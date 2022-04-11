@@ -1,0 +1,36 @@
+.ant-btn {
+    border: none;
+}
+
+.ant-btn.button-h56 {
+    height: 56px;
+    text-align: center;
+    font-weight: bold;
+    font-size: 16px;
+    line-height: 20px;
+    border-radius: 28px;
+}
+
+.ant-btn.button-h44 {
+    height: 44px;
+    text-align: center;
+    font-weight: bold;
+    font-size: 14px;
+    line-height: 20px;
+    border-radius: 22px;
+}
+
+.ant-btn.red {
+    color: #ffffff;
+    background: var(--red);
+}
+
+.ant-btn.orange {
+    color: #ffffff;
+    background: var(--orange);
+}
+
+.ant-btn.blue-dark {
+    color: #ffffff;
+    background: var(--blue-dark);
+}

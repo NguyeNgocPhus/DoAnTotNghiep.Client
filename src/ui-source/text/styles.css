@@ -1,0 +1,12 @@
+.font {
+    color: var(--text-color);
+    font-style: normal;
+}
+
+.size-text {
+    font-size: 14px;
+}
+
+.bold {
+    font-weight: 700;
+}

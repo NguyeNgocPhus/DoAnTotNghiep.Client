@@ -1,0 +1,62 @@
+body{
+    width: 100%;
+    height: 100%; 
+}
+
+.splash-screen-container {
+    position: absolute !important;
+    top: 30%;
+    left: 50%;
+    
+}
+.splash-content{
+    flex:1;
+    justify-content: center;
+}
+.splash-logo{
+    border: none;
+}
+.splash-text{
+    display: flex;
+    color: white;
+    text-align: center;
+    flex-direction: row;
+    margin-top: 20px;
+    justify-content: center;
+    
+}
+.loading__letter {
+    font-weight: normal;
+    letter-spacing: 4px;
+    /* text-transform: uppercase; */
+    animation-name: bounce;
+    animation-duration: 2s;
+    animation-iteration-count: infinite;
+  }
+.loading__letter:nth-child(2) {
+    animation-delay: 0.1s;
+  }
+  .loading__letter:nth-child(3) {
+    animation-delay: 0.2s;
+  }
+  .loading__letter:nth-child(4) {
+    animation-delay: 0.3s;
+  }
+  .loading__letter:nth-child(5) {
+    animation-delay: 0.4s;
+  }
+  .loading__letter:nth-child(6) {
+    animation-delay: 0.5s;
+  }
+  .loading__letter:nth-child(7) {
+    animation-delay: 0.6s;
+  }
+  .loading__letter:nth-child(8) {
+    animation-delay: 0.8s;
+  }
+  .loading__letter:nth-child(9) {
+    animation-delay: 1s;
+  }
+  .loading__letter:nth-child(10) {
+    animation-delay: 1.2s;
+  }

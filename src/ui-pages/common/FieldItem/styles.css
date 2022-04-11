@@ -1,0 +1,57 @@
+.fielItem{
+    padding:0 15px;
+}
+.ant-slider-handle{
+    border: none;
+    background-color: black;
+    
+
+}
+.ant-slider:hover .ant-slider-track{
+    background-color: black !important;
+
+}
+.ant-slider-track{
+    background-color: black;
+}
+.ant-slider-track:hover{
+    background-color: black !important;
+}
+.ant-slider-track::selection{
+    background-color: black !important;
+}
+.ant-slider-rail{
+    background-color: #ffff;
+    border: 1px solid black;
+}
+.list-field-product{
+    list-style: none;
+    margin-top: 6px !important;
+    padding-left: 10px !important;
+    
+}
+
+.field-color{
+    height: 350px;
+    overflow-y:scroll;
+}
+.select-color{
+    height: 15px;
+    width: 15px;
+    border: 0.15px solid rgb(227, 225, 225);
+    cursor: pointer;
+
+}
+.select-size{
+    height: 15px;
+    width: 15px;
+    border: 0.15px solid rgb(227, 225, 225);
+    cursor: pointer;
+
+
+}
+.select-rate{
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}

@@ -1,0 +1,12 @@
+.ant-table-thead > tr > th {
+    background-color: #EDEDED;
+    color: #A9A9A9;
+}
+
+.ant-table-tbody > tr > td {
+    border-bottom: 1px solid #EDEDED;
+}
+
+.ant-table-tbody > tr.ant-table-row:hover > td {
+    background-color: transparent;
+}

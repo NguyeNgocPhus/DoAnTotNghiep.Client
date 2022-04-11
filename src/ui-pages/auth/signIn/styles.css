@@ -1,0 +1,87 @@
+.text-signin{
+
+    font-size: 40px;
+    font-weight: 700;
+    display: flex;
+    align-items: flex-start;
+    position: relative;
+   
+}
+.text-signin::after{
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 100%;
+    height: 4px;
+    width: 60px;
+    background-color: black;
+}
+.input-email{
+    height: 55px;
+    margin-bottom: 30px;
+}
+.input-password{
+    height: 55px;
+    margin-bottom: 30px;
+}
+.ant-input:focus {
+    border-color: #d9d9d9;
+    outline: 0;
+    -webkit-box-shadow: 0 0 0 0px #d9d9d9;
+    box-shadow: 0 0 0 0px #d9d9d9;
+}
+.ant-input:hover {
+    border-color: #d9d9d9;
+    
+}
+.btn-signin{
+    width: 100%;
+    height: 55px;
+    color: #ffff;
+    font-weight: 700;
+    background-color: black;
+    cursor: pointer;
+}
+.auth-link{
+    margin-top: 5px;
+    display:flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.signin-by-fb {
+    width: 100%;
+    height: 55px;
+    color: #ffff;
+    margin-bottom: 5px;
+    background-color: #385898;
+    font-weight: 400;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0 5px;
+    cursor: pointer;
+
+}
+.signin-by-google{
+    width: 100%;
+    height: 55px;
+    color: #ffff;
+    background-color: #DF4A32;
+    font-weight: 400;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0 5px;
+    cursor: pointer;
+
+
+}
+.btn-back-home{
+    cursor: pointer;
+    margin-top: 20px;
+    display:flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 600;
+}

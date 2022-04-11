@@ -1,0 +1,67 @@
+.modal-approval {
+
+}
+
+.modal-approval .text-reason {
+    color: black;
+    font-weight: 700;
+}
+
+.modal-approval .ant-modal-content {
+}
+
+.modal-approval .ant-modal-title {
+    margin: 0;
+    color: rgba(0, 0, 0, 0.85);
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 22px;
+    word-wrap: break-word;
+    align-items: center;
+    display: flex;
+}
+
+.modal-approval .ant-modal-header {
+    padding: 16px 24px;
+    color: rgba(0, 0, 0, 0.85);
+    background: #fff;
+    border-bottom: 0px solid #f0f0f0;
+    border-radius: 2px 2px 0 0;
+}
+
+.modal-approval .ant-modal-body {
+    padding: 16px 24px;
+    font-size: 14px;
+    line-height: 1.5715;
+    word-wrap: break-word;
+}
+
+.modal-approval .ant-modal-footer {
+    padding: 10px 20px;
+    text-align: right;
+    background: transparent;
+    border-top: 0px solid #f0f0f0;
+    border-radius: 0 0 2px 2px;
+}
+
+.modal-approval .icon-dialog {
+    color: #dbac17;
+    font-size: xx-large; 
+    margin-right: 10px;
+}
+
+.modal-approval .btn-dialog {
+    width: 100px;
+}
+
+.modal-approval .color-text {
+    color: #dbac17;
+}
+
+.modal-approval .margin-top {
+    margin-top: 20px;
+}
+
+.modal-approval .mess-content {
+    margin-left: 30px;
+}

@@ -1,0 +1,17 @@
+
+.ant-pagination-item-active {
+    font-weight: 500;
+    border: none;
+    border-radius: 20px;
+    background: var(--orange);
+}
+
+.ant-pagination-item-active a {
+    color: black;
+}
+
+.ant-pagination-item {
+    font-family: 'Inter';
+    font-size: 12;
+    font-weight: bold;
+}
