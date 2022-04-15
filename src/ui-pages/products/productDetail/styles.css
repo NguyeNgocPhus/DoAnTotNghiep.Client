@@ -1,0 +1,118 @@
+.page-product-detail{
+    padding: 30px 15px;
+    display: flex;
+    align-items: flex-start;
+    gap: 0 30px;
+}
+.image-ao_left{
+    height: 70px;
+    width: 70px;
+    border: 1px solid black;
+    margin-bottom: 10px;
+    cursor: pointer;
+    
+}
+.image-ao_left img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.image-ao_right{
+    max-width: 732px;
+    max-height: 732px;
+    width: 100%;
+    height: 100%;
+    margin-bottom: 10px;
+}
+.image-ao_right img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.list-image{
+    display: flex;
+    align-items: flex-start;
+    gap: 0 10px;
+}
+.product-img-color{
+    height: 40px;
+    width: 40px;
+    border-radius: 50%;
+    overflow: hidden;
+    cursor: pointer;
+    position: relative;
+    transition: .1s;
+}
+.list-image-left{
+    position: sticky;
+    top:80px;
+}
+.product-color{
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap:0 10px;
+    padding: 20px 0;
+}
+.product-size{
+    padding: 10px 0;
+    border-top: 1px solid rgb(230, 230, 230);
+    border-bottom: 1px solid rgb(230, 230, 230);
+    margin-bottom: 15px;
+}
+.list-product-size{
+    display:flex;
+    justify-content:flex-start;
+    align-items: center;
+    gap: 0 10px;
+}
+.btn-product-top{
+    width: 100%;
+    background-color: black;
+    color: #ffff;
+    height: 50px;
+    margin: 10px 0;
+
+}
+.btn-product-bottom{
+    width: 100%;
+    margin-bottom: 10px;
+    
+    height: 50px;
+    border: 1px solid black;
+}
+.product-footer{
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+.product-footer{
+    font-size: 20px;
+    font-weight: 600;
+}
+.cart-image{
+    cursor: pointer;
+}
+.cart-price{
+    display: flex;
+    justify-content: space-between;
+    padding: 15px 0;
+}
+.btn-cart{
+    width: 100%;
+    background-color: black;
+    color: #ffff;
+    font-size: 10px;
+    font-weight: 500;
+    cursor: pointer;
+    padding:20px 0;
+}
+.cart-next{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    margin-top: 20px;
+}

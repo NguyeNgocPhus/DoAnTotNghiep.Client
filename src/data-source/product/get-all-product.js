@@ -1,32 +1,29 @@
 import { REQUEST_STATE } from "../../app-config/constants";
 import { cancel } from "../../app-helper";
-import { getTokenSource, POST } from "../fetch";
+import { GET, getTokenSource } from "../fetch";
 
 
 
 let source = null;
 
-export const cancelApiUserLogin = () => cancel(source);
+export const cancelapiGetAllProduct = () => cancel(source);
 
-export const apiUserLogin = async(params) =>{
-    const query = {
-        "email":params.email,
-        "password":params.password
-    };
+export const apiGetAllProduct = async(params) =>{
+
     // console.log(query);
-    cancelApiUserLogin();
+    cancelapiGetAllProduct();
 
     source = getTokenSource();
     // console.log(source);
     try {
-        const response = await POST('/auth/login',query,{
+        const response = await GET(`/type-product/${params}`,{},{
             // cancelToken: source.token
         })
-       
+        
         return {
             message:"",
             loading:false,
-            token:response?.data?.data?.token,
+            data:response?.data,
             state:REQUEST_STATE.SUCCESS
         }
     } catch (error) {

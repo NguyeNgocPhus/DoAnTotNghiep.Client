@@ -56,7 +56,7 @@ export const Profile = () =>{
                </Col>
                <Col span={20}>
                     {type.info && <InfoProfile></InfoProfile>}
-                   {type.account && <AccountProfile myProfile={myProfile.data}></AccountProfile>}
+                   {type.account && myProfile.data  && <AccountProfile myProfile={myProfile.data}></AccountProfile>}
                    {type.history  && <HistoryProfile></HistoryProfile>}
                </Col>
            </Row>

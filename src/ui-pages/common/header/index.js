@@ -14,14 +14,52 @@ import { useNavigate } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
 import { myProfileState, userInfoState } from '../../../store/auth/share-state';
 import { REQUEST_STATE } from '../../../app-config/constants';
+import { typeProductState } from '../../../store/type-product/share-state';
+import { Cart } from '../../cart';
 const { Search } = Input;
 const { Header, Footer, Sider, Content } = Layout;
 
 export const HeaderPage = () =>{
+    const listTypeProduct = useRecoilValue(typeProductState);
     const myProfile = useRecoilValue(myProfileState);
-    // console.log(myProfile);
+    const [listTypeAo,setListTypeAo] = useState([]);
+    const [listTypeQuan,setListTypeQuan] = useState([]);
+    const [listTypePhuKien,setListTypePhuKien] = useState([]);
+    const [listTypeAoSlug,setListTypeAoSlug] = useState([]);
+    const [listTypeQuanSlug,setListTypeQuanSlug] = useState([]);
+    const [listTypePhuKienSlug,setListTypePhuKienSlug] = useState([]);
     const [visibleSearch, setvisibleSearch] = useState(false);
     const [visibleStore, setvisibleStore] = useState(false);
+    
+    
+    useEffect(()=>{
+        if(listTypeProduct.state === REQUEST_STATE.SUCCESS){
+            let ao = [];
+            let quan = [];
+            let phukien = [];
+            let aoSlug = [],quanSlug = [],phukienSlug = [];
+            listTypeProduct.data.forEach(data =>{
+                if(data.type ==='ao'){
+                    ao.push(data.name);
+                    aoSlug.push(data.nameSlug);
+                }
+                if(data.type === 'quan'){
+                    quan.push(data.name);
+                    quanSlug.push(data.nameSlug);
+                }
+                if(data.type === 'phukien'){
+                    phukien.push(data.name);
+                    phukienSlug.push(data.nameSlug);
+                }
+            })
+            setListTypeAo(ao);
+            setListTypeQuan(quan);
+            setListTypePhuKien(phukien);
+            setListTypeAoSlug(aoSlug);
+            setListTypeQuanSlug(quanSlug);
+            setListTypePhuKienSlug(phukienSlug)
+        }
+    },[listTypeProduct])
 
     const navigate = useNavigate();
     
@@ -32,7 +70,7 @@ export const HeaderPage = () =>{
         navigate("/profile");
     }
     const showDrawerSearch = () => {
-        setvisibleStore(true);
+        setvisibleSearch(true);
     };
     const showDrawerStore = () => {
         setvisibleStore(true);
@@ -43,6 +81,7 @@ export const HeaderPage = () =>{
     const onCloseStore = () =>{
         setvisibleStore(false);
     }
+   
     return (
             
                 <div style={{position:"fixed",width:"100%",top:0,left:0,zIndex:100,backgroundColor:"#ffff"}} className="header">
@@ -52,21 +91,21 @@ export const HeaderPage = () =>{
                         </Col>
                         <Col span={16} className="navbar">
                             <ul mode="horizontal" className="menu">
-                                <li className='menu-item ao' onClick={()=>{navigate("/ao")}}>
+                                <li className='menu-item ao'>
                                     <b>ÁO</b> 
-                                    <NavBar img={ao} type={"ao"}></NavBar>                             
+                                    {listTypeAo && listTypeAo.length>0 && <NavBar slug={listTypeAoSlug} data={listTypeAo} img={ao} type={"ao"}></NavBar> }                            
                                 </li >
                                
                                 <li className='menu-item ao'>
                                     <b>QUẦN</b>
-                                    <NavBar img={quan} type="quan"></NavBar>  
+                                   {listTypeQuan && listTypeQuan.length>0 && <NavBar slug={listTypeQuanSlug} data={listTypeQuan} img={quan} type="quan"></NavBar>  } 
                                 </li>
                                 <li className='menu-item ao'>
                                     <b>SET</b>
                                 </li>
                                 <li className='menu-item ao'>
                                     <b>PHỤ KIỆN</b>
-                                    <NavBar type="phukien"></NavBar>  
+                                    {listTypePhuKien && listTypePhuKien.length> 0 && <NavBar slug={listTypePhuKienSlug} data={listTypePhuKien} type="phukien"></NavBar>  }
                                 </li>
                                 <li className='menu-item ao'>
                                     <b>KHUYẾN MÃI</b>                              
@@ -88,11 +127,7 @@ export const HeaderPage = () =>{
                         
                             <Input placeholder="Tìm kiếm sản phẩm" className='input-drawer' suffix={<SearchOutlined />}></Input>
                         </Drawer>   
-                        <Drawer  getContainer={false} zIndex={100000}  width={480} bodyStyle={{ padding: 70 }} placement="right" onClose={onCloseStore} visible={visibleStore}>
-                            <h3>GIỎ HÀNG</h3>
-                        
-                            <Input placeholder="Tìm kiếm sản phẩm" className='input-drawer' suffix={<SearchOutlined />}></Input>
-                        </Drawer>   
+                        <Cart visibleStore={visibleStore} onCloseStore={onCloseStore}></Cart>  
                        
 
                     </Row>

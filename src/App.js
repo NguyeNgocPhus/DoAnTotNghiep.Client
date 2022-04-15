@@ -3,7 +3,7 @@ import { Navigate, Route, Routes } from 'react-router-dom';
 import './App.css';
 import { HomePage } from './ui-pages/home';
 
-import { PageAo } from './ui-pages/products/ao';
+import { PageProduct } from './ui-pages/products';
 import { UserSignIn } from './ui-pages/auth/signIn';
 import { UserSignUp } from './ui-pages/auth/signUp';
 import { GetPassword } from './ui-pages/auth/getPassword';
@@ -14,13 +14,22 @@ import { getUserInfo, saveUserInfoToStore } from './app-helper';
 import { Profile } from './ui-pages/profile';
 import { useProfile } from './store/auth/use-my-profile';
 import { Select } from 'antd';
+import { REQUEST_STATE } from './app-config/constants';
+import { ProductDetail } from './ui-pages/products/productDetail';
+import { useTypeProduct } from './store/type-product/use-type-product';
 const {Option}  = Select;
+
+
 function App() {
+  const token = getUserInfo();
   const [userLoginData,setUserLoginData] = useRecoilState(userInfoState);
+  const [listTypeProduct,requestListTypeProduct ] = useTypeProduct();
   const [myProfile,requestMyProfile]  = useProfile();
   const [isVerify, setIsVerify] = useState(false);
+ 
   useEffect(()=>{
     requestMyProfile();
+    requestListTypeProduct();
   },[])
   // console.log(myProfile);
   useEffect(()=>{
@@ -34,14 +43,18 @@ function App() {
   },[userLoginData])
   
   useEffect(()=>{
-    setIsVerify(true);
+   
+    if(myProfile.state === REQUEST_STATE.SUCCESS){
+      setIsVerify(true);
+    }
+   
   },[myProfile])
-  // console.log(userLoginData);
+  
   const PrivateRouter = ({element,...rest})=>{
     return (
       <Routes>
         <Route {...rest} element={
-          !isVerify ? (
+          !token ? (
             <Navigate to="/user/signin"></Navigate>
           ) : (
             element
@@ -50,7 +63,10 @@ function App() {
       </Routes>
     )
   }
-
+  const convertPath = (name) =>{
+    const path=  name.replace(" ","-");
+    return path;
+  }
   return (
     <>
       <Routes>
@@ -58,10 +74,17 @@ function App() {
         
         <Route path="/user/signin" element={<UserSignIn></UserSignIn>}></Route>
         <Route path="/user/signup" element={<UserSignUp></UserSignUp>}></Route>
-        <Route path="/user/getpassword" element={<GetPassword></GetPassword>}></Route>
-        
+        <Route path="/user/getpassword" element={<GetPassword></GetPassword>}></Route>   
+        {listTypeProduct.state === REQUEST_STATE.SUCCESS && listTypeProduct.data.map((type)=>{
+           return  (
+             <>
+              <Route path={`/${type.nameSlug}`} element={<PageProduct></PageProduct>}></Route>
+              <Route path={`/${type.nameSlug}/:productDetail`} element={<ProductDetail></ProductDetail>}></Route>
+             </>
+            )
+        })}    
       </Routes>
-      <PrivateRouter path="/ao" element={<PageAo></PageAo>}></PrivateRouter>
+      
       <PrivateRouter path="/profile" element={<Profile></Profile>}></PrivateRouter>
   
       

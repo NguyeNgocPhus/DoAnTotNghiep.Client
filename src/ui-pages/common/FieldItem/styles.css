@@ -7,12 +7,17 @@
     
 
 }
+
+.ant-checkbox-checked .ant-checkbox-inner {
+    background-color: red !important;
+    border-color: red !important;
+  }
 .ant-slider:hover .ant-slider-track{
     background-color: black !important;
 
 }
 .ant-slider-track{
-    background-color: black;
+    background-color: black !important;
 }
 .ant-slider-track:hover{
     background-color: black !important;
@@ -20,9 +25,10 @@
 .ant-slider-track::selection{
     background-color: black !important;
 }
+
 .ant-slider-rail{
-    background-color: #ffff;
-    border: 1px solid black;
+    background-color: #ffff !important;
+    border: 1px solid black !important;
 }
 .list-field-product{
     list-style: none;
@@ -30,11 +36,10 @@
     padding-left: 10px !important;
     
 }
-
-.field-color{
-    height: 350px;
-    overflow-y:scroll;
+.ant-slider-handle{
+    border:2px solid black !important;
 }
+
 .select-color{
     height: 15px;
     width: 15px;
@@ -54,4 +59,24 @@
     display: flex;
     align-items: center;
     justify-content: flex-end;
+}
+
+.box{
+    width: 15px;
+    height: 15px;
+    position: relative;
+}
+.size-box{
+    border: 1px solid black;
+    
+}
+.box-icon{
+    font-size: 12px !important;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 10px;
+    height: 10px;
+    object-fit: cover;
+    transform: translate(-50%,-50%);
 }

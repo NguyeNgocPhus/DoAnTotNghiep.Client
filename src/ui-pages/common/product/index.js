@@ -2,24 +2,64 @@
 import "./styles.css"
 import {EyeOutlined,ShoppingCartOutlined} from "@ant-design/icons";
 import { Col, Modal, Rate, Row, Tooltip } from "antd";
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import "./styles.css";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Configs } from "../../../app-config/api";
 
-export const Product = ({img1,img2,name,price}) =>{
+export const Product = ({product,type,listSize,img1,img2}) =>{
+    
     const [isModalVisible,setIsModalVisible] = useState(false);
+    const [valueRating,setValueRating] = useState(0);
+    const [listColor,setListColor] = useState({});
+    const [listImage,setListImage] = useState({});
+    const location = useLocation();
+
+    const navigate = useNavigate();
+    useEffect(()=>{
+        if(product){
+            const colors = [];
+            const images = [];
+            product.productDetails.map(dt=>{
+                colors.push({
+                    colorName:dt.colorName,
+                    colorCode:dt.colorCode
+                })
+                dt.images.map(image=>{
+                   const pathImage = Configs.BASE_API + `/${type}/${image.name}`;
+                   images.push(pathImage);
+                })
+            })
+            
+            setValueRating(product.rating); 
+            setListColor(colors);
+            setListImage(images);
+        }
+       
+    },[product])
     const handleCancel = () =>{
         setIsModalVisible(false);
     }
     const handleOk = () => {
         setIsModalVisible(false);
     };
+    const convertToVND = (money) =>{
+        return money.toLocaleString('vi-VN', {style : 'currency', currency : 'VND'})
+    }
     return (
         <div>
             <div className="product">
                 <div className="product-image">
-                    <img src={img1} className="image-product"></img> 
-                    <img src={img2} className="image-product__change"></img>
+                    <div className="image-product"><img src={img1} className="image-click"></img> </div>   
+                    
+                    <img src={img2}   onClick={()=>navigate(`/${location.state}/${product.nameSlug}_${product.id}`,{
+                        state:{
+                            product : product,
+                            listColor: listColor,
+                            listImage : listImage,
+                            listSize:listSize
+                        }
+                    })} className="image-product__change"></img>
                     <div className="product-info">
                         <div className="info-see" onClick={()=>setIsModalVisible(true)}>
                             <span>Xem nhanh </span>  <EyeOutlined />
@@ -27,28 +67,27 @@ export const Product = ({img1,img2,name,price}) =>{
                         <div className="info-pay"><span>Mua ngay </span> <ShoppingCartOutlined /></div>
                     </div>   
                 </div>
-                <h4><b>{name}</b></h4>
-                <p>{price} đ</p>
+                <h4><b>{product.normalizedName}</b></h4>
+                <p>{convertToVND(product.price)}</p>
                 
             </div>
             <Modal width={1000}  visible={isModalVisible} onCancel={handleCancel} footer={false}>
                 <Row gutter={[30,10]}>
                     <Col span={12}>
                         <div className="image-modal">
-                            <img src={img1} className="image"></img>
+                            {listImage.length>0 && <img src={listImage[0]} className="image"></img>} 
                         </div>
                     </Col>
                     <Col span={12}>
                         <div className="modal-title">
-                            <div className="modal-title__name">ÁO THUN TIED GUN</div>
+                            <div className="modal-title__name">{product.normalizedName}</div>
                             <div>
-                                <b>Mã sản phẩm</b> OD-2018
+                                <b>Mã sản phẩm</b> {product.code}
                             </div>
                         </div>
-                        <Rate disabled value={2} style={{fontSize:14}}></Rate>
+                        <Rate disabled value={valueRating} style={{fontSize:14}}></Rate>
                         <div className="modal-price">
-                            <div className="price">199,000</div>
-                            <div style={{fontWeight: 700}}>đ</div>
+                            <div className="price">{convertToVND(product.price)}</div>
                         </div>
                         <div className="modal-color">
                             <Tooltip title="Đen"><div className="modal-img-color">
@@ -78,18 +117,13 @@ export const Product = ({img1,img2,name,price}) =>{
                     </Col>
                     <Col span={12}>
                         <Row gutter={[7]}>
-                            <Col span={6}>
-                                <img src={img1} className="image-footer"></img>
-                            </Col>
-                            <Col span={6}>
-                                <img src={img1} className="image-footer"></img>
-                            </Col>
-                            <Col span={6}>
-                                <img src={img1} className="image-footer"></img>
-                            </Col>
-                            <Col span={6}>
-                                <img src={img1} className="image-footer"></img>
-                            </Col>
+                            {listImage.length>0 && listImage.map((img,index)=>{
+                                return (
+                                    <Col key={index} span={6}>
+                                        <img src={img1} className="image-footer"></img>
+                                    </Col>
+                                )
+                            })}                            
                         </Row>
                     </Col>
                     <Col span={12}></Col>

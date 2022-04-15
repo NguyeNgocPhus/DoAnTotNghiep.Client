@@ -1,0 +1,57 @@
+[
+    {
+        "color":"đen",
+        "code":"#000000"
+    },
+    {
+        "color":"trắng",
+        "code":"#FFFFFF"
+
+        
+    },
+    {
+        "color":"đỏ",
+        "code":"#FF0000"
+    },
+    {
+        "color":"xanh chanh",
+        "code":"#00FF00"
+    },
+    {
+        "color":"xanh da trời",
+        "code":"#0000FF"
+    },
+    {
+        "color":"vàng",
+        "code":"#FFFF00"
+    },
+    {
+        "color":"hồng",
+        "code":"#FF00FF"
+    },
+    {
+        "color":"bạc",
+        "code":"#C0C0C0"
+    },
+    {
+        "color":"xám",
+        "code":"#808080"
+    },
+    {
+        "color":"nâu",
+        "code":"#800000"
+    },
+    {
+        "color":"tím",
+        "code":"#800080"
+    },
+    {
+        "color":"xanh lá",
+        "code":"#008000"
+    },{
+        "color":"xanh navy",
+        "code":"#000080"
+    }
+    
+
+]
