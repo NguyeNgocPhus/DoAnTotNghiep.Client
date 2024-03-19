@@ -15,6 +15,7 @@
     "react-dom": "^17.0.1",
     "react-router-dom": "^6.3.0",
     "react-scripts": "4.0.1",
+    "reactflow": "^11.10.4",
     "recoil": "^0.7.0",
     "typescript": "^5.4.2",
     "web-vitals": "^0.2.4"
@@ -38,9 +39,9 @@
       "not op_mini all"
     ],
     "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
     ]
   },
   "devDependencies": {

@@ -1,0 +1,9 @@
+.node_trigger{
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+.node_trigger_detail{
+    display: flex;
+    flex-direction: column;
+}

@@ -1,0 +1,35 @@
+.text-updater-node {
+  height: 50px;
+  border: 1px solid #eee;
+  padding: 5px;
+  border-radius: 5px;
+  background: white;
+}
+
+.text-updater-node label {
+  display: block;
+  color: #777;
+  font-size: 12px;
+}
+
+.updatenode__controls {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  z-index: 4;
+  font-size: 12px;
+}
+
+.updatenode__controls label {
+  display: block;
+}
+
+.updatenode__bglabel {
+  margin-top: 10px;
+}
+
+.updatenode__checkboxwrapper {
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+}
