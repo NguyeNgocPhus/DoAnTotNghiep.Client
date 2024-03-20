@@ -1,9 +1,10 @@
-import { useCallback, useState } from 'react';
-import { Handle, Position } from 'reactflow';
+import { Button } from 'antd';
+import { useCallback, useEffect, useState } from 'react';
+import { Handle, NodeToolbar, Position, useStore } from 'reactflow';
 
 const handleStyle = { left: 10 };
 
-export const customNode = ({
+export const CustomNode = ({
     id,
     data,
     dragHandle,
@@ -16,27 +17,48 @@ export const customNode = ({
     dragging,
     targetPosition,
     sourcePosition }) => {
-        
+    const connectionNodeIdSelector = (state) => state.connectionNodeId;
+
+    const connectionNodeId = useStore(connectionNodeIdSelector);
+
+    // console.log(connectionNodeId);
+    const isConnecting = !!connectionNodeId;
+    const isTarget = connectionNodeId && connectionNodeId !== id;
+    console.log(data.forceToolbarVisible);
     const onChange = useCallback((evt) => {
         console.log(evt.target.value);
+        setText(evt.target.value);
     }, []);
-    const [count, setCount] = useState(data);
+    const onClick = () => {
+        data.callBackSetEdge();
+    }
+
+
+    const { label, setText } = data;
 
 
     return (
         <div className="text-updater-node">
-            <Handle type="target" position={Position.Top} isConnectable={isConnectable} />
+            {
+                data.forceToolbarVisible &&
+                <div style={{position:'absolute', top:'-50%'}}>
+                    <button onClick={onClick}>Bước tiếp theo</button>
+
+                </div>
+            }
+
+             <Handle type="target" position={Position.Top} isConnectable={isConnectable} />
             <div>
-                <label htmlFor="text">Text:</label>
+                <label htmlFor="text">{label} :</label>
                 <input id="text" name="text" onChange={onChange} className="nodrag" />
             </div>
-            <Handle
+            {/* {/* <Handle
                 type="source"
                 position={Position.Bottom}
                 id="a"
                 style={handleStyle}
                 isConnectable={isConnectable}
-            />
+            /> */}
             <Handle type="source" position={Position.Bottom} id="b" isConnectable={isConnectable} />
         </div>
     );

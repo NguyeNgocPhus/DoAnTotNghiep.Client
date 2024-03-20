@@ -3,7 +3,10 @@ import { Col, Row } from "antd";
 import "./styles.css";
 import { NodeAction } from "./nodeAction";
 export const ListNodeAction = () => {
-
+    const onDragStart = (event, nodeType) => {
+        event.dataTransfer.setData('application/reactflow', nodeType);
+        event.dataTransfer.effectAllowed = 'move';
+    };
     const listAction = [
         {
             image :"",
@@ -23,12 +26,11 @@ export const ListNodeAction = () => {
     ]
     return (
         <>
-
-            <Row>
+            <Row className="dndflow">
                 <Col span={24}>Danh sách hoạt động</Col>
                 {listAction.length && listAction.map((action , index)=>{
                            return (
-                            <Col span={24}>
+                            <Col span={24} >
                                 <NodeAction action={action}></NodeAction>
                             </Col>
                            )

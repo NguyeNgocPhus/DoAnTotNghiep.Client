@@ -10,10 +10,13 @@ import { ReactFlowProvider } from "reactflow";
 ReactDOM.render(
   <RecoilRoot>
     <BrowserRouter>
+   
       <ReactFlowProvider>
         <App />
       </ReactFlowProvider>
+     
     </BrowserRouter>
+   
   </RecoilRoot>,
   document.getElementById("root")
 );

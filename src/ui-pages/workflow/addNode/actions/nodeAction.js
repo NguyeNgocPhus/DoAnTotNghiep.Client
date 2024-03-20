@@ -4,23 +4,25 @@ import "./styles.css";
 
 export const NodeAction = ({ action }) => {
 
-    const onClickNodeTrigger = () =>{
+    const onClickNodeTrigger = () => {
         console.log("onClickNodeTrigger")
     }
+    const onDragStart = (event, nodeType) => {
+        event.dataTransfer.setData('application/reactflow', nodeType);
+        event.dataTransfer.effectAllowed = 'move';
+    };
     return (
         <>
-           
-            
-            <Comment
+            <Comment className="dndnode"
+                onDragStart={(event) => onDragStart(event, 'default')} draggable
                 onClick={onClickNodeTrigger}
                 author={<b>{action.name}</b>}
-                avatar={<DownCircleTwoTone  style={{ fontSize: '36px',height:'100%' }}/>}
+                avatar={<DownCircleTwoTone style={{ fontSize: '36px', height: '100%' }} />}
                 content={
                     <p style={{ fontSize: '12px' }}>
-                       {action.description}
+                        {action.description}
                     </p>
                 }
-                
             />
         </>
     );
