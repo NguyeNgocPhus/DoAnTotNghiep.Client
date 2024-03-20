@@ -9,6 +9,7 @@ import { DownloadOutlined, CloseCircleOutlined } from '@ant-design/icons';
 import { ListNodeDrawer } from './listNodeDrawer';
 import { CustomNode } from './customNode';
 import { CustomConnectionLine } from './customConnectionLine';
+import { NodeDetailDrawer } from './nodeDetailDrawer';
 
 const initialNodes = [
     { id: 'a', position: { x: 0, y: 0 }, type: 'custom-node', data: { label: 'Node A', forceToolbarVisible: false } },
@@ -32,14 +33,16 @@ const nodeTypes = {
 let id = 1;
 const getId = () => `${id++}`;
 export const WorkflowDetail = () => {
-    const reactFlowWrapper = useRef(null);
+
     const connectingNodeId = useRef(null);
-    const [visibleStore, setVisibleStore] = useState(false);
+    const [openListNodeDrawer, setOpenListNodeDrawer] = useState(false);
+    const [openNodeDetailDrawer, setNodeDetailDrawer] = useState(false);
+
     const [nodes, setNodes, onNodesChange] = useNodesState([]);
     const [edges, setEdges, onEdgesChange] = useEdgesState([]);
     const [text, setText] = useState("");
     const { screenToFlowPosition } = useReactFlow();
-    const [enableToolbar, setEnableToolbar] = useState(false);
+
 
     const [reactFlowInstance, setReactFlowInstance] = useState(null);
     useEffect(() => {
@@ -149,13 +152,6 @@ export const WorkflowDetail = () => {
         }
     }, [screenToFlowPosition]);
 
-    const openModal = () => {
-        setVisibleStore(true);
-    }
-    const onCloseStore = () => {
-        setVisibleStore(false);
-    }
-
     const containerStyle = {
         position: 'relative',
         overflow: 'hidden',
@@ -213,7 +209,21 @@ export const WorkflowDetail = () => {
         },
         [reactFlowInstance],
     );
+    const [dataNodeDetail, setDataNodeDetail] = useState({});
+    const { setViewport, zoomIn, zoomOut } = useReactFlow();
+    const onNodeClick = useCallback((_, node) => {
+        setNodeDetailDrawer(true);
+        console.log(node)
+        setDataNodeDetail(node);
+        setNodes((nodes) =>
 
+            nodes.map((n) => ({
+                ...n,
+                className: n.id === node.id ? 'highlight' : '',
+            }))
+        );
+        setViewport({ x: node.position.x, y: node.position.y });
+    }, [setNodes, setViewport]);
     return (
         <AdminCommomLayout>
             <div >
@@ -241,6 +251,7 @@ export const WorkflowDetail = () => {
                     onConnect={onConnect}
                     onConnectStart={onConnectStart}
                     onConnectEnd={onConnectEnd}
+                    onNodeClick={onNodeClick}
                     edgeTypes={edgeTypes}
                     nodeTypes={nodeTypes}
                     fitView
@@ -250,11 +261,12 @@ export const WorkflowDetail = () => {
                     onDrop={onDrop}
                     onDragOver={onDragOver}
                 >
-                    <Panel position="top-left" onClick={openModal}>
+                    <Panel position="top-left" onClick={() => { setOpenListNodeDrawer(true) }}>
                         <Button size='large'>Add Node</Button>
                     </Panel>
                     <Controls showInteractive={false} />
-                    <ListNodeDrawer visibleStore={visibleStore} onCloseStore={onCloseStore}></ListNodeDrawer>
+                    <ListNodeDrawer open={openListNodeDrawer} onClose={() => { setOpenListNodeDrawer(false) }}></ListNodeDrawer>
+                    <NodeDetailDrawer open={openNodeDetailDrawer} data={dataNodeDetail} onClose={() => { setNodeDetailDrawer(false) }}></NodeDetailDrawer>
 
                     <Background variant={BackgroundVariant.Dots} />
                 </ReactFlow>
