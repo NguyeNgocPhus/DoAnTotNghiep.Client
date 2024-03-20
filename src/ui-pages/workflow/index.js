@@ -6,7 +6,7 @@ import 'reactflow/dist/style.css';
 import { Breadcrumb, Button, Col, Drawer, Row, Tabs } from 'antd';
 import { AdminCommomLayout } from '../common/layout/admin/admin-common';
 import { DownloadOutlined, CloseCircleOutlined } from '@ant-design/icons';
-import { AddNodeDrawer } from './addNode';
+import { ListNodeDrawer } from './listNodeDrawer';
 import { CustomNode } from './customNode';
 import { CustomConnectionLine } from './customConnectionLine';
 
@@ -254,7 +254,7 @@ export const WorkflowDetail = () => {
                         <Button size='large'>Add Node</Button>
                     </Panel>
                     <Controls showInteractive={false} />
-                    <AddNodeDrawer visibleStore={visibleStore} onCloseStore={onCloseStore}></AddNodeDrawer>
+                    <ListNodeDrawer visibleStore={visibleStore} onCloseStore={onCloseStore}></ListNodeDrawer>
 
                     <Background variant={BackgroundVariant.Dots} />
                 </ReactFlow>
