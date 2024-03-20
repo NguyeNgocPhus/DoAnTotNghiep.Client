@@ -1,6 +1,6 @@
 import { Button } from 'antd';
 import { useCallback, useEffect, useState } from 'react';
-import { Handle, NodeToolbar, Position, useStore } from 'reactflow';
+import { Handle, NodeToolbar, Position, useStore,useStoreActions } from 'reactflow';
 
 const handleStyle = { left: 10 };
 
@@ -17,14 +17,16 @@ export const CustomNode = ({
     dragging,
     targetPosition,
     sourcePosition }) => {
-    const connectionNodeIdSelector = (state) => state.connectionNodeId;
-
+    const connectionNodeIdSelector = (state) => {
+        // console.log("state",state);
+        return state.connectionNodeId};
+  
     const connectionNodeId = useStore(connectionNodeIdSelector);
 
     // console.log(connectionNodeId);
     const isConnecting = !!connectionNodeId;
     const isTarget = connectionNodeId && connectionNodeId !== id;
-    console.log(data.forceToolbarVisible);
+    // console.log(data.forceToolbarVisible);
     const onChange = useCallback((evt) => {
         console.log(evt.target.value);
         setText(evt.target.value);
@@ -50,7 +52,7 @@ export const CustomNode = ({
              <Handle type="target" position={Position.Top} isConnectable={isConnectable} />
             <div>
                 <label htmlFor="text">{label} :</label>
-                <input id="text" name="text" onChange={onChange} className="nodrag" />
+                {/* <input id="text" name="text" onChange={onChange} className="nodrag" /> */}
             </div>
             {/* {/* <Handle
                 type="source"
