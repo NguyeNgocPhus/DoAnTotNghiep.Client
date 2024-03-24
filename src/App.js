@@ -79,6 +79,7 @@ function App() {
         <Route path="/" element={<HomePage></HomePage>}></Route>
         <Route path="/admin/workflows" element={<ListWorkflow></ListWorkflow>}></Route>
         <Route path="/admin/workflow/create" element={<CreateWorkflow></CreateWorkflow>}></Route>
+        <Route path="/admin/workflow/:id" element={<WorkflowDetail></WorkflowDetail>}></Route>
         <Route path="/admin/users" element={<ListUsers></ListUsers>}></Route>
         <Route path="/admin/user/create" element={<CreateUser></CreateUser>}></Route>
         <Route path="/admin/import" element={<ListImport></ListImport>}></Route>

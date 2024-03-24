@@ -60,6 +60,13 @@ export const ListNodeDrawer = ({ open, onClose }) => {
             key: "Condition",
             name: "Điều kiện",
             description: "Điều kiện cho kịch bản workflow"
+        },
+        {
+            image: "",
+            type: "action",
+            key: "Branch",
+            name: "Luồng rẽ nhanh",
+            description: "Thực hiện luồng công việc phân nhánh thành nhiều nhánh"
         }
     ]
     const listNodeTrigger = listNode.filter(x=>x.type === "trigger");

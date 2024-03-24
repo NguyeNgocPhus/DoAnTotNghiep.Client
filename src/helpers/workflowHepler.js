@@ -1,4 +1,5 @@
 import { ApproveNode } from "../ui-pages/admin/workflow/nodes/actions/approve";
+import { BranchNode } from "../ui-pages/admin/workflow/nodes/actions/branch";
 import { ConditionNode } from "../ui-pages/admin/workflow/nodes/actions/condition";
 import { RejectNode } from "../ui-pages/admin/workflow/nodes/actions/reject";
 import { SendEmailNode } from "../ui-pages/admin/workflow/nodes/actions/sendEmail";
@@ -14,7 +15,15 @@ const nodeTypes = {
     'Reject': RejectNode,
     'Condition': ConditionNode,
     'SendEmail': SendEmailNode,
+    'Branch':BranchNode
 };
+
+const createWorkflow = (nodes, edges) =>{
+
+    let workflow = {};
+    
+}
+
 export {
     nodeTypes
 }

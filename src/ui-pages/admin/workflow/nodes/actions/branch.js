@@ -1,10 +1,10 @@
-import { Button , Typography} from 'antd';
+import { Button,Typography } from 'antd';
 import { useCallback, useEffect, useState } from 'react';
 import { Handle, NodeToolbar, Position, useStore, useStoreActions } from 'reactflow';
 
 const handleStyle = { left: 10 };
 
-export const SendEmailNode = ({
+export const BranchNode = ({
     id,
     data,
     dragHandle,

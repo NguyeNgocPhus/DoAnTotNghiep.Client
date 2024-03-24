@@ -3,7 +3,7 @@ import ReactFlow, { addEdge, useNodesState, useEdgesState, Panel, Background, Co
 import { CustomEdge } from './customEdge';
 import "./styles.css";
 import 'reactflow/dist/style.css';
-import { Breadcrumb, Button, Col, Drawer, Row, Tabs } from 'antd';
+import { Breadcrumb, Button, Col, Drawer, Row, Space, Tabs } from 'antd';
 import { AdminCommomLayout } from '../../common/layout/admin/admin-common';
 import { DownloadOutlined, CloseCircleOutlined } from '@ant-design/icons';
 import { ListNodeDrawer } from './drawer/listNode';
@@ -50,7 +50,7 @@ export const CreateWorkflow = () => {
 
     const onConnect = useCallback(
         (connection) => {
-        
+
             const callBackSetEdge = () => {
                 setEdges((eds) => addEdge(connection, eds));
                 setNodes((nds) => {
@@ -117,7 +117,7 @@ export const CreateWorkflow = () => {
 
     const containerStyle = {
         position: 'relative',
-        overflow: 'hidden',
+
         with: '100vw',
         height: '100vh',
     };
@@ -147,13 +147,16 @@ export const CreateWorkflow = () => {
         (event) => {
             event.preventDefault();
 
-            const type = event.dataTransfer.getData('type-node');
+            const typeNode = event.dataTransfer.getData('type');
+            const nameNode = event.dataTransfer.getData('name');
+            const descNode = event.dataTransfer.getData('description');
 
             // check if the dropped element is valid
-            if (typeof type === 'undefined' || !type) {
+            if (typeof typeNode === 'undefined' || !typeNode) {
                 return;
             }
             
+          
             // reactFlowInstance.project was renamed to reactFlowInstance.screenToFlowPosition
             // and you don't need to subtract the reactFlowBounds.left/top anymore
             // details: https://reactflow.dev/whats-new/2023-11-10
@@ -163,9 +166,9 @@ export const CreateWorkflow = () => {
             });
             const newNode = {
                 id: getId(),
-                type,
+                type : typeNode,
                 position,
-                data: { label: `${type}` },
+                data: { name : `${nameNode}`},
             };
 
             setNodes((nds) => nds.concat(newNode));
@@ -176,7 +179,7 @@ export const CreateWorkflow = () => {
     const { setViewport, zoomIn, zoomOut } = useReactFlow();
     const onNodeClick = useCallback((_, node) => {
         setNodeDetailDrawer(true);
-        console.log(node)
+       
         setDataNodeDetail(node);
         setNodes((nodes) =>
 
@@ -185,12 +188,18 @@ export const CreateWorkflow = () => {
                 className: n.id === node.id ? 'highlight' : '',
             }))
         );
-        // setViewport({ x: node.position.x, y: node.position.y });
     }, [setNodes, setViewport]);
+
+
+    const onCreateWorkflow = () =>{
+        console.log("nodes",nodes);
+        console.log("edges", edges)
+
+    }
     return (
         <AdminCommomLayout>
             <div >
-                <Row style={{ height: '50px', borderBottom: '1px solid #f0f0f0', alignItems: 'center', paddingLeft: '20px' }}>
+                <Row style={{ height: '50px', borderBottom: '1px solid #f0f0f0', alignItems: 'center', paddingLeft: '20px', paddingRight: '20px' }}>
                     <Col span={12}>
 
                         <Breadcrumb>
@@ -198,8 +207,9 @@ export const CreateWorkflow = () => {
                             <Breadcrumb.Item href="">Application Center</Breadcrumb.Item>
                         </Breadcrumb>
                     </Col>
-                    <Col span={12}>
-                        <Button type="primary" icon={<DownloadOutlined />} />
+                    <Col span={12} style={{ display: 'flex', justifyContent: 'end' }}>
+                        <Button type="primary" onClick={onCreateWorkflow} icon={<DownloadOutlined />} >Xuất bản</Button>
+
                     </Col>
                 </Row>
             </div>
