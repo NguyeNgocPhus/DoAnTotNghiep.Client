@@ -10,8 +10,9 @@ import { ListNodeDrawer } from './drawer/listNode';
 import { CustomNode } from './customNode';
 import { CustomConnectionLine } from './customConnectionLine';
 import { NodeDetailDrawer } from './drawer/nodeDetail';
-import { nodeTypes } from '../../../helpers/workflowHepler';
-
+import { createWorkflow, nodeTypes } from '../../../helpers/workflowHepler';
+import { v4 as uuidv4 } from 'uuid';
+import { useCreateWorkflow } from '../../../store/workflow/use-create-workflow';
 // const initialNodes = [
 //     { id: 'a', position: { x: 0, y: 0 }, type: 'custom-node', data: { label: 'Node A', forceToolbarVisible: false } },
 //     { id: 'b', position: { x: 0, y: 100 }, type: 'custom-node', data: { label: 'Node B', forceToolbarVisible: false } },
@@ -27,9 +28,6 @@ const edgeTypes = {
     'custom-edge': CustomEdge,
 };
 
-
-let id = 1;
-const getId = () => `${id++}`;
 export const CreateWorkflow = () => {
 
     const connectingNodeId = useRef(null);
@@ -40,6 +38,8 @@ export const CreateWorkflow = () => {
     const [edges, setEdges, onEdgesChange] = useEdgesState([]);
 
     const { screenToFlowPosition } = useReactFlow();
+
+    const [createWorkflowData, requestCreateWorkflow] = useCreateWorkflow();
 
 
     const [reactFlowInstance, setReactFlowInstance] = useState(null);
@@ -101,17 +101,7 @@ export const CreateWorkflow = () => {
 
         if (targetIsPane) {
             // we need to remove the wrapper bounds, in order to get the correct position
-            const id = getId();
-            const newNode = {
-                id,
-                position: screenToFlowPosition({
-                    x: event.clientX,
-                    y: event.clientY,
-                }),
-                data: { label: `Node ${id}` },
-                origin: [0.5, 0.0],
-            };
-
+            
         }
     }, [screenToFlowPosition]);
 
@@ -165,7 +155,7 @@ export const CreateWorkflow = () => {
                 y: event.clientY,
             });
             const newNode = {
-                id: getId(),
+                id: uuidv4(),
                 type : typeNode,
                 position,
                 data: { name : `${nameNode}`},
@@ -192,8 +182,8 @@ export const CreateWorkflow = () => {
 
 
     const onCreateWorkflow = () =>{
-        console.log("nodes",nodes);
-        console.log("edges", edges)
+        const workflow = createWorkflow(nodes, edges);
+        requestCreateWorkflow(workflow);
 
     }
     return (

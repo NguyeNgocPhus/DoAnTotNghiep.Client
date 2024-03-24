@@ -1,3 +1,3 @@
 export const Configs = {
-    BASE_API:"http://localhost:5000"
+    BASE_API:"http://localhost:5197"
 }

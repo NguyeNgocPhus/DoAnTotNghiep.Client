@@ -86,14 +86,14 @@ function App() {
         <Route path="/user/signin" element={<UserSignIn></UserSignIn>}></Route>
         <Route path="/user/signup" element={<UserSignUp></UserSignUp>}></Route>
         <Route path="/user/getpassword" element={<GetPassword></GetPassword>}></Route>
-        {listTypeProduct.state === REQUEST_STATE.SUCCESS && listTypeProduct.data.map((type) => {
+        {/* {listTypeProduct.state === REQUEST_STATE.SUCCESS && listTypeProduct.data.map((type) => {
           return (
             <>
               <Route path={`/${type.nameSlug}`} element={<PageProduct></PageProduct>}></Route>
               <Route path={`/${type.nameSlug}/:productDetail`} element={<ProductDetail></ProductDetail>}></Route>
             </>
           )
-        })}
+        })} */}
       </Routes>
 
       <PrivateRouter path="/profile" element={<Profile></Profile>}></PrivateRouter>

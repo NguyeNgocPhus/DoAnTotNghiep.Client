@@ -2,17 +2,17 @@ import * as axios from "axios";
 import { Configs } from "../app-config/api";
 import { getUserInfo } from "../app-helper";
 
-export const getOptions = (option) =>{
+export const getOptions = (option) => {
     const userInfo = getUserInfo();
-    
+
     const opts = {
         ...option,
         headers: {
             'Content-Type': 'application/json'
         },
-       
+
     };
-   
+
     if (userInfo) {
         opts.headers['Authorization'] = `Bearer ${userInfo.token}`;
     }
@@ -25,20 +25,20 @@ export const getOptions = (option) =>{
 }
 
 
-export const getTokenSource = () =>{
+export const getTokenSource = () => {
     return axios.CancelToken.source();
 }
 
 
-export const POST = async (path,params,option ={}) =>{
+export const POST = async (path, params, option = {}) => {
     const _url = Configs.BASE_API + path;
     const _option = getOptions(option);
 
-    return await axios.post(_url,params,_option);
+    return await axios.post(_url, params, _option);
 
 
 }
-export const GET = async (path,params={},option={}) =>{
+export const GET = async (path, params = {}, option = {}) => {
     const _params = params ? Object.keys(params).map(key => {
         let valueParam = params[key];
         let adjustParam = "";
@@ -53,10 +53,10 @@ export const GET = async (path,params={},option={}) =>{
         return adjustParam;
     }).join("&") : "";
 
-    const _url = Configs.BASE_API+ path + (_params === "" ? "" : "?" + _params);
+    const _url = Configs.BASE_API + path + (_params === "" ? "" : "?" + _params);
 
     const _option = getOptions(option);
     console.log(_option);
-    return await axios.get(_url,_option);
+    return await axios.get(_url, _option);
 
 }
