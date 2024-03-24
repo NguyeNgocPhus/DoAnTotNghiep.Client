@@ -6,10 +6,10 @@ import 'reactflow/dist/style.css';
 import { Breadcrumb, Button, Col, Drawer, Row, Tabs } from 'antd';
 import { AdminCommomLayout } from '../../common/layout/admin/admin-common';
 import { DownloadOutlined, CloseCircleOutlined } from '@ant-design/icons';
-import { ListNodeDrawer } from './listNodeDrawer';
+import { ListNodeDrawer } from './drawer/listNode';
 import { CustomNode } from './customNode';
 import { CustomConnectionLine } from './customConnectionLine';
-import { NodeDetailDrawer } from './nodeDetailDrawer';
+import { NodeDetailDrawer } from './drawer/nodeDetail';
 
 const initialNodes = [
     { id: 'a', position: { x: 0, y: 0 }, type: 'custom-node', data: { label: 'Node A', forceToolbarVisible: false } },
