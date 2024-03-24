@@ -17,7 +17,12 @@ import { Select } from 'antd';
 import { REQUEST_STATE } from './app-config/constants';
 import { ProductDetail } from './ui-pages/products/productDetail';
 import { useTypeProduct } from './store/type-product/use-type-product';
-import  {WorkflowDetail} from './ui-pages/workflow';
+import  {WorkflowDetail} from './ui-pages/admin/workflow/detail';
+import { ListImport } from './ui-pages/admin/import';
+import { ListUsers } from './ui-pages/admin/user';
+import { CreateUser } from './ui-pages/admin/user/create';
+import { ListWorkflow } from './ui-pages/admin/workflow';
+import { CreateWorkflow } from './ui-pages/admin/workflow/create';
 const { Option } = Select;
 
 
@@ -72,7 +77,11 @@ function App() {
     <>
       <Routes>
         <Route path="/" element={<HomePage></HomePage>}></Route>
-        <Route path="/admin/workflow" element={<WorkflowDetail></WorkflowDetail>}></Route>
+        <Route path="/admin/workflows" element={<ListWorkflow></ListWorkflow>}></Route>
+        <Route path="/admin/workflow/create" element={<CreateWorkflow></CreateWorkflow>}></Route>
+        <Route path="/admin/users" element={<ListUsers></ListUsers>}></Route>
+        <Route path="/admin/user/create" element={<CreateUser></CreateUser>}></Route>
+        <Route path="/admin/import" element={<ListImport></ListImport>}></Route>
         <Route path="/user/signin" element={<UserSignIn></UserSignIn>}></Route>
         <Route path="/user/signup" element={<UserSignUp></UserSignUp>}></Route>
         <Route path="/user/getpassword" element={<GetPassword></GetPassword>}></Route>

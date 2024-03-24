@@ -1,12 +1,10 @@
-import { Button, Col, Layout, Menu, Row, Input } from "antd";
+import { Button, Col, Layout, Menu, Row, Input, Tooltip } from "antd";
 
 
 import {
-    AppstoreOutlined,
-    CalendarOutlined,
-    LinkOutlined,
-    MailOutlined,
-    SettingOutlined,
+    FolderOpenOutlined,
+    UserOutlined,
+    BranchesOutlined
 } from '@ant-design/icons';
 import { useState } from "react";
 import { Link } from "react-router-dom";
@@ -23,17 +21,7 @@ export const AdminLeftCommomLayout = ({ children }) => {
             label,
         };
     };
-    const items = [
-        getItem('', '1', <MailOutlined />),
-        getItem('', '2', <CalendarOutlined />),
-        getItem('', 'sub1', <AppstoreOutlined />),
-        getItem('', 'sub2', <SettingOutlined />),
-        getItem(
-            '',
-            'link',
-            <LinkOutlined />,
-        ),
-    ];
+   
     const [mode, setMode] = useState('inline');
     const [theme, setTheme] = useState('light');
     const changeMode = (value) => {
@@ -44,31 +32,43 @@ export const AdminLeftCommomLayout = ({ children }) => {
     };
     return (
         <Menu
-            style={{ width: '100%',height:'100vh' }}
+            style={{ width: '100%', height: '100vh' }}
             defaultSelectedKeys={['1']}
             defaultOpenKeys={['sub1']}
             mode={mode}
             theme={theme}
 
         >
-            <Menu.Item>
+            <Menu.Item style={{ height: '80px' }}>
 
-                <Link to="/shopify" className="menu_left">
-                    <MailOutlined />
+                <Link to="/admin/home" className="menu_left">
+                    <img src="/admin_logo.svg"></img>
                 </Link>
             </Menu.Item>
-            <Menu.Item>
+            <Menu.Item style={{ height: '50px' }}>
 
-                <Link to="/shopify" className="menu_left">
-                    <SettingOutlined />
-                </Link>
-            </Menu.Item>
-            <Menu.Item>
 
-                <Link to="/shopify" className="menu_left">
-                    <CalendarOutlined />
-                </Link>
+                <Tooltip placement="right" title={"Người dùng"}>
+                    <Link to="/admin/users" className="menu_left">
+                        <UserOutlined style={{ fontSize: '25px' }} />
+                    </Link>
+                </Tooltip>
             </Menu.Item>
+            <Menu.Item style={{ height: '50px' }}>
+                <Tooltip placement="right" title={"Nhập dữ liệu"}>
+                    <Link to="/admin/import" className="menu_left">
+                        <FolderOpenOutlined style={{ fontSize: '25px' }} />
+                    </Link>
+                </Tooltip>
+            </Menu.Item>
+            <Menu.Item style={{ height: '50px' }}>
+                <Tooltip placement="right" title={"Workflows"}>
+                    <Link to="/admin/workflows" className="menu_left">
+                        <BranchesOutlined style={{ fontSize: '25px'}} />
+                    </Link>
+                </Tooltip>
+            </Menu.Item>
+            
         </Menu>
     )
 }

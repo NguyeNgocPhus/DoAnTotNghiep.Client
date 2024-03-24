@@ -1,13 +1,13 @@
 import { Comment, Row, Tabs } from "antd";
 import { DiffTwoTone } from '@ant-design/icons';
 import "./styles.css";
-export const NodeTrigger = ({ trigger }) => {
+export const NodeTrigger = ({ node }) => {
 
     const onClickNodeTrigger = () =>{
         console.log("")
     }
     const onDragStart = (event, nodeType) => {
-        event.dataTransfer.setData('application/reactflow', nodeType);
+        event.dataTransfer.setData('type-node', nodeType);
         event.dataTransfer.effectAllowed = 'move';
       };
     return (
@@ -15,13 +15,13 @@ export const NodeTrigger = ({ trigger }) => {
            
             
             <Comment className="dndnode"
-                onDragStart={(event) => onDragStart(event, 'default')} draggable  
+                onDragStart={(event) => onDragStart(event, node.key)} draggable  
                 onClick={onClickNodeTrigger}
-                author={<b>{trigger.name}</b>}
+                author={<b>{node.name}</b>}
                 avatar={<DiffTwoTone  style={{ fontSize: '36px',height:'100%' }}/>}
                 content={
                     <p style={{ fontSize: '12px' }}>
-                       {trigger.description}
+                       {node.description}
                     </p>
                 }
                 

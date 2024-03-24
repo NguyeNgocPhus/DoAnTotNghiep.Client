@@ -8,7 +8,8 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 60px;
+  
+    /* padding-top: 50px !important; */
 }
 .icon-phone{
     position: fixed;

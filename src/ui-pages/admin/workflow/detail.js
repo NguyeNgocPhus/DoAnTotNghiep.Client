@@ -4,7 +4,7 @@ import { CustomEdge } from './customEdge';
 import "./styles.css";
 import 'reactflow/dist/style.css';
 import { Breadcrumb, Button, Col, Drawer, Row, Tabs } from 'antd';
-import { AdminCommomLayout } from '../common/layout/admin/admin-common';
+import { AdminCommomLayout } from '../../common/layout/admin/admin-common';
 import { DownloadOutlined, CloseCircleOutlined } from '@ant-design/icons';
 import { ListNodeDrawer } from './listNodeDrawer';
 import { CustomNode } from './customNode';
