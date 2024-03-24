@@ -2,7 +2,7 @@ import { Comment, Row, Tabs } from "antd";
 import { DownCircleTwoTone } from '@ant-design/icons';
 import "./styles.css";
 
-export const NodeAction = ({ node }) => {
+export const Node = ({ node }) => {
 
     const onClickNodeTrigger = () => {
         console.log("onClickNodeTrigger")

@@ -10,6 +10,7 @@ import { ListNodeDrawer } from './drawer/listNode';
 import { CustomNode } from './customNode';
 import { CustomConnectionLine } from './customConnectionLine';
 import { NodeDetailDrawer } from './drawer/nodeDetail';
+import { nodeTypes } from '../../../helpers/workflowHepler';
 
 // const initialNodes = [
 //     { id: 'a', position: { x: 0, y: 0 }, type: 'custom-node', data: { label: 'Node A', forceToolbarVisible: false } },
@@ -26,9 +27,6 @@ const edgeTypes = {
     'custom-edge': CustomEdge,
 };
 
-const nodeTypes = {
-    'custom-node': CustomNode,
-};
 
 let id = 1;
 const getId = () => `${id++}`;
@@ -155,7 +153,7 @@ export const CreateWorkflow = () => {
             if (typeof type === 'undefined' || !type) {
                 return;
             }
-            console.log("type",type);
+            
             // reactFlowInstance.project was renamed to reactFlowInstance.screenToFlowPosition
             // and you don't need to subtract the reactFlowBounds.left/top anymore
             // details: https://reactflow.dev/whats-new/2023-11-10
@@ -165,10 +163,9 @@ export const CreateWorkflow = () => {
             });
             const newNode = {
                 id: getId(),
-                // type,
+                type,
                 position,
-                type: 'custom-node',
-                data: { label: `${type} node` },
+                data: { label: `${type}` },
             };
 
             setNodes((nds) => nds.concat(newNode));

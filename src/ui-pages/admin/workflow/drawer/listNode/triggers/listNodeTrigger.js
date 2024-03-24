@@ -1,7 +1,7 @@
 import { Col, Drawer, Row, Tabs } from "antd";
-import { NodeTrigger } from "./nodeTrigger";
-import { CloseCircleOutlined } from '@ant-design/icons';
+
 import "./styles.css";
+import { Node } from "../node";
 export const ListNodeTrigger = ({nodes}) => {
 
     
@@ -14,7 +14,7 @@ export const ListNodeTrigger = ({nodes}) => {
                     return (
                         <Col span={24} key={node.key}>
                             <aside>
-                                <NodeTrigger node={node}></NodeTrigger>
+                                <Node node={node}></Node>
                             </aside>
                         </Col>
                     )
