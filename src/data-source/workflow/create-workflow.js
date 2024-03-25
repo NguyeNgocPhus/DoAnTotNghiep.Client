@@ -15,16 +15,26 @@ export const apiCreateWorkflow = async (params) => {
     source = getTokenSource();
  
     try {
-        const response = await POST('/Workflow/Create', {...params}, {
-            //cancelToken: source.token
+        const response = await POST('/api/workflow/create', {...params}, {
+            // cancelToken: source.token
         })
-
-        return {
-            message: "",
-            loading: false,
-            data: response?.data,
-            state: REQUEST_STATE.SUCCESS
+        // console.log("response",response)
+        if(response?.data?.isSuccess === true){
+            return {
+                message: "",
+                loading: false,
+                data: response?.data.value,
+                state: REQUEST_STATE.SUCCESS
+            }
+        }if(response?.data?.isFailure === true) {
+            return {
+                message: response?.data?.error.message,
+                loading: false,
+                token: response?.data?.error.code,
+                state: REQUEST_STATE.ERROR
+            }
         }
+        
     } catch (error) {
 
         return {

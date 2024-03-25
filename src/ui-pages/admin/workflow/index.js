@@ -5,12 +5,14 @@ import 'reactflow/dist/style.css';
 import { Button, Col, Input, Row, Space, Table, Typography, Tag, Dropdown, Modal, Form, Checkbox } from 'antd';
 import { AdminCommomLayout } from '../../common/layout/admin/admin-common';
 import { SearchOutlined, PlusOutlined, DownOutlined } from '@ant-design/icons';
+import { useCreateWorkflow } from '../../../store/workflow/use-create-workflow';
+import { REQUEST_STATE } from '../../../app-config/constants';
 const { Title } = Typography;
 const items = [
   {
     key: '1',
     label: (
-      <Typography.Text style={{padding:'15px'}}>
+      <Typography.Text style={{ padding: '15px' }}>
         1st menu item
       </Typography.Text>
     ),
@@ -18,7 +20,7 @@ const items = [
   {
     key: '2',
     label: (
-      <Typography.Text style={{padding:'15px'}}>
+      <Typography.Text style={{ padding: '15px' }}>
         2st menu item
       </Typography.Text>
     ),
@@ -62,8 +64,8 @@ const columns = [
     render: () => (
       <Space size="middle">
         <Dropdown
-         type="primary"
-         size="large"
+          type="primary"
+          size="large"
           menu={{
             items,
           }}
@@ -106,8 +108,9 @@ export const ListWorkflow = () => {
   const navigate = useNavigate();
 
   // const navigateTo = () => navigate('/admin/workflow/create');
-
+  const [createWorkflowData, requestCreateWorkflow] = useCreateWorkflow();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  // const [loading, setLoading] = useState(false);
   const showModal = () => {
     setIsModalOpen(true);
   };
@@ -119,10 +122,25 @@ export const ListWorkflow = () => {
   };
   const onFinish = (values) => {
     console.log('Success:', values);
+
+    requestCreateWorkflow(values);
   };
   const onFinishFailed = (errorInfo) => {
     console.log('Failed:', errorInfo);
   };
+  useEffect(() => {
+    console.log("createWorkflowData", createWorkflowData);
+    if (createWorkflowData !== null) {
+      if (createWorkflowData.state === REQUEST_STATE.SUCCESS) {
+        
+        navigate(`/admin/workflow/${createWorkflowData.data.definitionId}`);
+      }else if(createWorkflowData.state === REQUEST_STATE.ERROR){
+
+      }else if(createWorkflowData.state === REQUEST_STATE.REQUEST){
+
+      }
+    }
+  }, [createWorkflowData])
   return (
     <AdminCommomLayout>
       <Row style={{ padding: '20px' }} gutter={[0, 32]}>
@@ -153,16 +171,16 @@ export const ListWorkflow = () => {
           <Form.Item
             label="Tên Workflow"
             name="name"
-          
+
           >
-            <Input/>
+            <Input />
           </Form.Item>
 
           <Form.Item
-            label="Tên tag"
-            name="tag"
+            label="Mô tả"
+            name="description"
           >
-            <Input/>
+            <Input />
           </Form.Item>
 
 
