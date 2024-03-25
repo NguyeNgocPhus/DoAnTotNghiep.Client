@@ -14,8 +14,10 @@ export const useProfile = () =>{
         Auth.getMyprofileAsync(setMyprofile);
     }
     useEffect(()=>{
-        setMyprofile({});
-        Auth.cancelGetMyprofile();
+        return ()=>{
+            // setMyprofile({});
+            Auth.cancelGetMyprofile();
+        }
     })
     return [
         myprofile,
