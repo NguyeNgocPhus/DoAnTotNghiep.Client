@@ -36,3 +36,8 @@
   display: flex;
   align-items: center;
 }
+.ant-tabs-nav-wrap{
+  background-color: #f0f0f0;
+  padding-top: 40px;
+ 
+}

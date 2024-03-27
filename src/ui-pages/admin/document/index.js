@@ -1,27 +1,24 @@
-import { useEffect, useState } from 'react';
-import { useNavigate } from "react-router-dom";
 import "./styles.css";
 import 'reactflow/dist/style.css';
-import { Space, Typography, Tag, Dropdown, Tabs } from 'antd';
-import { DownOutlined } from '@ant-design/icons';
-import { ListWorkflowDefinition } from './workflow-definition';
-import { ListWorkflowInstance } from './workflow-instance';
+import { Typography, Tabs } from 'antd';
 import { AdminCommomLayout } from '../../common/layout/admin/admin-common';
+import { ListDocument } from './upload';
+import { ListApprove } from './approve';
 const { Title } = Typography;
 
 var tabs = [
   {
-    label: `Workflow Definition`,
+    label: `Danh sách mẫu nhập`,
     key: 1,
-    children: <ListWorkflowDefinition></ListWorkflowDefinition>,
+    children: <ListDocument></ListDocument>,
   },
   {
-    label: `Workflow Instance`,
+    label: `Phê duyệt dữ liệu`,
     key: 2,
-    children: <ListWorkflowInstance></ListWorkflowInstance>,
+    children: <ListApprove></ListApprove>,
   }
 ]
-export const Workflow = () => {
+export const Document = () => {
 
   
   return (

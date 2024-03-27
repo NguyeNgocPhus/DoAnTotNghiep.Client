@@ -3,11 +3,10 @@ import ReactFlow, { addEdge, useNodesState, useEdgesState, Panel, Background, Co
 import { CustomEdge } from './customEdge';
 import "./styles.css";
 import 'reactflow/dist/style.css';
-import { Breadcrumb, Button, Col, Drawer, Row, Space, Tabs } from 'antd';
+import { Breadcrumb, Button, Col, Row } from 'antd';
 import { AdminCommomLayout } from '../../common/layout/admin/admin-common';
-import { DownloadOutlined, CloseCircleOutlined } from '@ant-design/icons';
+import { DownloadOutlined } from '@ant-design/icons';
 import { ListNodeDrawer } from './drawer/listNode';
-import { CustomNode } from './customNode';
 import { CustomConnectionLine } from './customConnectionLine';
 import { NodeDetailDrawer } from './drawer/nodeDetail';
 import { createWorkflow, nodeTypes } from '../../../helpers/workflowHepler';
