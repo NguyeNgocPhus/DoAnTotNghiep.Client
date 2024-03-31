@@ -17,6 +17,7 @@ export const useUserLogin = () =>{
     useEffect(()=>{
 
         return ()=>{
+            setUserLoginDate({});
             Auth.cancelUserLogin();
         }
     })

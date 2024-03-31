@@ -1,0 +1,5 @@
+.header_list_users{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}

@@ -1,21 +1,25 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import ReactFlow, { addEdge, useNodesState, useEdgesState, Panel, Background, Controls, MarkerType, useReactFlow, BackgroundVariant } from 'reactflow';
-import { CustomEdge } from './customEdge';
+import { CustomEdge } from '../customEdge';
 import "./styles.css";
 import 'reactflow/dist/style.css';
-import { Breadcrumb, Button, Col, Drawer, Row, Tabs } from 'antd';
-import { AdminCommomLayout } from '../../common/layout/admin/admin-common';
-import { DownloadOutlined, CloseCircleOutlined } from '@ant-design/icons';
-import { ListNodeDrawer } from './drawer/listNode';
-import { CustomNode } from './customNode';
-import { CustomConnectionLine } from './customConnectionLine';
-import { NodeDetailDrawer } from './drawer/nodeDetail';
-
-const initialNodes = [
-    { id: 'a', position: { x: 0, y: 0 }, type: 'custom-node', data: { label: 'Node A', forceToolbarVisible: false } },
-    { id: 'b', position: { x: 0, y: 100 }, type: 'custom-node', data: { label: 'Node B', forceToolbarVisible: false } },
-    { id: 'c', position: { x: 0, y: 200 }, type: 'custom-node', data: { label: 'Node C', forceToolbarVisible: false } },
-];
+import { Breadcrumb, Button, Col, Row } from 'antd';
+import { AdminCommomLayout } from '../../../common/layout/admin/admin-common';
+import { ArrowUpOutlined } from '@ant-design/icons';
+import { ListNodeDrawer } from '../drawer/listNode';
+import { CustomConnectionLine } from '../customConnectionLine';
+import { NodeDetailDrawer } from '../drawer/nodeDetail';
+import { generateWfDefinitionForApi, generateWfDefinitionForUI, nodeTypes } from '../../../../helpers/workflowHepler';
+import { v4 as uuidv4 } from 'uuid';
+import { useGetWfDefinition } from '../../../../store/workflow/use-get-wf-definition';
+import { useParams } from 'react-router-dom';
+import { REQUEST_STATE } from '../../../../app-config/constants';
+import { useUpdateWfDefinition } from '../../../../store/workflow/use-update-wf-definition';
+// const initialNodes = [
+//     { id: 'a', position: { x: 0, y: 0 }, type: 'custom-node', data: { label: 'Node A', forceToolbarVisible: false } },
+//     { id: 'b', position: { x: 0, y: 100 }, type: 'custom-node', data: { label: 'Node B', forceToolbarVisible: false } },
+//     { id: 'c', position: { x: 0, y: 200 }, type: 'custom-node', data: { label: 'Node C', forceToolbarVisible: false } },
+// ];
 
 // const initialEdges = [
 //     { id: 'a->b', type: 'custom-edge', source: 'a', target: 'b' },
@@ -25,58 +29,77 @@ const initialNodes = [
 const edgeTypes = {
     'custom-edge': CustomEdge,
 };
+const containerStyle = {
+    position: 'relative',
 
-const nodeTypes = {
-    'custom-node': CustomNode,
+    with: '100vw',
+    height: '100vh',
+};
+const defaultEdgeOptions = {
+    style: { strokeWidth: 1, stroke: 'black' },
+    type: 'floating',
+    markerEnd: {
+        type: MarkerType.ArrowClosed,
+        color: 'black',
+    },
 };
 
-let id = 1;
-const getId = () => `${id++}`;
-export const WorkflowDetail = () => {
+const connectionLineStyle = {
+    strokeWidth: 3,
+    stroke: 'black',
+};
+export const WorkflowDetail = (props) => {
 
+    const { id } = useParams()
     const connectingNodeId = useRef(null);
+
+    const [wfDefinitionApiData, requestWfDefinitionApiData] = useGetWfDefinition();
+    const [updateWfDefinitionApiData, requestUpdateWfDefinitionApiData] = useUpdateWfDefinition();
+
+
+    const [wfDefinition, setWorklfowDefinition] = useState({});
+
     const [openListNodeDrawer, setOpenListNodeDrawer] = useState(false);
     const [openNodeDetailDrawer, setNodeDetailDrawer] = useState(false);
 
     const [nodes, setNodes, onNodesChange] = useNodesState([]);
     const [edges, setEdges, onEdgesChange] = useEdgesState([]);
-    const [text, setText] = useState("");
+
     const { screenToFlowPosition } = useReactFlow();
 
 
     const [reactFlowInstance, setReactFlowInstance] = useState(null);
+
     useEffect(() => {
-        let nodes = initialNodes.map(x => {
-            if (x.type === 'custom-node') {
-                return { ...x, data: { ...x.data, setText: setText } }
-            }
-            return x;
-        })
-        console.log("initialNodes", nodes)
-
-        setNodes(nodes);
+        setNodes([]);
         setEdges([]);
+        
+        requestWfDefinitionApiData({id});
     }, []);
+    useEffect(()=>{
+        if (wfDefinitionApiData.state === REQUEST_STATE.SUCCESS) {
+            console.log('wfDefinitionApiData',wfDefinitionApiData.data)
+            setWorklfowDefinition(wfDefinitionApiData.data);
+            const { initialNodes, initialEdges } = generateWfDefinitionForUI({
+                nodes: wfDefinitionApiData.data.activities,
+                edges: wfDefinitionApiData.data.connections,
+            })
+            setNodes([...initialNodes]);
+            setEdges([...initialEdges]);
 
-    // useEffect(() => {
-    //     console.log("text change", text);
-    // }, [text])
 
-    // const updateNodes = () => {
-    //     setNodes((nds) =>
-    //         nds.map((node) => {
-    //             if (node.type === 'custom-node') {
-    //                 return { ...node, data: { ...node.data, label: "change +1" } }
-    //             }
-    //             return node;
-    //         })
-    //     );
-    // }
+        } else if (wfDefinitionApiData.state === REQUEST_STATE.ERROR) {
 
+        } else if (wfDefinitionApiData.state === REQUEST_STATE.REQUEST) {
+
+        }
+    },[wfDefinitionApiData]);
+
+
+    /// on connect 
     const onConnect = useCallback(
         (connection) => {
-            // console.log("connection ", connection);
-            // console.log("nodes", nodes);
+
             const callBackSetEdge = () => {
                 setEdges((eds) => addEdge(connection, eds));
                 setNodes((nds) => {
@@ -114,66 +137,15 @@ export const WorkflowDetail = () => {
         },
         [setEdges, setNodes],
     );
-
-
     const onConnectStart = useCallback((_, { nodeId }) => {
         connectingNodeId.current = nodeId;
     }, []);
     const onConnectEnd = useCallback((event) => {
-        console.log("event", event);
-        if (!connectingNodeId.current) return;
 
-        const targetIsPane = event.target.classList.contains('react-flow__pane');
-
-        if (targetIsPane) {
-            // we need to remove the wrapper bounds, in order to get the correct position
-            const id = getId();
-            const newNode = {
-                id,
-                position: screenToFlowPosition({
-                    x: event.clientX,
-                    y: event.clientY,
-                }),
-                data: { label: `Node ${id}` },
-                origin: [0.5, 0.0],
-            };
-
-            // setNodes((nds) => {
-            //     console.log("nds", nds.concat(newNode));
-            //     return nds.concat(newNode);
-
-            // });
-            // setEdges((eds) => {
-            //     console.log("eds", eds.concat({ id, source: connectingNodeId.current, target: id }));
-            //     return eds.concat({ id, source: connectingNodeId.current, target: id });
-
-            // }
-            // );
-        }
     }, [screenToFlowPosition]);
 
-    const containerStyle = {
-        position: 'relative',
-        overflow: 'hidden',
-        with: '100vw',
-        height: '100vh',
-    };
 
-    const defaultEdgeOptions = {
-        style: { strokeWidth: 1, stroke: 'black' },
-        type: 'floating',
-        markerEnd: {
-            type: MarkerType.ArrowClosed,
-            color: 'black',
-        },
-    };
-
-    const connectionLineStyle = {
-        strokeWidth: 3,
-        stroke: 'black',
-    };
-
-    /// drag drop
+    /// on drag and drop node
 
     const onDragOver = useCallback((event) => {
         event.preventDefault();
@@ -184,12 +156,15 @@ export const WorkflowDetail = () => {
         (event) => {
             event.preventDefault();
 
-            const type = event.dataTransfer.getData('application/reactflow');
+            const typeNode = event.dataTransfer.getData('type');
+            const nameNode = event.dataTransfer.getData('name');
+            const descNode = event.dataTransfer.getData('description');
 
             // check if the dropped element is valid
-            if (typeof type === 'undefined' || !type) {
+            if (typeof typeNode === 'undefined' || !typeNode) {
                 return;
             }
+
 
             // reactFlowInstance.project was renamed to reactFlowInstance.screenToFlowPosition
             // and you don't need to subtract the reactFlowBounds.left/top anymore
@@ -199,10 +174,10 @@ export const WorkflowDetail = () => {
                 y: event.clientY,
             });
             const newNode = {
-                id: getId(),
-                type,
+                id: uuidv4(),
+                type: typeNode,
                 position,
-                data: { label: `${type} node` },
+                data: { name: `${nameNode}` },
             };
 
             setNodes((nds) => nds.concat(newNode));
@@ -213,7 +188,7 @@ export const WorkflowDetail = () => {
     const { setViewport, zoomIn, zoomOut } = useReactFlow();
     const onNodeClick = useCallback((_, node) => {
         setNodeDetailDrawer(true);
-        console.log(node)
+
         setDataNodeDetail(node);
         setNodes((nodes) =>
 
@@ -222,21 +197,41 @@ export const WorkflowDetail = () => {
                 className: n.id === node.id ? 'highlight' : '',
             }))
         );
-        setViewport({ x: node.position.x, y: node.position.y });
     }, [setNodes, setViewport]);
+
+    // on create workflow
+    const onUpdateWorkflow = () => {
+        const workflow = generateWfDefinitionForApi({
+            nodes,
+            edges,
+            id: wfDefinition.definitionId,
+            name: wfDefinition.name,
+            version: wfDefinition.version
+        });
+        console.log("workflow",workflow);
+        requestUpdateWfDefinitionApiData(workflow);
+
+    }
+    useEffect(()=>{
+        console.log("updateWfDefinitionApiData",updateWfDefinitionApiData);
+    },[updateWfDefinitionApiData])
+
+    
     return (
         <AdminCommomLayout>
+            
             <div >
-                <Row style={{ height: '50px', borderBottom: '1px solid #f0f0f0', alignItems: 'center', paddingLeft: '20px' }}>
+                <Row style={{ height: '50px', borderBottom: '1px solid #f0f0f0', alignItems: 'center', paddingLeft: '20px', paddingRight: '20px' }}>
                     <Col span={12}>
 
                         <Breadcrumb>
-                            <Breadcrumb.Item>Location</Breadcrumb.Item>
-                            <Breadcrumb.Item href="">Application Center</Breadcrumb.Item>
+                            <Breadcrumb.Item>Workflow Definition</Breadcrumb.Item>
+                            {wfDefinition && <Breadcrumb.Item href="">{wfDefinition.name}</Breadcrumb.Item>}
                         </Breadcrumb>
                     </Col>
-                    <Col span={12}>
-                        <Button type="primary" icon={<DownloadOutlined />} />
+                    <Col span={12} style={{ display: 'flex', justifyContent: 'end' }}>
+                        <Button type="primary" onClick={onUpdateWorkflow} icon={<ArrowUpOutlined />} >Xuất bản</Button>
+
                     </Col>
                 </Row>
             </div>

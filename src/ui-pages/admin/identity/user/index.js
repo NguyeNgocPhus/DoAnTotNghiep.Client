@@ -2,9 +2,8 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import "./styles.css";
 import 'reactflow/dist/style.css';
-import {Button, Col, Input, Row, Space, Table, Typography, Tag } from 'antd';
-import { AdminCommomLayout } from '../../common/layout/admin/admin-common';
-import { SearchOutlined , PlusOutlined} from '@ant-design/icons';
+import { Button, Col, Input, Row, Space, Table, Typography, Tag, Modal, Form } from 'antd';
+import { SearchOutlined, PlusOutlined } from '@ant-design/icons';
 const { Title } = Typography;
 const columns = [
     {
@@ -78,30 +77,71 @@ const data = [
     },
 ];
 export const ListUsers = () => {
-
-    const navigate = useNavigate();
-
-    const navigateTo = () => navigate('/admin/user/create');
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const onOpenModal = () => {
+        setIsModalOpen(true);
+    };
+    const handleCancel = () => {
+        setIsModalOpen(false);
+    };
+    const onFinish = (values) => {
+        console.log('Success:', values);
+    };
+    const onFinishFailed = (errorInfo) => {
+        console.log('Failed:', errorInfo);
+    };
     return (
-        <AdminCommomLayout>
-            <Row style={{padding:'20px'}} gutter={[0,32]}>
+        <>
+            <Row style={{ padding: '20px' }}>
                 <Col span={24}>
                     <div className='header_list_users'>
                         <Title level={5}>Danh sách người dùng</Title>
                         <div>
-                            <Button onClick={navigateTo} icon={<PlusOutlined />} type="primary" size="large">Tạo khách hàng mới</Button>
+                            <Button onClick={onOpenModal} icon={<PlusOutlined />} type="primary" size="large">Tạo khách hàng mới</Button>
                         </div>
                     </div>
                 </Col>
                 <Col span={24}>
-                    <Input icon={<SearchOutlined />}  style={{width:'70%'}}  size="large" placeholder="Tìm kiếm theo tên, email hoặc số điện thoại" prefix={<SearchOutlined />} />
+                    <Input icon={<SearchOutlined />} style={{ width: '70%' }} size="large" placeholder="Tìm kiếm theo tên, email hoặc số điện thoại" prefix={<SearchOutlined />} />
                 </Col>
                 <Col span={24}>
                     <Table columns={columns} dataSource={data} />
                 </Col>
             </Row>
+            <Modal title="Tạo flow mới" open={isModalOpen} onCancel={handleCancel} footer={null}>
+                <Form
+                    name="basic"
+                    layout="vertical"
+                    onFinish={onFinish}
+                    onFinishFailed={onFinishFailed}
+                    autoComplete="off"
+                >
+                    <Form.Item
+                        label="Tên Workflow"
+                        name="name"
 
-        </AdminCommomLayout>
+                    >
+                        <Input />
+                    </Form.Item>
+
+                    <Form.Item
+                        label="Mô tả"
+                        name="description"
+                    >
+                        <Input />
+                    </Form.Item>
+
+
+                    <Form.Item >
+                        <Button type="primary" htmlType="submit">
+                            Submit
+                        </Button>
+                    </Form.Item>
+                </Form>
+            </Modal>
+        </>
+
+
 
     );
 }

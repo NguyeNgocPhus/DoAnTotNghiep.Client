@@ -15,6 +15,7 @@ export const useTypeProduct = () =>{
     }
     useEffect(()=>{
         return ()=>{
+            // setListTypeProduct({});
             TYPE_PRODUCT.cancelapiGetAllTypeProduct() 
         }
     },[])

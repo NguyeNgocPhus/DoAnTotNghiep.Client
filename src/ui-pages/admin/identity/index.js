@@ -1,27 +1,24 @@
-import { useEffect, useState } from 'react';
-import { useNavigate } from "react-router-dom";
 import "./styles.css";
 import 'reactflow/dist/style.css';
-import { Space, Typography, Tag, Dropdown, Tabs } from 'antd';
-import { DownOutlined } from '@ant-design/icons';
-import { ListWorkflowDefinition } from './workflow-definition';
-import { ListWorkflowInstance } from './workflow-instance';
+import { Typography, Tabs } from 'antd';
 import { AdminCommomLayout } from '../../common/layout/admin/admin-common';
+import { ListRole } from "./role";
+import { ListUsers } from "./user";
 const { Title } = Typography;
 
 var tabs = [
   {
-    label: `Workflow Definition`,
+    label: `Nhóm người dùng`,
     key: 1,
-    children: <ListWorkflowDefinition></ListWorkflowDefinition>,
+    children: <ListRole></ListRole>,
   },
   {
-    label: `Workflow Instance`,
+    label: `Người dùng`,
     key: 2,
-    children: <ListWorkflowInstance></ListWorkflowInstance>,
+    children: <ListUsers></ListUsers>,
   }
 ]
-export const Workflow = () => {
+export const Identity = () => {
 
   
   return (

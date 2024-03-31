@@ -1,7 +1,9 @@
 import { Button ,Typography} from 'antd';
 import { useCallback, useEffect, useState } from 'react';
 import { Handle, NodeToolbar, Position, useStore, useStoreActions } from 'reactflow';
-
+import { FileAddOutlined } from '@ant-design/icons';
+import "./styles.css";
+import { ApproveIcon } from '../icons/approve_icon';
 const handleStyle = { left: 10 };
 
 export const ApproveNode = ({
@@ -39,16 +41,22 @@ export const ApproveNode = ({
         <div className="text-updater-node">
             {
                 data.forceToolbarVisible &&
-                <div style={{ position: 'absolute', top: '-50%' }}>
+                <div style={{ position: 'absolute', top: '-50%',left:'50%' }}>
                     <button onClick={onClick}>Bước tiếp theo</button>
 
                 </div>
             }
 
             <Handle type="target" position={Position.Top} isConnectable={isConnectable} />
-            <div>
-                <label htmlFor="text">{type}</label>
-                <Typography.Text>{name}</Typography.Text>
+            <div className='node-info'>
+                <div className='node-image'>
+                    <ApproveIcon></ApproveIcon>
+                </div>
+                <div className='node-name'>
+                    <label htmlFor="text">{type}</label>
+                    <Typography.Text>{name}</Typography.Text>
+                </div>
+                
                 {/* <input id="text" name="text" onChange={onChange} className="nodrag" /> */}
             </div>
             {/* {/* <Handle

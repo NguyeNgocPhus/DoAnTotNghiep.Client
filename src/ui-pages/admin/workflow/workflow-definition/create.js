@@ -1,17 +1,18 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import ReactFlow, { addEdge, useNodesState, useEdgesState, Panel, Background, Controls, MarkerType, useReactFlow, BackgroundVariant } from 'reactflow';
-import { CustomEdge } from './customEdge';
+import { CustomEdge } from '../customEdge';
 import "./styles.css";
 import 'reactflow/dist/style.css';
 import { Breadcrumb, Button, Col, Drawer, Row, Space, Tabs } from 'antd';
-import { AdminCommomLayout } from '../../common/layout/admin/admin-common';
+import { AdminCommomLayout } from '../../../common/layout/admin/admin-common';
 import { DownloadOutlined, CloseCircleOutlined } from '@ant-design/icons';
-import { ListNodeDrawer } from './drawer/listNode';
-import { CustomNode } from './customNode';
-import { CustomConnectionLine } from './customConnectionLine';
-import { NodeDetailDrawer } from './drawer/nodeDetail';
-import { nodeTypes } from '../../../helpers/workflowHepler';
-
+import { ListNodeDrawer } from '../drawer/listNode';
+import { CustomNode } from '../customNode';
+import { CustomConnectionLine } from '../customConnectionLine';
+import { NodeDetailDrawer } from '../drawer/nodeDetail';
+import { nodeTypes } from '../../../../helpers/workflowHepler';
+import { v4 as uuidv4 } from 'uuid';
+import { useUpdateWfDefinition } from '../../../../store/workflow/use-update-wf-definition';
 // const initialNodes = [
 //     { id: 'a', position: { x: 0, y: 0 }, type: 'custom-node', data: { label: 'Node A', forceToolbarVisible: false } },
 //     { id: 'b', position: { x: 0, y: 100 }, type: 'custom-node', data: { label: 'Node B', forceToolbarVisible: false } },
@@ -26,10 +27,25 @@ import { nodeTypes } from '../../../helpers/workflowHepler';
 const edgeTypes = {
     'custom-edge': CustomEdge,
 };
+const containerStyle = {
+    position: 'relative',
 
+    with: '100vw',
+    height: '100vh',
+};
+const defaultEdgeOptions = {
+    style: { strokeWidth: 1, stroke: 'black' },
+    type: 'floating',
+    markerEnd: {
+        type: MarkerType.ArrowClosed,
+        color: 'black',
+    },
+};
 
-let id = 1;
-const getId = () => `${id++}`;
+const connectionLineStyle = {
+    strokeWidth: 3,
+    stroke: 'black',
+};
 export const CreateWorkflow = () => {
 
     const connectingNodeId = useRef(null);
@@ -41,6 +57,8 @@ export const CreateWorkflow = () => {
 
     const { screenToFlowPosition } = useReactFlow();
 
+    const [updateWfDefinitionApiData, requestUpdateWfDefinitionApiData] = useUpdateWfDefinition();
+
 
     const [reactFlowInstance, setReactFlowInstance] = useState(null);
     useEffect(() => {
@@ -48,6 +66,7 @@ export const CreateWorkflow = () => {
         setEdges([]);
     }, []);
 
+    /// on connect 
     const onConnect = useCallback(
         (connection) => {
 
@@ -88,55 +107,15 @@ export const CreateWorkflow = () => {
         },
         [setEdges, setNodes],
     );
-
-
     const onConnectStart = useCallback((_, { nodeId }) => {
         connectingNodeId.current = nodeId;
     }, []);
     const onConnectEnd = useCallback((event) => {
-        console.log("event", event);
-        if (!connectingNodeId.current) return;
 
-        const targetIsPane = event.target.classList.contains('react-flow__pane');
-
-        if (targetIsPane) {
-            // we need to remove the wrapper bounds, in order to get the correct position
-            const id = getId();
-            const newNode = {
-                id,
-                position: screenToFlowPosition({
-                    x: event.clientX,
-                    y: event.clientY,
-                }),
-                data: { label: `Node ${id}` },
-                origin: [0.5, 0.0],
-            };
-
-        }
     }, [screenToFlowPosition]);
 
-    const containerStyle = {
-        position: 'relative',
 
-        with: '100vw',
-        height: '100vh',
-    };
-
-    const defaultEdgeOptions = {
-        style: { strokeWidth: 1, stroke: 'black' },
-        type: 'floating',
-        markerEnd: {
-            type: MarkerType.ArrowClosed,
-            color: 'black',
-        },
-    };
-
-    const connectionLineStyle = {
-        strokeWidth: 3,
-        stroke: 'black',
-    };
-
-    /// drag drop
+    /// on drag and drop node
 
     const onDragOver = useCallback((event) => {
         event.preventDefault();
@@ -155,8 +134,8 @@ export const CreateWorkflow = () => {
             if (typeof typeNode === 'undefined' || !typeNode) {
                 return;
             }
-            
-          
+
+
             // reactFlowInstance.project was renamed to reactFlowInstance.screenToFlowPosition
             // and you don't need to subtract the reactFlowBounds.left/top anymore
             // details: https://reactflow.dev/whats-new/2023-11-10
@@ -165,10 +144,10 @@ export const CreateWorkflow = () => {
                 y: event.clientY,
             });
             const newNode = {
-                id: getId(),
-                type : typeNode,
+                id: uuidv4(),
+                type: typeNode,
                 position,
-                data: { name : `${nameNode}`},
+                data: { name: `${nameNode}` },
             };
 
             setNodes((nds) => nds.concat(newNode));
@@ -179,7 +158,7 @@ export const CreateWorkflow = () => {
     const { setViewport, zoomIn, zoomOut } = useReactFlow();
     const onNodeClick = useCallback((_, node) => {
         setNodeDetailDrawer(true);
-       
+
         setDataNodeDetail(node);
         setNodes((nodes) =>
 
@@ -190,14 +169,18 @@ export const CreateWorkflow = () => {
         );
     }, [setNodes, setViewport]);
 
-
-    const onCreateWorkflow = () =>{
-        console.log("nodes",nodes);
-        console.log("edges", edges)
+    // on create workflow
+    const onCreateWorkflow = () => {
+        // const workflow = createWorkflow(nodes, edges);
+        // console.log("workflow", workflow);
+        // requestCreateWorkflow(workflow);
 
     }
+
+    
     return (
         <AdminCommomLayout>
+            
             <div >
                 <Row style={{ height: '50px', borderBottom: '1px solid #f0f0f0', alignItems: 'center', paddingLeft: '20px', paddingRight: '20px' }}>
                     <Col span={12}>

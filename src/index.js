@@ -6,7 +6,6 @@ import 'antd/dist/antd.min.css';
 import { RecoilRoot } from "recoil";
 import { ReactFlowProvider } from "reactflow";
 
-
 ReactDOM.render(
   <RecoilRoot>
     <BrowserRouter>

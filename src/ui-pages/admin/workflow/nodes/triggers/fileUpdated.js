@@ -1,6 +1,8 @@
 import { Button, Typography } from 'antd';
 import { useCallback, useEffect, useState } from 'react';
 import { Handle, NodeToolbar, Position, useStore, useStoreActions } from 'reactflow';
+import { ApproveIcon } from '../icons/approve_icon';
+import { FileUploadIcon } from '../icons/file_upload_icon';
 
 const handleStyle = { left: 10 };
 
@@ -46,9 +48,15 @@ export const FileUploadNode = ({
             }
 
             <Handle type="target" position={Position.Top} isConnectable={isConnectable} />
-            <div>
-                <label htmlFor="text">{type}</label>
-                <Typography.Text>{name}</Typography.Text>
+            <div className='node-info'>
+                <div className='node-image'>
+                    <FileUploadIcon></FileUploadIcon>
+                </div>
+                <div className='node-name'>
+                    <label htmlFor="text">{type}</label>
+                    <Typography.Text>{name}</Typography.Text>
+                </div>
+                
                 {/* <input id="text" name="text" onChange={onChange} className="nodrag" /> */}
             </div>
             {/* {/* <Handle

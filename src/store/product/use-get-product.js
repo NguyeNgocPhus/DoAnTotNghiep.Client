@@ -14,6 +14,7 @@ export const useGetAllProduct = () => {
 
     useEffect(() => {
         return () => {
+            // setListProduct({});
             PRODUCT.cancelapiGetAllProduct();
         }
     }, [])
