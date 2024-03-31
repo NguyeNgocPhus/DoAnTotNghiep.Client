@@ -6,6 +6,7 @@ import { Button, Col, Input, Row, Space, Table, Typography, Tag, Dropdown, Modal
 import { SearchOutlined, PlusOutlined, DownOutlined } from '@ant-design/icons';
 import { REQUEST_STATE } from '../../../../app-config/constants';
 import { useCreateWorkflow } from '../../../../store/workflow/use-create-workflow';
+import { useGetListWfDefinition } from '../../../../store/workflow/use-get-list-wf-definition';
 const { Title } = Typography;
 const items = [
     {
@@ -52,9 +53,9 @@ const columns = [
         ),
     },
     {
-        title: 'count',
-        dataIndex: 'count',
-        key: 'count',
+        title: 'version',
+        dataIndex: 'version',
+        key: 'version',
     },
     {
 
@@ -104,18 +105,16 @@ const data = [
 ];
 export const ListWorkflowDefinition = () => {
 
-    const navigate = useNavigate();
 
-    // const navigateTo = () => navigate('/admin/workflow/create');
     const [createWorkflowData, requestCreateWorkflow] = useCreateWorkflow();
+    const [listWfDefinitionRequestData, requestGetListWfDefinitionData] = useGetListWfDefinition();
+    const [listWfDefinition, setListWfDefinition] = useState([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
     // const [loading, setLoading] = useState(false);
     const showModal = () => {
         setIsModalOpen(true);
     };
-    const handleOk = () => {
-        navigate('/admin/workflow/create');
-    };
+
     const handleCancel = () => {
         setIsModalOpen(false);
     };
@@ -131,7 +130,7 @@ export const ListWorkflowDefinition = () => {
         if (createWorkflowData !== null) {
             if (createWorkflowData.state === REQUEST_STATE.SUCCESS) {
 
-                navigate(`/admin/workflow/${createWorkflowData.data.definitionId}`);
+                // navigate(`/admin/workflow/${createWorkflowData.data.definitionId}`);
             } else if (createWorkflowData.state === REQUEST_STATE.ERROR) {
 
             } else if (createWorkflowData.state === REQUEST_STATE.REQUEST) {
@@ -140,6 +139,37 @@ export const ListWorkflowDefinition = () => {
         }
     }, [createWorkflowData])
 
+    useEffect(() => {
+        if (listWfDefinitionRequestData !== null) {
+            if (listWfDefinitionRequestData.state === REQUEST_STATE.SUCCESS) {
+                let index = 0;
+                var listData = listWfDefinitionRequestData.data.map(x=>{
+                    index = index+1;
+                    return {
+                        id: x.definitionId,
+                        key :  x.definitionId,
+                        status:"publish",
+                        name : x.name,
+                        version : x.version
+                    }
+                });
+                // console.log("listData",listData)
+                setListWfDefinition(listData);
+            } else if (listWfDefinitionRequestData.state === REQUEST_STATE.ERROR) {
+
+            } else if (listWfDefinitionRequestData.state === REQUEST_STATE.REQUEST) {
+
+            }
+        }
+    }, [listWfDefinitionRequestData])
+    
+    
+    useEffect(()=>{
+        requestGetListWfDefinitionData({});
+    },[])
+    useEffect(()=>{
+        console.log("listWfDefinition",listWfDefinition)
+    },[listWfDefinition])
     return (
 
         <>
@@ -156,7 +186,9 @@ export const ListWorkflowDefinition = () => {
                     <Input icon={<SearchOutlined />} style={{ width: '70%' }} size="large" placeholder="Tìm kiếm theo tên, email hoặc số điện thoại" prefix={<SearchOutlined />} />
                 </Col>
                 <Col span={24}>
-                    <Table columns={columns} dataSource={data} />
+                    {listWfDefinition && 
+                        <Table columns={columns} dataSource={listWfDefinition} />
+                    }  
                 </Col>
             </Row>
             <Modal title="Tạo flow mới" open={isModalOpen} onCancel={handleCancel} footer={null}>
