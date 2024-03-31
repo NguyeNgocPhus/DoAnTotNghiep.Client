@@ -1,5 +1,6 @@
 import { REQUEST_STATE } from "../../app-config/constants"
 import { apiCreateWfDefinition, cancelApiCreateWfDefinition } from "../../data-source/workflow/create-wf-definition";
+import { apiDeleteWfDefinition, cancelApiDeleteWfDefinition } from "../../data-source/workflow/delete-wf-definition";
 import { apiGetListWfDefinition, cancelApiGetListWfDefinition } from "../../data-source/workflow/get-list-wf-definition";
 import { apiGetWfDefinition, cancelApiGetWfDefinition } from "../../data-source/workflow/get-wf-definition";
 import { apiUpdateWfDefinition, cancelApiUpdateWfDefinition } from "../../data-source/workflow/update-wf-definition";
@@ -34,6 +35,21 @@ export const WORKFLOW = {
         apiUpdateWfDefinition(params).then((response) => {
             if (response && response.state !== REQUEST_STATE.UNMOUNT) {
                 setUpdateWfDefinitionData(response);
+            }
+        });
+    },
+
+    // delete workflow definition
+    cancelDeleteWfDefinition: cancelApiDeleteWfDefinition,
+    deleteWfDefinitionAsync: function (params, setDeleteWfDefinitionData) {
+        setDeleteWfDefinitionData({
+            state: REQUEST_STATE.REQUEST,
+            message: "",
+            loading: true
+        })
+        apiDeleteWfDefinition(params).then((response) => {
+            if (response && response.state !== REQUEST_STATE.UNMOUNT) {
+                setDeleteWfDefinitionData(response);
             }
         });
     },

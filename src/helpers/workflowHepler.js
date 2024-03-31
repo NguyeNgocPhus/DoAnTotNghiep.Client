@@ -18,10 +18,10 @@ const nodeTypes = {
     'Branch': BranchNode
 };
 
-const generateWfDefinition = ({id, name, version ,nodes,edges}) => {
+const generateWfDefinitionForApi = ({ id, name, version, nodes, edges }) => {
 
     const activities = nodes.map(node => {
-
+    
         return {
             activityId: node.id,
             category: "",
@@ -33,9 +33,9 @@ const generateWfDefinition = ({id, name, version ,nodes,edges}) => {
             type: node.type,
             properties: [
                 {
-                    name: "Path",
+                    name: "Position",
                     expressions: {
-                        Literal: "/api/test"
+                        Literal: JSON.stringify(node.position)
                     }
                 }
             ]
@@ -53,12 +53,12 @@ const generateWfDefinition = ({id, name, version ,nodes,edges}) => {
     let workflow = {
         workflowDefinitionId: id,
         variables: "{}",
-        version : version,
+        version: version,
         publish: true,
         persistenceBehavior: "WorkflowBurst",
         isSingleton: false,
         deleteCompletedInstances: false,
-        description :"",
+        description: "",
         activities: activities,
         connections: connections,
         name: name,
@@ -67,6 +67,43 @@ const generateWfDefinition = ({id, name, version ,nodes,edges}) => {
 
     return workflow;
 }
+const generateWfDefinitionForUI = ({ nodes, edges }) => {
+
+    // const initialNodes = [
+    //     { id: 'a', position: { x: 0, y: 0 }, type: 'custom-node', data: { label: 'Node A', forceToolbarVisible: false } },
+    //     { id: 'b', position: { x: 0, y: 100 }, type: 'custom-node', data: { label: 'Node B', forceToolbarVisible: false } },
+    //     { id: 'c', position: { x: 0, y: 200 }, type: 'custom-node', data: { label: 'Node C', forceToolbarVisible: false } },
+    // ];
+
+    // const initialEdges = [
+    //     { id: 'a->b', type: 'custom-edge', source: 'a', target: 'b' },
+    //     { id: 'b->c', type: 'custom-edge', source: 'b', target: 'c' },
+    // ];
+    const initialNodes = nodes.map(x => {
+        var position = x.properties.find(p=>p.name === "Position").expressions.Literal;
+       
+        return {
+            id: x.activityId,
+            position: JSON.parse(position),
+            type: x.type,
+            data: {
+                name: x.displayName,
+                forceToolbarVisible: false
+            }
+        }
+
+    });
+    const initialEdges = edges.map((x, index) => {
+        return {
+            id: index,
+            type: 'custom-edge',
+            source: x.sourceActivityId,
+            target: x.targetActivityId
+        }
+    });
+    return { initialNodes, initialEdges }
+}
+
 const viewWorkflow = (nodes, edges) => {
 
     const activities = nodes.map(node => {
@@ -117,5 +154,6 @@ const viewWorkflow = (nodes, edges) => {
 
 export {
     nodeTypes,
-    generateWfDefinition
+    generateWfDefinitionForApi,
+    generateWfDefinitionForUI
 }

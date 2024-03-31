@@ -18,6 +18,15 @@ export const updateWfDefinitionState = atom({
         loading:false
     }
 })
+export const deleteWfDefinitionState = atom({
+    key:"DELETE-WF-DEFINITION-STATE",
+    default:{
+        data:{},
+        state:"",
+        message:"",
+        loading:false
+    }
+})
 export const getListWfDefinitionState = atom({
     key:"GET-LIST-WF-DEFINITION-STATE",
     default:{

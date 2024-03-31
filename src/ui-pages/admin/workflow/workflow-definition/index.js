@@ -1,92 +1,86 @@
 import { useEffect, useState } from 'react';
 import "./styles.css";
 import 'reactflow/dist/style.css';
-import { Button, Col, Input, Row, Space, Table, Typography, Tag, Dropdown, Modal, Form, message } from 'antd';
-import { SearchOutlined, PlusOutlined, DownOutlined } from '@ant-design/icons';
+import { Button, Col, Input, Row, Space, Table, Typography, Tag, Dropdown, Modal, Form, message, Popconfirm } from 'antd';
+import { SearchOutlined, PlusOutlined, DownOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import { REQUEST_STATE } from '../../../../app-config/constants';
 import { useCreateWfDefinition } from '../../../../store/workflow/use-create-wf-definition';
 import { useGetListWfDefinition } from '../../../../store/workflow/use-get-list-wf-definition';
 import { useNavigate } from 'react-router-dom';
+import { useDeleteWfDefinition } from '../../../../store/workflow/use-delete-wf-definition';
 const { Title } = Typography;
-const items = [
-    {
-        key: '1',
-        label: (
-            <Typography.Text style={{ padding: '15px' }}>
-                1st menu item
-            </Typography.Text>
-        ),
-    },
-    {
-        key: '2',
-        label: (
-            <Typography.Text style={{ padding: '15px' }}>
-                2st menu item
-            </Typography.Text>
-        ),
-    },
-];
-const columns = [
-    {
-        title: 'Name',
-        dataIndex: 'name',
-        key: 'name',
-        render: (_, { id, name }) => (
-            <>
-                <a href={`/admin/workflow-definition/${id}`}>
-                    {name} - {id}
-                </a>
-
-            </>
-        ),
-    },
-    {
-        title: 'Status',
-        dataIndex: 'status',
-        key: 'status',
-        render: (_, { status }) => (
-            <>
-                <Tag key={status}>
-                    {status}
-                </Tag>
-            </>
-        ),
-    },
-    {
-        title: 'version',
-        dataIndex: 'version',
-        key: 'version',
-    },
-    {
-
-        dataIndex: 'operation',
-        key: 'operation',
-        render: () => (
-            <Space size="middle">
-                <Dropdown
-                    type="primary"
-                    size="large"
-                    menu={{
-                        items,
-                    }}
-                >
-                    <a>
-                        <DownOutlined />
-                    </a>
-                </Dropdown>
-            </Space>
-        ),
-    },
-];
 
 export const ListWorkflowDefinition = () => {
+    const items = [
+        {
+            key: '1',
+            label: (
+                "Sửa"
+            ),
+            icon: <EditOutlined />,
+        },
+        {
+            key: '2',
+            label: (
+                "Xoá"
+            ),
+            icon: <DeleteOutlined />,
+        },
+    ];
+    const columns = [
+        {
+            title: 'Name',
+            dataIndex: 'name',
+            key: 'name',
+            render: (_, { id, name }) => (
+                <>
+                    <a href={`/admin/workflow-definition/${id}`}>
+                        {name} - {id}
+                    </a>
+
+                </>
+            ),
+        },
+        {
+            title: 'Status',
+            dataIndex: 'status',
+            key: 'status',
+            render: (_, { status }) => (
+                <>
+                    <Tag key={status}>
+                        {status}
+                    </Tag>
+                </>
+            ),
+        },
+        {
+            title: 'version',
+            dataIndex: 'version',
+            key: 'version',
+        },
+        {
+            title: '',
+            dataIndex: 'operation',
+            render: (_, record) =>
+                listWfDefinition.length >= 1 ? (
+                    <Popconfirm title="Sure to delete?" onConfirm={() => onConfirmDelete(record.id)}>
+                        <a>Xoá</a>
+                    </Popconfirm>
+                ) : null,
+        },
+    ];
 
     const navigate = useNavigate();
     const [createWfDefinitionApiData, requestCreateWfDefinitionApiData] = useCreateWfDefinition();
     const [listWfDefinitionRequestData, requestGetListWfDefinitionData] = useGetListWfDefinition();
+    const [deleteWfDefinitionApiData, requestDeleteWfDefinitionApiData] = useDeleteWfDefinition();
+
     const [listWfDefinition, setListWfDefinition] = useState([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
-    // const [loading, setLoading] = useState(false);
+
+    const onConfirmDelete = (id) => {
+        requestDeleteWfDefinitionApiData({ id })
+    }
     const showModal = () => {
         setIsModalOpen(true);
     };
@@ -103,7 +97,7 @@ export const ListWorkflowDefinition = () => {
     useEffect(() => {
         if (createWfDefinitionApiData !== null) {
             if (createWfDefinitionApiData.state === REQUEST_STATE.SUCCESS) {
-                console.log("createWfDefinitionApiData",createWfDefinitionApiData);
+                console.log("createWfDefinitionApiData", createWfDefinitionApiData);
                 setIsModalOpen(false);
                 // message.success('Loading finished', 2.5);
                 navigate(`/admin/workflow-definition/${createWfDefinitionApiData.data.definitionId}`)
@@ -120,14 +114,14 @@ export const ListWorkflowDefinition = () => {
         if (listWfDefinitionRequestData !== null) {
             if (listWfDefinitionRequestData.state === REQUEST_STATE.SUCCESS) {
                 let index = 0;
-                var listData = listWfDefinitionRequestData.data.map(x=>{
-                    index = index+1;
+                var listData = listWfDefinitionRequestData.data.map(x => {
+                    index = index + 1;
                     return {
                         id: x.definitionId,
-                        key :  x.definitionId,
-                        status:"publish",
-                        name : x.name,
-                        version : x.version
+                        key: x.definitionId,
+                        status: "publish",
+                        name: x.name,
+                        version: x.version
                     }
                 });
                 // console.log("listData",listData)
@@ -139,18 +133,32 @@ export const ListWorkflowDefinition = () => {
             }
         }
     }, [listWfDefinitionRequestData])
-    
-    
-    useEffect(()=>{
+
+
+    useEffect(() => {
         requestGetListWfDefinitionData({});
-    },[])
-    useEffect(()=>{
-        console.log("listWfDefinition",listWfDefinition)
-    },[listWfDefinition])
+    }, [])
+
+    useEffect(() => {
+        if (deleteWfDefinitionApiData !== null) {
+            if (deleteWfDefinitionApiData.state === REQUEST_STATE.SUCCESS) {
+
+                message.success('delete success', 2.5);
+                console.log("deleteWfDefinitionApiData.data", deleteWfDefinitionApiData)
+                const newListWfDefinition = listWfDefinition.filter(x => x.id !== deleteWfDefinitionApiData.data)
+                setListWfDefinition(newListWfDefinition);
+
+            } else if (deleteWfDefinitionApiData.state === REQUEST_STATE.ERROR) {
+                // message.error('This is an error message');
+            } else if (deleteWfDefinitionApiData.state === REQUEST_STATE.REQUEST) {
+                // message.loading('Action in progress..', 2.5)
+            }
+        }
+    }, [deleteWfDefinitionApiData])
     return (
 
         <>
-            <Row style={{padding:"20px"}}>
+            <Row style={{ padding: "20px" }}>
                 <Col span={24}>
                     <div className='header_list_users'>
                         <Title level={5}>Danh sách Workflow Definition</Title>
@@ -163,9 +171,9 @@ export const ListWorkflowDefinition = () => {
                     <Input icon={<SearchOutlined />} style={{ width: '70%' }} size="large" placeholder="Tìm kiếm theo tên, email hoặc số điện thoại" prefix={<SearchOutlined />} />
                 </Col>
                 <Col span={24}>
-                    {listWfDefinition && 
+                    {listWfDefinition &&
                         <Table columns={columns} dataSource={listWfDefinition} />
-                    }  
+                    }
                 </Col>
             </Row>
             <Modal title="Tạo flow mới" open={isModalOpen} onCancel={handleCancel} footer={null}>

@@ -9,7 +9,7 @@ import { ArrowUpOutlined } from '@ant-design/icons';
 import { ListNodeDrawer } from '../drawer/listNode';
 import { CustomConnectionLine } from '../customConnectionLine';
 import { NodeDetailDrawer } from '../drawer/nodeDetail';
-import { generateWfDefinition, nodeTypes } from '../../../../helpers/workflowHepler';
+import { generateWfDefinitionForApi, generateWfDefinitionForUI, nodeTypes } from '../../../../helpers/workflowHepler';
 import { v4 as uuidv4 } from 'uuid';
 import { useGetWfDefinition } from '../../../../store/workflow/use-get-wf-definition';
 import { useParams } from 'react-router-dom';
@@ -80,8 +80,13 @@ export const WorkflowDetail = (props) => {
         if (wfDefinitionApiData.state === REQUEST_STATE.SUCCESS) {
             console.log('wfDefinitionApiData',wfDefinitionApiData.data)
             setWorklfowDefinition(wfDefinitionApiData.data);
+            const { initialNodes, initialEdges } = generateWfDefinitionForUI({
+                nodes: wfDefinitionApiData.data.activities,
+                edges: wfDefinitionApiData.data.connections,
+            })
+            setNodes([...initialNodes]);
+            setEdges([...initialEdges]);
 
-            
 
         } else if (wfDefinitionApiData.state === REQUEST_STATE.ERROR) {
 
@@ -196,7 +201,7 @@ export const WorkflowDetail = (props) => {
 
     // on create workflow
     const onUpdateWorkflow = () => {
-        const workflow = generateWfDefinition({
+        const workflow = generateWfDefinitionForApi({
             nodes,
             edges,
             id: wfDefinition.definitionId,
