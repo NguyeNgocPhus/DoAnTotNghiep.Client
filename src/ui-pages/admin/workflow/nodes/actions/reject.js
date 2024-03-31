@@ -1,7 +1,8 @@
 import { Button , Typography} from 'antd';
 import { useCallback, useEffect, useState } from 'react';
 import { Handle, NodeToolbar, Position, useStore, useStoreActions } from 'reactflow';
-
+import "./styles.css";
+import { RejectIcon } from '../icons/reject_icon';
 const handleStyle = { left: 10 };
 
 export const RejectNode = ({
@@ -46,9 +47,15 @@ export const RejectNode = ({
             }
 
             <Handle type="target" position={Position.Top} isConnectable={isConnectable} />
-            <div>
-                <label htmlFor="text">{type}</label>
-                <Typography.Text>{name}</Typography.Text>
+            <div className='node-info'>
+                <div className='node-image'>
+                   <RejectIcon></RejectIcon>
+                </div>
+                <div className='node-name'>
+                    <label htmlFor="text">{type}</label>
+                    <Typography.Text>{name}</Typography.Text>
+                </div>
+                
                 {/* <input id="text" name="text" onChange={onChange} className="nodrag" /> */}
             </div>
             {/* {/* <Handle
