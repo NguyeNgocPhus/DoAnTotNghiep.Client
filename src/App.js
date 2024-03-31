@@ -3,7 +3,6 @@ import { Navigate, Route, Routes } from 'react-router-dom';
 import './App.css';
 import { HomePage } from './ui-pages/home';
 
-import { PageProduct } from './ui-pages/products';
 import { UserSignIn } from './ui-pages/auth/signIn';
 import { UserSignUp } from './ui-pages/auth/signUp';
 import { GetPassword } from './ui-pages/auth/getPassword';
@@ -15,17 +14,12 @@ import { Profile } from './ui-pages/profile';
 import { useProfile } from './store/auth/use-my-profile';
 import { Select } from 'antd';
 import { REQUEST_STATE } from './app-config/constants';
-import { ProductDetail } from './ui-pages/products/productDetail';
 import { useTypeProduct } from './store/type-product/use-type-product';
 import  {WorkflowDetail} from './ui-pages/admin/workflow/detail';
-import { ListDocument, ListImport } from './ui-pages/admin/document/upload';
-import { ListUsers } from './ui-pages/admin/user';
-import { CreateUser } from './ui-pages/admin/user/create';
-import { ListWorkflow, Workflow } from './ui-pages/admin/workflow';
+import { Workflow } from './ui-pages/admin/workflow';
 import { CreateWorkflow } from './ui-pages/admin/workflow/create';
-import { ListRole } from './ui-pages/admin/role';
-import { CreateRole } from './ui-pages/admin/role/create';
 import { Document } from './ui-pages/admin/document';
+import { Identity } from './ui-pages/admin/identity';
 const { Option } = Select;
 
 
@@ -83,10 +77,7 @@ function App() {
         <Route path="/admin/workflows" element={<Workflow></Workflow>}></Route>
         <Route path="/admin/workflow/create" element={<CreateWorkflow></CreateWorkflow>}></Route>
         <Route path="/admin/workflow/:id" element={<WorkflowDetail></WorkflowDetail>}></Route>
-        <Route path="/admin/users" element={<ListUsers></ListUsers>}></Route>
-        <Route path="/admin/user/create" element={<CreateUser></CreateUser>}></Route>
-        <Route path="/admin/roles" element={<ListRole></ListRole>}></Route>
-        <Route path="/admin/role/create" element={<CreateRole></CreateRole>}></Route>
+        <Route path="/admin/identity" element={<Identity></Identity>}></Route>
         <Route path="/admin/documents" element={<Document></Document>}></Route>
         <Route path="/user/signin" element={<UserSignIn></UserSignIn>}></Route>
         <Route path="/user/signup" element={<UserSignUp></UserSignUp>}></Route>

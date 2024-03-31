@@ -48,19 +48,13 @@ export const AdminLeftCommomLayout = ({ children }) => {
             </Menu.Item>
            
             <Menu.Item style={{ height: '50px' }}>
-                <Tooltip placement="right" title={"Người dùng"}>
-                    <Link to="/admin/users" className="menu_left">
+                <Tooltip placement="right" title={"Identity"}>
+                    <Link to="/admin/identity" className="menu_left">
                         <UserOutlined style={{ fontSize: '25px' }} />
                     </Link>
                 </Tooltip>
             </Menu.Item>
-            <Menu.Item style={{ height: '50px' }}>
-                <Tooltip placement="right" title={"Nhóm người dùng"}>
-                    <Link to="/admin/roles" className="menu_left">
-                        <UsergroupAddOutlined style={{ fontSize: '25px' }} />
-                    </Link>
-                </Tooltip>
-            </Menu.Item>
+           
             <Menu.Item style={{ height: '50px' }}>
                 <Tooltip placement="right" title={"Nhập dữ liệu"}>
                     <Link to="/admin/documents" className="menu_left">
@@ -72,6 +66,13 @@ export const AdminLeftCommomLayout = ({ children }) => {
                 <Tooltip placement="right" title={"Workflows"}>
                     <Link to="/admin/workflows" className="menu_left">
                         <BranchesOutlined style={{ fontSize: '25px'}} />
+                    </Link>
+                </Tooltip>
+            </Menu.Item>
+            <Menu.Item style={{ height: '50px' }}>
+                <Tooltip placement="right" title={"Workflows"}>
+                    <Link to="/admin/workflows" className="menu_left">
+                        Phú
                     </Link>
                 </Tooltip>
             </Menu.Item>
