@@ -1,18 +1,20 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import ReactFlow, { addEdge, useNodesState, useEdgesState, Panel, Background, Controls, MarkerType, useReactFlow, BackgroundVariant } from 'reactflow';
-import { CustomEdge } from './customEdge';
+import { CustomEdge } from '../customEdge';
 import "./styles.css";
 import 'reactflow/dist/style.css';
-import { Breadcrumb, Button, Col, Drawer, Row, Space, Tabs } from 'antd';
-import { AdminCommomLayout } from '../../common/layout/admin/admin-common';
-import { DownloadOutlined, CloseCircleOutlined } from '@ant-design/icons';
-import { ListNodeDrawer } from './drawer/listNode';
-import { CustomNode } from './customNode';
-import { CustomConnectionLine } from './customConnectionLine';
-import { NodeDetailDrawer } from './drawer/nodeDetail';
-import { createWorkflow, nodeTypes } from '../../../helpers/workflowHepler';
+import { Breadcrumb, Button, Col, Row } from 'antd';
+import { AdminCommomLayout } from '../../../common/layout/admin/admin-common';
+import { ArrowUpOutlined } from '@ant-design/icons';
+import { ListNodeDrawer } from '../drawer/listNode';
+import { CustomConnectionLine } from '../customConnectionLine';
+import { NodeDetailDrawer } from '../drawer/nodeDetail';
+import { generateWfDefinition, nodeTypes } from '../../../../helpers/workflowHepler';
 import { v4 as uuidv4 } from 'uuid';
-import { useCreateWorkflow } from '../../../store/workflow/use-create-workflow';
+import { useGetWfDefinition } from '../../../../store/workflow/use-get-wf-definition';
+import { useParams } from 'react-router-dom';
+import { REQUEST_STATE } from '../../../../app-config/constants';
+import { useUpdateWfDefinition } from '../../../../store/workflow/use-update-wf-definition';
 // const initialNodes = [
 //     { id: 'a', position: { x: 0, y: 0 }, type: 'custom-node', data: { label: 'Node A', forceToolbarVisible: false } },
 //     { id: 'b', position: { x: 0, y: 100 }, type: 'custom-node', data: { label: 'Node B', forceToolbarVisible: false } },
@@ -46,9 +48,17 @@ const connectionLineStyle = {
     strokeWidth: 3,
     stroke: 'black',
 };
-export const CreateWorkflow = () => {
+export const WorkflowDetail = (props) => {
 
+    const { id } = useParams()
     const connectingNodeId = useRef(null);
+
+    const [wfDefinitionApiData, requestWfDefinitionApiData] = useGetWfDefinition();
+    const [updateWfDefinitionApiData, requestUpdateWfDefinitionApiData] = useUpdateWfDefinition();
+
+
+    const [wfDefinition, setWorklfowDefinition] = useState({});
+
     const [openListNodeDrawer, setOpenListNodeDrawer] = useState(false);
     const [openNodeDetailDrawer, setNodeDetailDrawer] = useState(false);
 
@@ -57,14 +67,29 @@ export const CreateWorkflow = () => {
 
     const { screenToFlowPosition } = useReactFlow();
 
-    const [createWorkflowData, requestCreateWorkflow] = useCreateWorkflow();
-
 
     const [reactFlowInstance, setReactFlowInstance] = useState(null);
+
     useEffect(() => {
         setNodes([]);
         setEdges([]);
+        
+        requestWfDefinitionApiData({id});
     }, []);
+    useEffect(()=>{
+        if (wfDefinitionApiData.state === REQUEST_STATE.SUCCESS) {
+            console.log('wfDefinitionApiData',wfDefinitionApiData.data)
+            setWorklfowDefinition(wfDefinitionApiData.data);
+
+            
+
+        } else if (wfDefinitionApiData.state === REQUEST_STATE.ERROR) {
+
+        } else if (wfDefinitionApiData.state === REQUEST_STATE.REQUEST) {
+
+        }
+    },[wfDefinitionApiData]);
+
 
     /// on connect 
     const onConnect = useCallback(
@@ -170,11 +195,21 @@ export const CreateWorkflow = () => {
     }, [setNodes, setViewport]);
 
     // on create workflow
-    const onCreateWorkflow = () => {
-        const workflow = createWorkflow(nodes, edges);
-        requestCreateWorkflow(workflow);
+    const onUpdateWorkflow = () => {
+        const workflow = generateWfDefinition({
+            nodes,
+            edges,
+            id: wfDefinition.definitionId,
+            name: wfDefinition.name,
+            version: wfDefinition.version
+        });
+        console.log("workflow",workflow);
+        requestUpdateWfDefinitionApiData(workflow);
 
     }
+    useEffect(()=>{
+        console.log("updateWfDefinitionApiData",updateWfDefinitionApiData);
+    },[updateWfDefinitionApiData])
 
     
     return (
@@ -185,12 +220,12 @@ export const CreateWorkflow = () => {
                     <Col span={12}>
 
                         <Breadcrumb>
-                            <Breadcrumb.Item>Location</Breadcrumb.Item>
-                            <Breadcrumb.Item href="">Application Center</Breadcrumb.Item>
+                            <Breadcrumb.Item>Workflow Definition</Breadcrumb.Item>
+                            {wfDefinition && <Breadcrumb.Item href="">{wfDefinition.name}</Breadcrumb.Item>}
                         </Breadcrumb>
                     </Col>
                     <Col span={12} style={{ display: 'flex', justifyContent: 'end' }}>
-                        <Button type="primary" onClick={onCreateWorkflow} icon={<DownloadOutlined />} >Xuất bản</Button>
+                        <Button type="primary" onClick={onUpdateWorkflow} icon={<ArrowUpOutlined />} >Xuất bản</Button>
 
                     </Col>
                 </Row>

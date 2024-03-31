@@ -38,6 +38,14 @@ export const POST = async (path, params, option = {}) => {
 
 
 }
+export const PUT = async (path, params, option = {}) => {
+    const _url = Configs.BASE_API + path;
+    const _option = getOptions(option);
+
+    return await axios.put(_url, params, _option);
+
+
+}
 export const GET = async (path, params = {}, option = {}) => {
     const _params = params ? Object.keys(params).map(key => {
         let valueParam = params[key];

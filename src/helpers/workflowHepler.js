@@ -18,7 +18,56 @@ const nodeTypes = {
     'Branch': BranchNode
 };
 
-const createWorkflow = (nodes, edges) => {
+const generateWfDefinition = ({id, name, version ,nodes,edges}) => {
+
+    const activities = nodes.map(node => {
+
+        return {
+            activityId: node.id,
+            category: "",
+            displayName: node.data.name,
+            loadWorkflowContext: false,
+            persistWorkflow: false,
+            propertyStorageProviders: {},
+            saveWorkflowContext: false,
+            type: node.type,
+            properties: [
+                {
+                    name: "Path",
+                    expressions: {
+                        Literal: "/api/test"
+                    }
+                }
+            ]
+        }
+    });
+    const connections = edges.map(edge => {
+
+        return {
+            outcome: "DONE",
+            sourceActivityId: edge.source,
+            targetActivityId: edge.target
+        }
+    });
+
+    let workflow = {
+        workflowDefinitionId: id,
+        variables: "{}",
+        version : version,
+        publish: true,
+        persistenceBehavior: "WorkflowBurst",
+        isSingleton: false,
+        deleteCompletedInstances: false,
+        description :"",
+        activities: activities,
+        connections: connections,
+        name: name,
+        displayName: name
+    };
+
+    return workflow;
+}
+const viewWorkflow = (nodes, edges) => {
 
     const activities = nodes.map(node => {
 
@@ -68,5 +117,5 @@ const createWorkflow = (nodes, edges) => {
 
 export {
     nodeTypes,
-    createWorkflow
+    generateWfDefinition
 }

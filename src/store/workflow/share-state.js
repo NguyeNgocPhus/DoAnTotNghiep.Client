@@ -1,9 +1,18 @@
 import {atom} from "recoil";
 
-export const createWorkflowState = atom({
-    key:"CREATE-WORKFLOW-STATE",
+export const createWfDefinitionState = atom({
+    key:"CREATE-WF-DEFINITION-STATE",
     default:{
-        data:[],
+        data:{},
+        state:"",
+        message:"",
+        loading:false
+    }
+})
+export const updateWfDefinitionState = atom({
+    key:"UPDATE-WF-DEFINITION-STATE",
+    default:{
+        data:{},
         state:"",
         message:"",
         loading:false
@@ -11,6 +20,15 @@ export const createWorkflowState = atom({
 })
 export const getListWfDefinitionState = atom({
     key:"GET-LIST-WF-DEFINITION-STATE",
+    default:{
+        data:[],
+        state:"",
+        message:"",
+        loading:false
+    }
+})
+export const getWfDefinitionState = atom({
+    key:"GET-WF-DEFINITION-STATE",
     default:{
         data:[],
         state:"",

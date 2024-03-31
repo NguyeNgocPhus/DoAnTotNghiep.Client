@@ -15,9 +15,9 @@ import { useProfile } from './store/auth/use-my-profile';
 import { Select } from 'antd';
 import { REQUEST_STATE } from './app-config/constants';
 import { useTypeProduct } from './store/type-product/use-type-product';
-import  {WorkflowDetail} from './ui-pages/admin/workflow/detail';
+import  {WorkflowDetail} from './ui-pages/admin/workflow/workflow-definition/detail';
 import { Workflow } from './ui-pages/admin/workflow';
-import { CreateWorkflow } from './ui-pages/admin/workflow/create';
+import { CreateWorkflow } from './ui-pages/admin/workflow/workflow-definition/create';
 import { Document } from './ui-pages/admin/document';
 import { Identity } from './ui-pages/admin/identity';
 const { Option } = Select;
@@ -76,7 +76,7 @@ function App() {
         <Route path="/" element={<HomePage></HomePage>}></Route>
         <Route path="/admin/workflows" element={<Workflow></Workflow>}></Route>
         <Route path="/admin/workflow/create" element={<CreateWorkflow></CreateWorkflow>}></Route>
-        <Route path="/admin/workflow/:id" element={<WorkflowDetail></WorkflowDetail>}></Route>
+        <Route path="/admin/workflow-definition/:id" element={<WorkflowDetail></WorkflowDetail>}></Route>
         <Route path="/admin/identity" element={<Identity></Identity>}></Route>
         <Route path="/admin/documents" element={<Document></Document>}></Route>
         <Route path="/user/signin" element={<UserSignIn></UserSignIn>}></Route>

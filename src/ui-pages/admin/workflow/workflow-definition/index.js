@@ -1,12 +1,12 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from 'react';
 import "./styles.css";
 import 'reactflow/dist/style.css';
-import { Button, Col, Input, Row, Space, Table, Typography, Tag, Dropdown, Modal, Form, Checkbox, Tabs } from 'antd';
+import { Button, Col, Input, Row, Space, Table, Typography, Tag, Dropdown, Modal, Form, message } from 'antd';
 import { SearchOutlined, PlusOutlined, DownOutlined } from '@ant-design/icons';
 import { REQUEST_STATE } from '../../../../app-config/constants';
-import { useCreateWorkflow } from '../../../../store/workflow/use-create-workflow';
+import { useCreateWfDefinition } from '../../../../store/workflow/use-create-wf-definition';
 import { useGetListWfDefinition } from '../../../../store/workflow/use-get-list-wf-definition';
+import { useNavigate } from 'react-router-dom';
 const { Title } = Typography;
 const items = [
     {
@@ -33,7 +33,7 @@ const columns = [
         key: 'name',
         render: (_, { id, name }) => (
             <>
-                <a href={`/admin/workflow/${id}`}>
+                <a href={`/admin/workflow-definition/${id}`}>
                     {name} - {id}
                 </a>
 
@@ -78,35 +78,11 @@ const columns = [
         ),
     },
 ];
-const data = [
-    {
-        id: '1',
-        key: '1',
-        name: 'Cuộc hội thoại được tạo',
-        status: 'Xuất bản',
-        count: 1
 
-    },
-    {
-        id: '2',
-        key: '2',
-        name: 'Tải lên - Báo cáo TCKT',
-        status: 'Xuất bản',
-        count: 0
-    },
-    {
-        id: '3',
-        key: '3',
-        name: 'Tải lên - Báo cáo QTKD',
-        status: 'Nháp',
-        count: 3
-    },
-
-];
 export const ListWorkflowDefinition = () => {
 
-
-    const [createWorkflowData, requestCreateWorkflow] = useCreateWorkflow();
+    const navigate = useNavigate();
+    const [createWfDefinitionApiData, requestCreateWfDefinitionApiData] = useCreateWfDefinition();
     const [listWfDefinitionRequestData, requestGetListWfDefinitionData] = useGetListWfDefinition();
     const [listWfDefinition, setListWfDefinition] = useState([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -119,25 +95,26 @@ export const ListWorkflowDefinition = () => {
         setIsModalOpen(false);
     };
     const onFinish = (values) => {
-        console.log('Success:', values);
-
-        requestCreateWorkflow(values);
+        requestCreateWfDefinitionApiData(values);
     };
     const onFinishFailed = (errorInfo) => {
         console.log('Failed:', errorInfo);
     };
     useEffect(() => {
-        if (createWorkflowData !== null) {
-            if (createWorkflowData.state === REQUEST_STATE.SUCCESS) {
+        if (createWfDefinitionApiData !== null) {
+            if (createWfDefinitionApiData.state === REQUEST_STATE.SUCCESS) {
+                console.log("createWfDefinitionApiData",createWfDefinitionApiData);
+                setIsModalOpen(false);
+                // message.success('Loading finished', 2.5);
+                navigate(`/admin/workflow-definition/${createWfDefinitionApiData.data.definitionId}`)
 
-                // navigate(`/admin/workflow/${createWorkflowData.data.definitionId}`);
-            } else if (createWorkflowData.state === REQUEST_STATE.ERROR) {
-
-            } else if (createWorkflowData.state === REQUEST_STATE.REQUEST) {
-
+            } else if (createWfDefinitionApiData.state === REQUEST_STATE.ERROR) {
+                // message.error('This is an error message');
+            } else if (createWfDefinitionApiData.state === REQUEST_STATE.REQUEST) {
+                // message.loading('Action in progress..', 2.5)
             }
         }
-    }, [createWorkflowData])
+    }, [createWfDefinitionApiData])
 
     useEffect(() => {
         if (listWfDefinitionRequestData !== null) {
