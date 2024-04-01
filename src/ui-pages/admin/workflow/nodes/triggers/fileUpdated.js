@@ -46,8 +46,6 @@ export const FileUploadNode = ({
 
                 </div>
             }
-
-            <Handle type="target" position={Position.Top} isConnectable={isConnectable} />
             <div className='node-info'>
                 <div className='node-image'>
                     <FileUploadIcon></FileUploadIcon>

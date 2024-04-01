@@ -3,7 +3,7 @@ import ReactFlow, { addEdge, useNodesState, useEdgesState, Panel, Background, Co
 import { CustomEdge } from '../customEdge';
 import "./styles.css";
 import 'reactflow/dist/style.css';
-import { Breadcrumb, Button, Col, Row } from 'antd';
+import { Breadcrumb, Button, Col, Row, Spin, notification } from 'antd';
 import { AdminCommomLayout } from '../../../common/layout/admin/admin-common';
 import { ArrowUpOutlined } from '@ant-design/icons';
 import { ListNodeDrawer } from '../drawer/listNode';
@@ -33,7 +33,7 @@ const containerStyle = {
     position: 'relative',
 
     with: '100vw',
-    height: '100vh',
+    height: 'calc(100vh - 50px)',
 };
 const defaultEdgeOptions = {
     style: { strokeWidth: 1, stroke: 'black' },
@@ -58,6 +58,7 @@ export const WorkflowDetail = (props) => {
 
 
     const [wfDefinition, setWorklfowDefinition] = useState({});
+    const [loading, setLoading] = useState(false);
 
     const [openListNodeDrawer, setOpenListNodeDrawer] = useState(false);
     const [openNodeDetailDrawer, setNodeDetailDrawer] = useState(false);
@@ -73,12 +74,12 @@ export const WorkflowDetail = (props) => {
     useEffect(() => {
         setNodes([]);
         setEdges([]);
-        
-        requestWfDefinitionApiData({id});
+
+        requestWfDefinitionApiData({ id });
     }, []);
-    useEffect(()=>{
+    useEffect(() => {
         if (wfDefinitionApiData.state === REQUEST_STATE.SUCCESS) {
-            console.log('wfDefinitionApiData',wfDefinitionApiData.data)
+            console.log('wfDefinitionApiData', wfDefinitionApiData.data)
             setWorklfowDefinition(wfDefinitionApiData.data);
             const { initialNodes, initialEdges } = generateWfDefinitionForUI({
                 nodes: wfDefinitionApiData.data.activities,
@@ -93,7 +94,7 @@ export const WorkflowDetail = (props) => {
         } else if (wfDefinitionApiData.state === REQUEST_STATE.REQUEST) {
 
         }
-    },[wfDefinitionApiData]);
+    }, [wfDefinitionApiData]);
 
 
     /// on connect 
@@ -208,65 +209,75 @@ export const WorkflowDetail = (props) => {
             name: wfDefinition.name,
             version: wfDefinition.version
         });
-        console.log("workflow",workflow);
+        console.log("workflow", workflow);
         requestUpdateWfDefinitionApiData(workflow);
 
     }
-    useEffect(()=>{
-        console.log("updateWfDefinitionApiData",updateWfDefinitionApiData);
-    },[updateWfDefinitionApiData])
+    useEffect(() => {
+        if (updateWfDefinitionApiData.state === REQUEST_STATE.SUCCESS) {
+            setLoading(false);
+            notification.success({
+                message: "Cập nhật thành công",
+                duration: 1,
+            })
+        } else if (updateWfDefinitionApiData.state === REQUEST_STATE.ERROR) {
 
-    
+        } else if (updateWfDefinitionApiData.state === REQUEST_STATE.REQUEST) {
+            setLoading(true);
+        }
+    }, [updateWfDefinitionApiData])
+
+
     return (
         <AdminCommomLayout>
-            
-            <div >
-                <Row style={{ height: '50px', borderBottom: '1px solid #f0f0f0', alignItems: 'center', paddingLeft: '20px', paddingRight: '20px' }}>
-                    <Col span={12}>
+            <Spin size="large" spinning={loading}>
+                <div >
+                    <Row style={{ height: '50px', borderBottom: '1px solid #f0f0f0', alignItems: 'center', paddingLeft: '20px', paddingRight: '20px' }}>
+                        <Col span={12}>
 
-                        <Breadcrumb>
-                            <Breadcrumb.Item>Workflow Definition</Breadcrumb.Item>
-                            {wfDefinition && <Breadcrumb.Item href="">{wfDefinition.name}</Breadcrumb.Item>}
-                        </Breadcrumb>
-                    </Col>
-                    <Col span={12} style={{ display: 'flex', justifyContent: 'end' }}>
-                        <Button type="primary" onClick={onUpdateWorkflow} icon={<ArrowUpOutlined />} >Xuất bản</Button>
+                            <Breadcrumb>
+                                <Breadcrumb.Item>Workflow Definition</Breadcrumb.Item>
+                                {wfDefinition && <Breadcrumb.Item href="">{wfDefinition.name}</Breadcrumb.Item>}
+                            </Breadcrumb>
+                        </Col>
+                        <Col span={12} style={{ display: 'flex', justifyContent: 'end' }}>
+                            <Button type="primary" onClick={onUpdateWorkflow} icon={<ArrowUpOutlined />} >Xuất bản</Button>
 
-                    </Col>
-                </Row>
-            </div>
-            <div style={containerStyle}>
-                <ReactFlow
-                    nodes={nodes}
-                    edges={edges}
-                    onNodesChange={onNodesChange}
-                    onEdgesChange={onEdgesChange}
-                    defaultEdgeOptions={defaultEdgeOptions}
-                    onInit={setReactFlowInstance}
-                    onConnect={onConnect}
-                    onConnectStart={onConnectStart}
-                    onConnectEnd={onConnectEnd}
-                    onNodeClick={onNodeClick}
-                    edgeTypes={edgeTypes}
-                    nodeTypes={nodeTypes}
-                    fitView
-                    connectionLineStyle={connectionLineStyle}
-                    connectionLineComponent={CustomConnectionLine}
-                    preventScrolling={false}
-                    onDrop={onDrop}
-                    onDragOver={onDragOver}
-                >
-                    <Panel position="top-left" onClick={() => { setOpenListNodeDrawer(true) }}>
-                        <Button size='large'>Add Node</Button>
-                    </Panel>
-                    <Controls showInteractive={false} />
-                    <ListNodeDrawer open={openListNodeDrawer} onClose={() => { setOpenListNodeDrawer(false) }}></ListNodeDrawer>
-                    <NodeDetailDrawer open={openNodeDetailDrawer} data={dataNodeDetail} onClose={() => { setNodeDetailDrawer(false) }}></NodeDetailDrawer>
+                        </Col>
+                    </Row>
+                </div>
+                <div style={containerStyle}>
+                    <ReactFlow
+                        nodes={nodes}
+                        edges={edges}
+                        onNodesChange={onNodesChange}
+                        onEdgesChange={onEdgesChange}
+                        defaultEdgeOptions={defaultEdgeOptions}
+                        onInit={setReactFlowInstance}
+                        onConnect={onConnect}
+                        onConnectStart={onConnectStart}
+                        onConnectEnd={onConnectEnd}
+                        onNodeClick={onNodeClick}
+                        edgeTypes={edgeTypes}
+                        nodeTypes={nodeTypes}
+                        fitView
+                        connectionLineStyle={connectionLineStyle}
+                        connectionLineComponent={CustomConnectionLine}
+                        preventScrolling={false}
+                        onDrop={onDrop}
+                        onDragOver={onDragOver}
+                    >
+                        <Panel position="top-left" onClick={() => { setOpenListNodeDrawer(true) }}>
+                            <Button size='large'>Add Node</Button>
+                        </Panel>
+                        <Controls showInteractive={false} />
+                        <ListNodeDrawer open={openListNodeDrawer} onClose={() => { setOpenListNodeDrawer(false) }}></ListNodeDrawer>
+                        <NodeDetailDrawer open={openNodeDetailDrawer} data={dataNodeDetail} onClose={() => { setNodeDetailDrawer(false) }}></NodeDetailDrawer>
 
-                    <Background variant={BackgroundVariant.Dots} />
-                </ReactFlow>
-            </div>
-
+                        <Background variant={BackgroundVariant.Dots} />
+                    </ReactFlow>
+                </div>
+            </Spin>
         </AdminCommomLayout>
 
     );
