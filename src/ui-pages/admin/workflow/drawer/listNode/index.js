@@ -19,13 +19,13 @@ export const ListNodeDrawer = ({ open, onClose }) => {
             name: "Tài liệu được đẩy lên",
             description: "Kích hoạt khi có tài liệu được đẩy lên hệ thống"
         },
-        {
-            image: "",
-            type: "trigger",
-            key: "HttpEndpoint",
-            name: "Cuộc gọi API",
-            description: "Kích hoạt khi có HTTP request được gửi đến"
-        },
+        // {
+        //     image: "",
+        //     type: "trigger",
+        //     key: "HttpEndpoint",
+        //     name: "Cuộc gọi API",
+        //     description: "Kích hoạt khi có HTTP request được gửi đến"
+        // },
         {
             image: "",
             type: "trigger",
@@ -66,7 +66,7 @@ export const ListNodeDrawer = ({ open, onClose }) => {
             type: "action",
             key: "Branch",
             name: "Luồng rẽ nhanh",
-            description: "Thực hiện luồng công việc phân nhánh thành nhiều nhánh"
+            description: "Thực hiện luồng công việc phân nhánh"
         }
     ]
     const listNodeTrigger = listNode.filter(x=>x.type === "trigger");

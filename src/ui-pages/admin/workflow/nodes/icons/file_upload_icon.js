@@ -9,7 +9,7 @@ export const FileUploadIcon = () => {
 
 
     return (
-        <div className="approve_icon">
+        <div className="node_icon node_trigger_icon">
            <FileAddOutlined style={{color:'white'}}/>
         </div>
     );

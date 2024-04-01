@@ -8,7 +8,7 @@ export const SendEmailIcon = () => {
 
 
     return (
-        <div className="approve_icon">
+        <div className="node_icon node_action_icon">
            <SendOutlined style={{color:'white'}}/>
         </div>
     );

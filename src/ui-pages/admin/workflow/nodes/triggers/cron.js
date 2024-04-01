@@ -1,6 +1,7 @@
 import { Button, Typography } from 'antd';
 import { useCallback, useEffect, useState } from 'react';
 import { Handle, NodeToolbar, Position, useStore, useStoreActions } from 'reactflow';
+import { CronIcon } from '../icons/cron_icon';
 
 const handleStyle = { left: 10 };
 
@@ -46,9 +47,15 @@ export const CronNode = ({
             }
 
             <Handle type="target" position={Position.Top} isConnectable={isConnectable} />
-            <div>
-                <label htmlFor="text">{type}</label>
-                <Typography.Text>{name}</Typography.Text>
+            <div className='node-info'>
+                <div className='node-image'>
+                    <CronIcon></CronIcon>
+                </div>
+                <div className='node-name'>
+                    <label htmlFor="text">{type}</label>
+                    <Typography.Text>{name}</Typography.Text>
+                </div>
+                
                 {/* <input id="text" name="text" onChange={onChange} className="nodrag" /> */}
             </div>
             {/* {/* <Handle

@@ -1,8 +1,59 @@
 import { Comment, Row, Tabs } from "antd";
 import { DownCircleTwoTone } from '@ant-design/icons';
 import "./styles.css";
+import { ApproveIcon } from "../../nodes/icons/approve_icon";
+import { RejectIcon } from "../../nodes/icons/reject_icon";
+import { BranchIcon } from "../../nodes/icons/branch_icon";
+import { SendEmailIcon } from "../../nodes/icons/send_email_icon";
+import { FileUploadIcon } from "../../nodes/icons/file_upload_icon";
+import { ConditionIcon } from "../../nodes/icons/condition_icon";
+import { CronIcon } from "../../nodes/icons/cron_icon";
 
 export const Node = ({ node }) => {
+    console.log("node", node)
+    let avatar = (
+        <DownCircleTwoTone style={{ fontSize: '36px', height: '100%' }} />
+    );
+    switch (node.key) {
+        case "Approve":
+            avatar = (
+                <ApproveIcon style={{ fontSize: '36px', height: '100%' }} />
+            );
+
+            break;
+        case "Cron":
+            avatar = (
+                <CronIcon style={{ fontSize: '36px', height: '100%' }} />
+            );
+            break;
+        case "Reject":
+            avatar = (
+                <RejectIcon style={{ fontSize: '36px', height: '100%' }} />
+            );
+            break;
+        case "Condition":
+            avatar = (
+                <ConditionIcon style={{ fontSize: '36px', height: '100%' }} />
+            );
+            break;
+        case "Branch":
+            avatar = (
+                <BranchIcon style={{ fontSize: '36px', height: '100%' }} />
+            );
+            break;
+        case "SendEmail":
+            avatar = (
+                <SendEmailIcon style={{ fontSize: '36px', height: '100%' }} />
+            );
+            break;
+        case "FileUpload":
+            avatar = (
+                <FileUploadIcon style={{ fontSize: '36px', height: '100%' }} />
+            );
+            break;
+        default:
+
+    }
 
     const onClickNodeTrigger = () => {
         console.log("onClickNodeTrigger")
@@ -19,7 +70,7 @@ export const Node = ({ node }) => {
                 onDragStart={(event) => onDragStart(event, node.key, node.name, node.description)} draggable
                 onClick={onClickNodeTrigger}
                 author={<b>{node.name}</b>}
-                avatar={<DownCircleTwoTone style={{ fontSize: '36px', height: '100%' }} />}
+                avatar={avatar}
                 content={
                     <p style={{ fontSize: '12px' }}>
                         {node.description}
