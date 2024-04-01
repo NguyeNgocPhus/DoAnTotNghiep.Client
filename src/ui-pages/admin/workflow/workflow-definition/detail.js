@@ -15,6 +15,7 @@ import { useGetWfDefinition } from '../../../../store/workflow/use-get-wf-defini
 import { useParams } from 'react-router-dom';
 import { REQUEST_STATE } from '../../../../app-config/constants';
 import { useUpdateWfDefinition } from '../../../../store/workflow/use-update-wf-definition';
+import dagre from 'dagre';
 // const initialNodes = [
 //     { id: 'a', position: { x: 0, y: 0 }, type: 'custom-node', data: { label: 'Node A', forceToolbarVisible: false } },
 //     { id: 'b', position: { x: 0, y: 100 }, type: 'custom-node', data: { label: 'Node B', forceToolbarVisible: false } },
@@ -62,10 +63,11 @@ export const WorkflowDetail = (props) => {
 
     const [openListNodeDrawer, setOpenListNodeDrawer] = useState(false);
     const [openNodeDetailDrawer, setNodeDetailDrawer] = useState(false);
+    const [dataNodeDetail, setDataNodeDetail] = useState({});
 
     const [nodes, setNodes, onNodesChange] = useNodesState([]);
     const [edges, setEdges, onEdgesChange] = useEdgesState([]);
-
+    const { setViewport, zoomIn, zoomOut } = useReactFlow();
     const { screenToFlowPosition } = useReactFlow();
 
 
@@ -77,9 +79,11 @@ export const WorkflowDetail = (props) => {
 
         requestWfDefinitionApiData({ id });
     }, []);
+
+    // on load workflow on first
     useEffect(() => {
         if (wfDefinitionApiData.state === REQUEST_STATE.SUCCESS) {
-            console.log('wfDefinitionApiData', wfDefinitionApiData.data)
+
             setWorklfowDefinition(wfDefinitionApiData.data);
             const { initialNodes, initialEdges } = generateWfDefinitionForUI({
                 nodes: wfDefinitionApiData.data.activities,
@@ -87,12 +91,13 @@ export const WorkflowDetail = (props) => {
             })
             setNodes([...initialNodes]);
             setEdges([...initialEdges]);
+            setLoading(false);
 
 
         } else if (wfDefinitionApiData.state === REQUEST_STATE.ERROR) {
 
         } else if (wfDefinitionApiData.state === REQUEST_STATE.REQUEST) {
-
+            setLoading(true);
         }
     }, [wfDefinitionApiData]);
 
@@ -147,7 +152,6 @@ export const WorkflowDetail = (props) => {
 
 
     /// on drag and drop node
-
     const onDragOver = useCallback((event) => {
         event.preventDefault();
         event.dataTransfer.dropEffect = 'move';
@@ -185,8 +189,9 @@ export const WorkflowDetail = (props) => {
         },
         [reactFlowInstance],
     );
-    const [dataNodeDetail, setDataNodeDetail] = useState({});
-    const { setViewport, zoomIn, zoomOut } = useReactFlow();
+
+
+    // on click node
     const onNodeClick = useCallback((_, node) => {
         setNodeDetailDrawer(true);
 
@@ -213,6 +218,7 @@ export const WorkflowDetail = (props) => {
         requestUpdateWfDefinitionApiData(workflow);
 
     }
+    // on update workflow
     useEffect(() => {
         if (updateWfDefinitionApiData.state === REQUEST_STATE.SUCCESS) {
             setLoading(false);
@@ -226,6 +232,57 @@ export const WorkflowDetail = (props) => {
             setLoading(true);
         }
     }, [updateWfDefinitionApiData])
+
+    /// format workflow
+    const dagreGraph = new dagre.graphlib.Graph();
+    dagreGraph.setDefaultEdgeLabel(() => ({}));
+
+    const nodeWidth = 200;
+    const nodeHeight = 70;
+    const getLayoutedElements = (nodes, edges, direction = 'TB') => {
+        const isHorizontal = direction === 'LR';
+        dagreGraph.setGraph({ rankdir: direction });
+
+        nodes.forEach((node) => {
+            dagreGraph.setNode(node.id, { width: nodeWidth, height: nodeHeight });
+        });
+
+        edges.forEach((edge) => {
+            dagreGraph.setEdge(edge.source, edge.target);
+        });
+
+        dagre.layout(dagreGraph);
+
+        nodes.forEach((node) => {
+            const nodeWithPosition = dagreGraph.node(node.id);
+            node.targetPosition = isHorizontal ? 'left' : 'top';
+            node.sourcePosition = isHorizontal ? 'right' : 'bottom';
+
+            // We are shifting the dagre node position (anchor=center center) to the top left
+            // so it matches the React Flow node anchor point (top left).
+            node.position = {
+                x: nodeWithPosition.x - nodeWidth / 2,
+                y: nodeWithPosition.y - nodeHeight / 2,
+            };
+
+            return node;
+        });
+
+        return { nodes, edges };
+    };
+    const onLayout = useCallback(
+        (direction) => {
+            const { nodes: layoutedNodes, edges: layoutedEdges } = getLayoutedElements(
+                nodes,
+                edges,
+                direction
+            );
+
+            setNodes([...layoutedNodes]);
+            setEdges([...layoutedEdges]);
+        },
+        [nodes, edges]
+    );
 
 
     return (
@@ -269,6 +326,11 @@ export const WorkflowDetail = (props) => {
                     >
                         <Panel position="top-left" onClick={() => { setOpenListNodeDrawer(true) }}>
                             <Button size='large'>Add Node</Button>
+                        </Panel>
+                        <Panel position="top-right">
+                            
+                            <Button onClick={() => onLayout('TB')}>vertical</Button>
+                            <Button onClick={() => onLayout('LR')}>horizontal</Button>
                         </Panel>
                         <Controls showInteractive={false} />
                         <ListNodeDrawer open={openListNodeDrawer} onClose={() => { setOpenListNodeDrawer(false) }}></ListNodeDrawer>
