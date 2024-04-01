@@ -8,6 +8,7 @@ import { useUserLogin } from "../../../store/auth/use-user-login";
 import { REQUEST_STATE } from "../../../app-config/constants";
 import { myProfileState } from "../../../store/auth/share-state";
 import { useRecoilState } from "recoil";
+import { getUserInfo } from "../../../app-helper";
 
 export const UserSignIn = () => {
     const [userLoginData, requestUserLoginData] = useUserLogin();
@@ -29,9 +30,9 @@ export const UserSignIn = () => {
         })
     }
     useEffect(() => {
-        if (myprofile.state === REQUEST_STATE.SUCCESS) {
-            navigate("/profile")
-        }
+        // if (myprofile.state === REQUEST_STATE.SUCCESS) {
+        //     navigate("/profile")
+        // }
 
     }, [myprofile])
 
@@ -45,16 +46,21 @@ export const UserSignIn = () => {
                 duration: 5,
             })
         } else if (userLoginData.state === REQUEST_STATE.SUCCESS) {
-            navigate("/")
+            console.log("userLoginData",userLoginData)
+            navigate("/admin")
         }
     }, [userLoginData])
     useEffect(() => {
         window.scrollTo(0, 0)
+        var userInfo = getUserInfo();
+        if(userInfo){
+            navigate("/admin")
+        }
     }, [])
     return (
-        <CommomLayout>
+        <>
             <Row>
-                <Col span={12} style={{ padding: "200px 153px", borderRight: "2px solid #f0f2f5", height: '650px' }}>
+                <Col span={12} style={{ padding: "200px 153px", borderRight: "2px solid #f0f2f5", height: '100vh' }}>
                     <div className="text-signin">
                         <p>ĐĂNG NHẬP</p>
                     </div>
@@ -67,7 +73,7 @@ export const UserSignIn = () => {
                             name="email" rules={[
                                 {
                                     required: true,
-                                    message: "nhap email",
+                                    message: "Fill your email",
                                 }
                             ]}
                             onChange={onChangeEmail}
@@ -79,13 +85,13 @@ export const UserSignIn = () => {
                             name="password" rules={[
                                 {
                                     required: true,
-                                    message: "nhap password",
+                                    message: "Fill your password",
                                 }
                             ]}
                             onChange={onChangePassword}
                         >
-                            <Input placeholder="Mật khẩu" className="input-password input-signin" >
-                            </Input>
+                            <Input.Password placeholder="Mật khẩu" className="input-password input-signin" >
+                            </Input.Password>
                         </Form.Item>
                         <Form.Item>
                             <button type="primary" className="btn-signin">
@@ -110,6 +116,6 @@ export const UserSignIn = () => {
 
                 </Col>
             </Row>
-        </CommomLayout>
+        </>
     )
 }

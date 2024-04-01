@@ -8,19 +8,19 @@ import { userInfoState } from "./share-state"
 
 
 
-export const useUserLogin = () =>{
-    const [userLoginData,setUserLoginDate] = useRecoilState(userInfoState);
-   
-    const request = (params) =>{
-        Auth.userLoginAsync(params,setUserLoginDate);
-    }
-    useEffect(()=>{
+export const useUserLogin = () => {
+    const [userLoginData, setUserLoginDate] = useRecoilState(userInfoState);
 
-        return ()=>{
+    const request = (params) => {
+        Auth.userLoginAsync(params, setUserLoginDate);
+    }
+    useEffect(() => {
+
+        return () => {
             setUserLoginDate({});
             Auth.cancelUserLogin();
         }
-    })
+    }, [])
 
     return [
         userLoginData,

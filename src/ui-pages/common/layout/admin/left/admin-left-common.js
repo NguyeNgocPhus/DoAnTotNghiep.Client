@@ -1,4 +1,4 @@
-import { Button, Col, Layout, Menu, Row, Input, Tooltip } from "antd";
+import { Button, Col, Layout, Menu, Row, Input, Tooltip, Typography } from "antd";
 
 
 import {
@@ -42,7 +42,7 @@ export const AdminLeftCommomLayout = ({ children }) => {
         >
             <Menu.Item style={{ height: '80px' }}>
 
-                <Link to="/admin/home" className="menu_left">
+                <Link to="/admin" className="menu_left">
                     <img src="/admin_logo.svg"></img>
                 </Link>
             </Menu.Item>
@@ -69,13 +69,9 @@ export const AdminLeftCommomLayout = ({ children }) => {
                     </Link>
                 </Tooltip>
             </Menu.Item>
-            <Menu.Item style={{ height: '50px' }}>
-                <Tooltip placement="right" title={"Workflows"}>
-                    <Link to="/admin/workflows" className="menu_left">
-                        Phú
-                    </Link>
-                </Tooltip>
-            </Menu.Item>
+            <div className="user_avatar">
+                <Typography.Text>P</Typography.Text>
+            </div>
             
         </Menu>
     )

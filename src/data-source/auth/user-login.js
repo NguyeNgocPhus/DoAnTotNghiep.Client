@@ -8,10 +8,10 @@ let source = null;
 
 export const cancelApiUserLogin = () => cancel(source);
 
-export const apiUserLogin = async(params) =>{
-    const query = {
-        "email":params.email,
-        "password":params.password
+export const apiUserLogin = async (params) => {
+    const body = {
+        "email": params.email,
+        "password": params.password
     };
     // console.log(query);
     cancelApiUserLogin();
@@ -19,23 +19,23 @@ export const apiUserLogin = async(params) =>{
     source = getTokenSource();
     // console.log(source);
     try {
-        const response = await POST('/auth/login',query,{
-            // cancelToken: source.token
+        const response = await POST('/api/login', body, {
+            cancelToken: source.token
         })
-       
+
         return {
-            message:"",
-            loading:false,
-            token:response?.data?.data?.token,
-            state:REQUEST_STATE.SUCCESS
+            message: "",
+            loading: false,
+            data: response?.data,
+            state: REQUEST_STATE.SUCCESS
         }
     } catch (error) {
-        
+
         return {
-            message:error?.response?.data?.message,
-            loading:false,
-            token:"",
-            state:REQUEST_STATE.ERROR
+            message: error?.response?.data?.message,
+            loading: false,
+            token: "",
+            state: REQUEST_STATE.ERROR
         }
     }
 }

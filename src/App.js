@@ -14,8 +14,7 @@ import { Profile } from './ui-pages/profile';
 import { useProfile } from './store/auth/use-my-profile';
 import { Select } from 'antd';
 import { REQUEST_STATE } from './app-config/constants';
-import { useTypeProduct } from './store/type-product/use-type-product';
-import  {WorkflowDetail} from './ui-pages/admin/workflow/workflow-definition/detail';
+import { WorkflowDetail } from './ui-pages/admin/workflow/workflow-definition/detail';
 import { Workflow } from './ui-pages/admin/workflow';
 import { CreateWorkflow } from './ui-pages/admin/workflow/workflow-definition/create';
 import { Document } from './ui-pages/admin/document';
@@ -26,21 +25,18 @@ const { Option } = Select;
 function App() {
   const token = getUserInfo();
   const [userLoginData, setUserLoginData] = useRecoilState(userInfoState);
-  const [listTypeProduct, requestListTypeProduct] = useTypeProduct();
   const [myProfile, requestMyProfile] = useProfile();
   const [isVerify, setIsVerify] = useState(false);
 
   useEffect(() => {
-    requestMyProfile();
-    requestListTypeProduct();
+    // requestMyProfile();
+    // requestListTypeProduct();
   }, [])
-  // console.log(myProfile);
+ 
   useEffect(() => {
-    if (userLoginData.token) {
-      saveUserInfoToStore({
-        token: userLoginData.token
-      })
-      requestMyProfile();
+    if (userLoginData.data) {
+      saveUserInfoToStore(userLoginData.data)
+      // requestMyProfile();
       setIsVerify(true);
     }
   }, [userLoginData])
@@ -58,7 +54,7 @@ function App() {
       <Routes>
         <Route {...rest} element={
           !token ? (
-            <Navigate to="/user/signin"></Navigate>
+            <Navigate to="/login"></Navigate>
           ) : (
             element
           )
@@ -73,15 +69,10 @@ function App() {
   return (
     <>
       <Routes>
-        <Route path="/" element={<HomePage></HomePage>}></Route>
-        <Route path="/admin/workflows" element={<Workflow></Workflow>}></Route>
-        <Route path="/admin/workflow/create" element={<CreateWorkflow></CreateWorkflow>}></Route>
-        <Route path="/admin/workflow-definition/:id" element={<WorkflowDetail></WorkflowDetail>}></Route>
-        <Route path="/admin/identity" element={<Identity></Identity>}></Route>
-        <Route path="/admin/documents" element={<Document></Document>}></Route>
-        <Route path="/user/signin" element={<UserSignIn></UserSignIn>}></Route>
-        <Route path="/user/signup" element={<UserSignUp></UserSignUp>}></Route>
-        <Route path="/user/getpassword" element={<GetPassword></GetPassword>}></Route>
+
+        <Route path="/login" element={<UserSignIn></UserSignIn>}></Route>
+        {/* <Route path="/logout" element={<UserSignUp></UserSignUp>}></Route>
+        <Route path="/user/getpassword" element={<GetPassword></GetPassword>}></Route> */}
         {/* {listTypeProduct.state === REQUEST_STATE.SUCCESS && listTypeProduct.data.map((type) => {
           return (
             <>
@@ -91,7 +82,12 @@ function App() {
           )
         })} */}
       </Routes>
-
+      <PrivateRouter path="/admin/" element={<HomePage></HomePage>}></PrivateRouter>
+      <PrivateRouter path="/admin/workflows" element={<Workflow></Workflow>}></PrivateRouter>
+      {/* <PrivateRouter path="/admin/workflow/create" element={<CreateWorkflow></CreateWorkflow>}></PrivateRouter> */}
+      <PrivateRouter path="/admin/workflow-definition/:id" element={<WorkflowDetail></WorkflowDetail>}></PrivateRouter>
+      <PrivateRouter path="/admin/identity" element={<Identity></Identity>}></PrivateRouter>
+      <PrivateRouter path="/admin/documents" element={<Document></Document>}></PrivateRouter>
       <PrivateRouter path="/profile" element={<Profile></Profile>}></PrivateRouter>
 
 

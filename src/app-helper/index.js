@@ -9,7 +9,7 @@ export function cancel(source) {
 }
 
 export function getUserInfo() {
-    const userInfo = sessionStorage.getItem("USER_INFO");
+    const userInfo = localStorage.getItem("USER_INFO");
     if (userInfo && userInfo.length) {
         return JSON.parse(userInfo);
     }
@@ -19,6 +19,6 @@ export function getUserInfo() {
 
 export function saveUserInfoToStore(userInfo) {
     if (userInfo) {
-        sessionStorage.setItem("USER_INFO", JSON.stringify(userInfo));
+        localStorage.setItem("USER_INFO", JSON.stringify(userInfo));
     }
 }
