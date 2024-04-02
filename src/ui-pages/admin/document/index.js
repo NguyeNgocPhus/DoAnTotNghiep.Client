@@ -2,7 +2,7 @@ import "./styles.css";
 import 'reactflow/dist/style.css';
 import { Typography, Tabs } from 'antd';
 import { AdminCommomLayout } from '../../common/layout/admin/admin-common';
-import { ListDocument } from './upload';
+import { ListDocument } from './list';
 import { ListApprove } from './approve';
 const { Title } = Typography;
 

@@ -3,8 +3,9 @@ import { useNavigate } from "react-router-dom";
 import "./styles.css";
 import 'reactflow/dist/style.css';
 import { Button, Col, Input, Row, Space, Table, Typography, Tag, Modal, Form, Upload } from 'antd';
-import { AdminCommomLayout } from '../../../common/layout/admin/admin-common';
 import { SearchOutlined, PlusOutlined, CheckOutlined, UploadOutlined, HistoryOutlined } from '@ant-design/icons';
+import { FormCreate } from './form_create';
+import { FormUpload } from './form_upload';
 const { Title } = Typography;
 
 
@@ -73,21 +74,19 @@ export const ListDocument = () => {
         },
     ];
 
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const showModal = () => {
-        setIsModalOpen(true);
-    };
-    const handleCancel = () => {
-        setIsModalOpen(false);
-    };
-    const navigate = useNavigate();
+    const [formCreateOpen, setFormCreateOpen] = useState(false);
+    const [formUploadOpen, setFormUploadOpen] = useState(false);
 
-    const navigateTo = () => navigate('/admin/role/create');
+    const showFormCreate = () => {
+        setFormCreateOpen(true);
+    };
+   
+
     const onClickViewHistory = () => {
         console.log("onClickViewHistory")
     }
     const onClickUploadDocument = () => {
-        showModal(true);
+        setFormUploadOpen(true);
     }
     const props = {
         action: '//jsonplaceholder.typicode.com/posts/',
@@ -110,7 +109,7 @@ export const ListDocument = () => {
                     <div className='header_list_users'>
                         <Title level={5}>Danh sách mẫu nhập</Title>
                         <div>
-                            <Button onClick={navigateTo} icon={<PlusOutlined />} type="primary" size="large">Tạo mẫu nhập</Button>
+                            <Button onClick={showFormCreate} icon={<PlusOutlined />} type="primary" size="large">Tạo mẫu nhập</Button>
                         </div>
                     </div>
                 </Col>
@@ -121,48 +120,8 @@ export const ListDocument = () => {
                     <Table columns={columns} dataSource={data} />
                 </Col>
             </Row>
-            <Modal title="Nhập dữ liệu từ file excel" open={isModalOpen} onCancel={handleCancel} footer={null}>
-                <Form
-                    name="basic"
-                    layout="vertical"
-
-                    autoComplete="off"
-                >
-                    <Form.Item
-                        label="Tài liệu"
-                        name="name"
-
-                    >
-                        <Input />
-                    </Form.Item>
-                    <Form.Item
-                        label="Tên Workflow"
-                        name="name"
-
-                    >
-                        <Input />
-                    </Form.Item>
-                    <Form.Item
-                        label="Năm"
-                        name="year"
-
-                    >
-                        <Input />
-                    </Form.Item>
-                    <Form.Item
-
-                    >
-                        <Upload {...props}>
-                            <Button icon={<UploadOutlined />}>Tải lên tài liệu</Button>
-                        </Upload>
-                    </Form.Item>
-                    <Form.Item >
-                        <Button type="primary" htmlType="submit">
-                            Submit
-                        </Button>
-                    </Form.Item>
-                </Form>
-            </Modal>
+            <FormCreate open={formCreateOpen} onClose={()=>{setFormCreateOpen(false)}}></FormCreate>
+            <FormUpload open={formUploadOpen} onClose={()=>{setFormUploadOpen(false)}}></FormUpload>
 
         </>
 

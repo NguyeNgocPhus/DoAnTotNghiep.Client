@@ -66,7 +66,7 @@ export const ApproveNode = ({
                     style={handleStyle}
                     isConnectable={isConnectable}
                 /> */}
-            <Handle type="source" position={Position.Bottom} id="b" isConnectable={isConnectable} />
+            <Handle className="customHandle" type="source" position={Position.Bottom} id="b" isConnectable={isConnectable} />
         </div>
     );
 }
