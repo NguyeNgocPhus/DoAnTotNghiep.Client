@@ -2,10 +2,12 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import "./styles.css";
 import 'reactflow/dist/style.css';
-import { Button, Col, Input, Row, Space, Table, Typography, Tag, Modal, Form, Upload } from 'antd';
+import { Button, Col, Input, Row, Space, Table, Typography, Tag, Modal, Form, Upload, Spin } from 'antd';
 import { SearchOutlined, PlusOutlined, CheckOutlined, UploadOutlined, HistoryOutlined } from '@ant-design/icons';
 import { FormCreate } from './form_create';
 import { FormUpload } from './form_upload';
+import { useGetListImportTemplate } from '../../../../store/import-template/use-get-list-import-template';
+import { REQUEST_STATE } from '../../../../app-config/constants';
 const { Title } = Typography;
 
 
@@ -18,9 +20,10 @@ export const ListDocument = () => {
             render: (text) => <a>{text}</a>,
         },
         {
-            title: 'Code',
-            dataIndex: 'code',
-            key: 'code',
+            title: 'Tag',
+            dataIndex: 'tag',
+            key: 'tag',
+            render: (text) => <div>{text}</div>,
         },
         {
             title: 'Active',
@@ -29,6 +32,16 @@ export const ListDocument = () => {
             render: (_, { active }) => (
                 <>
                     {active && <CheckOutlined />}
+                </>
+            ),
+        },
+        {
+            title: 'Workflow',
+            key: 'hasWorkflow',
+            dataIndex: 'hasWorkflow',
+            render: (_, { hasWorkflow }) => (
+                <>
+                    {hasWorkflow && <CheckOutlined />}
                 </>
             ),
         },
@@ -53,29 +66,12 @@ export const ListDocument = () => {
             ),
         },
     ];
-    const data = [
-        {
-            key: '1',
-            name: 'Administrators',
-            code: 'Administrators',
-            active: true
-        },
-        {
-            key: '2',
-            name: 'Quy trình làm việc',
-            code: 'Workflow',
-            active: true
-        },
-        {
-            key: '3',
-            name: 'Tải lên tài liệu',
-            code: 'UploadData',
-            active: false
-        },
-    ];
 
+    const [listImportTemplateApiData, requestListImportTemplateApi] = useGetListImportTemplate();
     const [formCreateOpen, setFormCreateOpen] = useState(false);
     const [formUploadOpen, setFormUploadOpen] = useState(false);
+    const [listImportTemplate, setListImportTemplate ] = useState([]);
+    const [loading, setLoading] = useState(false);
 
     const showFormCreate = () => {
         setFormCreateOpen(true);
@@ -102,6 +98,32 @@ export const ListDocument = () => {
                 .then(({ thumbnail }) => thumbnail);
         },
     };
+
+    useEffect(()=>{
+        requestListImportTemplateApi();
+    },[])
+    useEffect(() => {
+        if (listImportTemplateApiData !== null) {
+            if (listImportTemplateApiData.state === REQUEST_STATE.SUCCESS) {
+                setLoading(false);
+                var data = listImportTemplateApiData.data.map(x=>{
+                    return {
+                        name : x.name,
+                        tag : x.tag,
+                        hasWorkflow : x.hasWorkflow,
+                        active : x.active,
+            
+                    }
+                });
+                setListImportTemplate(data);
+
+            } else if (listImportTemplateApiData.state === REQUEST_STATE.ERROR) {
+                // message.error('This is an error message');
+            } else if (listImportTemplateApiData.state === REQUEST_STATE.REQUEST) {
+                setLoading(true);
+            }
+        }
+    }, [listImportTemplateApiData])
     return (
         <>
             <Row style={{ padding: '20px' }} gutter={[0, 32]}>
@@ -117,7 +139,9 @@ export const ListDocument = () => {
                     <Input icon={<SearchOutlined />} style={{ width: '70%' }} size="large" placeholder="Tìm kiếm theo tên mẫu nhập" prefix={<SearchOutlined />} />
                 </Col>
                 <Col span={24}>
-                    <Table columns={columns} dataSource={data} />
+                    <Spin size="large" spinning={loading}>
+                       {listImportTemplate.length > 0 &&  <Table columns={columns} dataSource={listImportTemplate} />}
+                    </Spin>
                 </Col>
             </Row>
             <FormCreate open={formCreateOpen} onClose={()=>{setFormCreateOpen(false)}}></FormCreate>
