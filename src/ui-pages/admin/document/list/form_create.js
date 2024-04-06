@@ -1,16 +1,18 @@
 import "./styles.css";
 import 'reactflow/dist/style.css';
-import { Typography, Tabs, Modal, Form, Input, Button } from 'antd';
+import { Typography, InputNumber, Modal, Form, Input, Button } from 'antd';
+import { useCreateImportTemplate } from "../../../../store/import-template/use-create-import-template";
+import { useEffect } from "react";
 
-export const FormCreate = ({open, onClose}) => {
-
+export const FormCreate = ({ form, open, onClose, onFinish }) => {
 
     return (
-        <Modal title="Tạo mẫu nhập" open={open} onCancel={onClose}  footer={null}>
+        <Modal title="Tạo mẫu nhập" open={open} onCancel={onClose} footer={null}>
             <Form
+                form={form}
                 name="basic"
                 layout="vertical"
-
+                onFinish={onFinish}
                 autoComplete="off"
             >
                 <Form.Item
@@ -21,25 +23,24 @@ export const FormCreate = ({open, onClose}) => {
                     <Input />
                 </Form.Item>
                 <Form.Item
-                    label="Tên Workflow"
-                    name="name"
+                    label="Tags"
+                    name="tag"
 
                 >
                     <Input />
                 </Form.Item>
                 <Form.Item
-                    label="Năm"
-                    name="year"
+                    label="Mô tả"
+                    name="description"
 
                 >
                     <Input />
                 </Form.Item>
                 <Form.Item
-
+                    label="Thứ tự hiển thị"
+                    name="displayOrder"
                 >
-                    {/* <Upload {...props}>
-                            <Button icon={<UploadOutlined />}>Tải lên tài liệu</Button>
-                        </Upload> */}
+                    <InputNumber />
                 </Form.Item>
                 <Form.Item >
                     <Button type="primary" htmlType="submit">
