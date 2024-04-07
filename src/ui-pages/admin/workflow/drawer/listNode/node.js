@@ -8,9 +8,10 @@ import { SendEmailIcon } from "../../nodes/icons/send_email_icon";
 import { FileUploadIcon } from "../../nodes/icons/file_upload_icon";
 import { ConditionIcon } from "../../nodes/icons/condition_icon";
 import { CronIcon } from "../../nodes/icons/cron_icon";
+import { FinishIcon } from "../../nodes/icons/finish_icon";
 
 export const Node = ({ node }) => {
-    console.log("node", node)
+    
     let avatar = (
         <DownCircleTwoTone style={{ fontSize: '36px', height: '100%' }} />
     );
@@ -51,10 +52,14 @@ export const Node = ({ node }) => {
                 <FileUploadIcon style={{ fontSize: '36px', height: '100%' }} />
             );
             break;
+            case "Finish":
+                avatar = (
+                    <FinishIcon style={{ fontSize: '36px', height: '100%' }} />
+                );
+                break;
         default:
 
     }
-
     const onClickNodeTrigger = () => {
         console.log("onClickNodeTrigger")
     }
@@ -67,7 +72,8 @@ export const Node = ({ node }) => {
     return (
         <>
             <Comment className="dndnode"
-                onDragStart={(event) => onDragStart(event, node.key, node.name, node.description)} draggable
+                onDragStart={(event) => onDragStart(event, node.key, node.name, node.description)} 
+                draggable
                 onClick={onClickNodeTrigger}
                 author={<b>{node.name}</b>}
                 avatar={avatar}

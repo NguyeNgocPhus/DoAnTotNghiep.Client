@@ -169,7 +169,7 @@ export const WorkflowDetail = (props) => {
             if (typeof typeNode === 'undefined' || !typeNode) {
                 return;
             }
-
+            console.log("typeNode", typeNode);
 
             // reactFlowInstance.project was renamed to reactFlowInstance.screenToFlowPosition
             // and you don't need to subtract the reactFlowBounds.left/top anymore
@@ -194,7 +194,6 @@ export const WorkflowDetail = (props) => {
     // on click node
     const onNodeClick = useCallback((_, node) => {
         setNodeDetailDrawer(true);
-
         setDataNodeDetail(node);
         setNodes((nodes) =>
 

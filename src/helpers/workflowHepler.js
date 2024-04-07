@@ -1,6 +1,7 @@
 import { ApproveNode } from "../ui-pages/admin/workflow/nodes/actions/approve";
 import { BranchNode } from "../ui-pages/admin/workflow/nodes/actions/branch";
 import { ConditionNode } from "../ui-pages/admin/workflow/nodes/actions/condition";
+import { FinishNode } from "../ui-pages/admin/workflow/nodes/actions/finish";
 import { RejectNode } from "../ui-pages/admin/workflow/nodes/actions/reject";
 import { SendEmailNode } from "../ui-pages/admin/workflow/nodes/actions/sendEmail";
 import { CronNode } from "../ui-pages/admin/workflow/nodes/triggers/cron";
@@ -15,7 +16,8 @@ const nodeTypes = {
     'Reject': RejectNode,
     'Condition': ConditionNode,
     'SendEmail': SendEmailNode,
-    'Branch': BranchNode
+    'Branch': BranchNode,
+    'Finish': FinishNode
 };
 
 const generateWfDefinitionForApi = ({ id, name, version, nodes, edges }) => {

@@ -7,6 +7,7 @@ import { ConditionDetail } from "./condition";
 import { BranchDetail } from "./branch";
 import { SendEmailDetail } from "./sendEmail";
 import { FileUploadDetail } from "./fileUpload";
+import { FinishDetail } from "./finish";
 export const NodeDetailDrawer = ({ open, data, onClose }) => {
     
     let nodeDetail ;
@@ -47,10 +48,15 @@ export const NodeDetailDrawer = ({ open, data, onClose }) => {
                 <FileUploadDetail  data={data}  onClose={onClose}/>
             );
             break;
+        case "Finish":
+            nodeDetail =(
+                <FinishDetail  data={data}  onClose={onClose}/>
+            );
+            break;
         default:
 
     }
-    console.log("nodeDetail",nodeDetail)
+    // console.log("nodeDetail",nodeDetail)
     return (
         <>
             <Drawer placement="left" getContainer={false} mask={false} closable={false} open={open}>

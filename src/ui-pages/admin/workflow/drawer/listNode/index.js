@@ -5,10 +5,6 @@ import { ListNodeTrigger } from "./triggers/listNodeTrigger";
 import { ListNodeAction } from "./actions/listNodeAction";
 export const ListNodeDrawer = ({ open, onClose }) => {
 
-    const onDragStart = (event, nodeType) => {
-        event.dataTransfer.setData('application/reactflow', nodeType);
-        event.dataTransfer.effectAllowed = 'move';
-    };
     const operations = <CloseCircleOutlined size='large' onClick={onClose} />;
 
     var listNode = [
@@ -67,10 +63,17 @@ export const ListNodeDrawer = ({ open, onClose }) => {
             key: "Branch",
             name: "Luồng rẽ nhanh",
             description: "Thực hiện luồng công việc phân nhánh"
+        },
+        {
+            image: "",
+            type: "action",
+            key: "Finish",
+            name: "Kết thúc quy trình",
+            description: "Kết thúc quy trình"
         }
     ]
-    const listNodeTrigger = listNode.filter(x=>x.type === "trigger");
-    const listNodeAction = listNode.filter(x=>x.type === "action");
+    const listNodeTrigger = listNode.filter(x => x.type === "trigger");
+    const listNodeAction = listNode.filter(x => x.type === "action");
 
 
     return (

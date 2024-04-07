@@ -34,7 +34,7 @@ export const ApproveNode = ({
     }
 
 
-    const { name } = data;
+    const { name , description} = data;
 
 
     return (
@@ -53,8 +53,8 @@ export const ApproveNode = ({
                     <ApproveIcon></ApproveIcon>
                 </div>
                 <div className='node-name'>
-                    <label htmlFor="text">{type}</label>
-                    <Typography.Text>{name}</Typography.Text>
+                    <Typography.Text strong>{name}</Typography.Text>
+                    <Typography.Text>{description}</Typography.Text>
                 </div>
                 
                 {/* <input id="text" name="text" onChange={onChange} className="nodrag" /> */}
