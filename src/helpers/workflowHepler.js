@@ -45,6 +45,12 @@ const generateWfDefinitionForApi = ({ id, name, version, nodes, edges }) => {
                     expressions: {
                         Literal: node.data.DATA
                     }
+                },
+                {
+                    name: "DESCRIPTION",
+                    expressions: {
+                        Literal: node.data.DESCRIPTION
+                    }
                 }
             ]
         }
@@ -89,12 +95,14 @@ const generateWfDefinitionForUI = ({ nodes, edges }) => {
     // ];
     const initialNodes = nodes.map(x => {
         var position = x.properties.find(p=>p.name === "Position").expressions.Literal;
+        var description = x.properties.find(p=>p.name === "DESCRIPTION")?.expressions?.Literal;
         return {
             id: x.activityId,
             position: JSON.parse(position),
             type: x.type,
             data: {
                 name: x.displayName,
+                description: description,
                 forceToolbarVisible: false
             }
         }

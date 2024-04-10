@@ -2,7 +2,7 @@ import { Button ,Typography} from 'antd';
 import { useCallback, useEffect, useState } from 'react';
 import { Handle, NodeToolbar, Position, useStore, useStoreActions } from 'reactflow';
 import { BorderOutlined } from '@ant-design/icons';
-import "./styles.css";
+import "../styles.css";
 import { FinishIcon } from '../icons/finish_icon';
 const handleStyle = { left: 10 };
 

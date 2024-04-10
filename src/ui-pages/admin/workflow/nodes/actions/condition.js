@@ -1,7 +1,7 @@
 import { Button ,Typography} from 'antd';
 import { useCallback, useEffect, useState } from 'react';
 import { Handle, NodeToolbar, Position, useStore, useStoreActions } from 'reactflow';
-import "./styles.css";
+import "../styles.css";
 import { ConditionIcon } from '../icons/condition_icon';
 const handleStyle = { left: 10 };
 

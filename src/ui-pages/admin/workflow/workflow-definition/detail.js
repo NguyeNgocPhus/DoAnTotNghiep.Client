@@ -283,22 +283,23 @@ export const WorkflowDetail = (props) => {
         [nodes, edges]
     );
 
-    const onUpdateNodes = ({nodeId, customData}) =>{
-       
-        const newNodes = nodes.map(x=>{
-            if(x.id === nodeId){
+    const onUpdateNodes = ({ nodeId, customData, description }) => {
+
+        const newNodes = nodes.map(x => {
+            if (x.id === nodeId) {
                 return {
                     ...x,
                     data: {
                         ...x.data,
-                        DATA : customData
+                        DATA: customData,
+                        DESCRIPTION: description
                     }
                 }
-            }else{
+            } else {
                 return x;
             }
         });
-    
+
         setNodes([...newNodes]);
 
         const workflow = generateWfDefinitionForApi({
@@ -308,7 +309,7 @@ export const WorkflowDetail = (props) => {
             name: wfDefinition.name,
             version: wfDefinition.version
         });
-       
+
         requestUpdateWfDefinitionApiData(workflow);
     }
 
@@ -355,7 +356,7 @@ export const WorkflowDetail = (props) => {
                             <Button size='large'>Add Node</Button>
                         </Panel>
                         <Panel position="top-right">
-                            
+
                             <Button onClick={() => onLayout('TB')}>vertical</Button>
                             <Button onClick={() => onLayout('LR')}>horizontal</Button>
                         </Panel>

@@ -13,6 +13,7 @@ export const FileUploadDetail = ({ onUpdateNodes, data, onClose }) => {
     const [listImportTemplateApiData , requestListImportTemplateApiData] = useGetListImportTemplate();
     const [nodeDefinitionApiData , requestGetNodeTemplateApiData] = useGetNodeDefinition();
     const [importTemplateId, setImportTemplateId] = useState(null);
+    const [description, setDescription] = useState("");
     const { id } = useParams();
 
     useEffect(()=>{
@@ -39,9 +40,11 @@ export const FileUploadDetail = ({ onUpdateNodes, data, onClose }) => {
     useEffect(()=>{
         if (nodeDefinitionApiData !== null) {
             if (nodeDefinitionApiData.state === REQUEST_STATE.SUCCESS) {
-                
+
+               var jsonData = JSON.parse(nodeDefinitionApiData.data.data)
             
-               setImportTemplateId(nodeDefinitionApiData.data.importTemplateId)
+               setImportTemplateId(jsonData.importTemplateId)
+               setDescription(nodeDefinitionApiData.data.description)
             } else if (nodeDefinitionApiData.state === REQUEST_STATE.ERROR) {
 
             } else if (nodeDefinitionApiData.state === REQUEST_STATE.REQUEST) {
@@ -57,12 +60,12 @@ export const FileUploadDetail = ({ onUpdateNodes, data, onClose }) => {
         
         const data1 = {
             importTemplateId : importTemplateId,
-           
         };
-
+        console.log("data?.data?.description",description)
         onUpdateNodes({
             nodeId : data.id,
-            customData : JSON.stringify(data1)
+            customData : JSON.stringify(data1),
+            description: description
         })
     }
     return (
@@ -70,7 +73,7 @@ export const FileUploadDetail = ({ onUpdateNodes, data, onClose }) => {
             <Row>
                 <Col span={24} style={{ display: 'flex', justifyContent: 'space-between' }}>
                     <div className='node-detail-info'>
-                        <NodeInfo icon={<FileUploadIcon></FileUploadIcon>} name={data?.data?.name} description={data?.data?.description}></NodeInfo>
+                        <NodeInfo setDescription={setDescription} icon={<FileUploadIcon></FileUploadIcon>} name={data?.data?.name} description={description}></NodeInfo>
                         {/* <div className='node-image'>
                             
                         </div>

@@ -2,7 +2,7 @@ import { Button, Typography } from 'antd';
 import { useCallback, useEffect, useState } from 'react';
 import { Handle, NodeToolbar, Position, useStore, useStoreActions } from 'reactflow';
 import { CronIcon } from '../icons/cron_icon';
-
+import "../styles.css";
 const handleStyle = { left: 10 };
 
 export const CronNode = ({

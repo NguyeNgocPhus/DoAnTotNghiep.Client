@@ -3,7 +3,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { Handle, NodeToolbar, Position, useStore, useStoreActions } from 'reactflow';
 import { ApproveIcon } from '../icons/approve_icon';
 import { FileUploadIcon } from '../icons/file_upload_icon';
-
+import "../styles.css";
 const handleStyle = { left: 10 };
 
 export const FileUploadNode = ({

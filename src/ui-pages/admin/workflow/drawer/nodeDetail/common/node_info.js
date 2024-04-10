@@ -1,11 +1,12 @@
-import { Row, Col, Divider, Typography, Input, Select, Button } from "antd";
-import { CloseCircleOutlined, SettingOutlined, EditOutlined } from '@ant-design/icons';
-import { FileUploadIcon } from "../../../nodes/icons/file_upload_icon";
+import { Typography, Input } from "antd";
+import { EditOutlined } from '@ant-design/icons';
 import { useState } from "react";
 
-export const NodeInfo = ({ icon, name, description }) => {
+export const NodeInfo = ({ setDescription, icon, name, description }) => {
     const [showInputEdit, setShowInputEdit] = useState(false);
-
+    const onChange = (e) =>{
+        setDescription( e.target.value)
+    }
     return (
         <>
             <div className='node-image'>
@@ -16,8 +17,8 @@ export const NodeInfo = ({ icon, name, description }) => {
                 <Typography.Text strong>{name}</Typography.Text>
                 <div>
                     {!showInputEdit && <Typography.Text>{description}</Typography.Text>}
-                    {showInputEdit && <Input></Input>} 
-                    {!showInputEdit && <EditOutlined onClick={()=>{setShowInputEdit(true)}} style={{cursor:'pointer'}}/> }
+                    {showInputEdit && <Input value={description} onChange={onChange} onPressEnter={() => { setShowInputEdit(false) }}></Input>}
+                    {!showInputEdit && <EditOutlined onClick={() => { setShowInputEdit(true) }} style={{ cursor: 'pointer' }} />}
                 </div>
             </div>
         </>

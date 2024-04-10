@@ -14,3 +14,7 @@
   .node_action_icon{
     background-color: blue;
   }
+  .node-name{
+    display: flex;
+    flex-direction: column;
+  }
