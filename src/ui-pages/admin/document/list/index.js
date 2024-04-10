@@ -188,6 +188,7 @@ export const ListDocument = () => {
                 setLoading(false);
                 setFormCreateOpen(false);
                 setListImportTemplate([{
+                    id: createImportTemplateApiData.data.id,
                     name: createImportTemplateApiData.data.name,
                     description: createImportTemplateApiData.data.description,
                     tag: createImportTemplateApiData.data.tag,

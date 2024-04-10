@@ -6,11 +6,22 @@ import { useGetListImportTemplate } from "../../../../../store/import-template/u
 import { useEffect, useState } from "react";
 import { REQUEST_STATE } from "../../../../../app-config/constants";
 import { NodeInfo } from "./common/node_info";
-export const FileUploadDetail = ({ data, onClose }) => {
+import { useGetNodeDefinition } from "../../../../../store/workflow/use-get-node-definition";
+import { useParams } from 'react-router-dom';
+export const FileUploadDetail = ({ onUpdateNodes, data, onClose }) => {
     const [listImportTemplate, setListImportTemplate] = useState([]);
     const [listImportTemplateApiData , requestListImportTemplateApiData] = useGetListImportTemplate();
+    const [nodeDefinitionApiData , requestGetNodeTemplateApiData] = useGetNodeDefinition();
+    const [importTemplateId, setImportTemplateId] = useState(null);
+    const { id } = useParams();
+
     useEffect(()=>{
         requestListImportTemplateApiData();
+       
+        requestGetNodeTemplateApiData({
+            id: id,
+            type:data.type
+        });
     },[]);
 
     useEffect(()=>{
@@ -25,7 +36,35 @@ export const FileUploadDetail = ({ data, onClose }) => {
             }
         }
     },[listImportTemplateApiData])
+    useEffect(()=>{
+        if (nodeDefinitionApiData !== null) {
+            if (nodeDefinitionApiData.state === REQUEST_STATE.SUCCESS) {
+                
+            
+               setImportTemplateId(nodeDefinitionApiData.data.importTemplateId)
+            } else if (nodeDefinitionApiData.state === REQUEST_STATE.ERROR) {
 
+            } else if (nodeDefinitionApiData.state === REQUEST_STATE.REQUEST) {
+                
+            }
+        }
+    },[nodeDefinitionApiData])
+
+    const onChange = (value) =>{
+        setImportTemplateId(value);
+    }
+    const saveConfigNode = () =>{
+        
+        const data1 = {
+            importTemplateId : importTemplateId,
+           
+        };
+
+        onUpdateNodes({
+            nodeId : data.id,
+            customData : JSON.stringify(data1)
+        })
+    }
     return (
         <>
             <Row>
@@ -59,17 +98,17 @@ export const FileUploadDetail = ({ data, onClose }) => {
 
                     <div>
                         <Typography.Text level={5}>Chọn mẫu nhập liệu</Typography.Text>
-                        <Select style={{ width: '100%' }}>
+                        <Select style={{ width: '100%' }} value={importTemplateId}  onChange={onChange}>
                             {listImportTemplate.length>0 && listImportTemplate.map(x=>{
                                 return (
-                                    <Select.Option value={x.id}>{x.name}</Select.Option>
+                                    <Select.Option key={x.id} value={x.id}>{x.name}</Select.Option>
                                 )
                             })}
                         
                         </Select>
                     </div>
                     <div style={{ display: 'flex', justifyContent: 'end'}}>
-                        <Button type="primary" style={{margin:'10px 0'}}>Save</Button>  
+                        <Button type="primary" style={{margin:'10px 0'}} onClick={saveConfigNode}>Save</Button>  
                     </div>
                     
                 </Col>

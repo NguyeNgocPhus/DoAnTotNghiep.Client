@@ -1,9 +1,9 @@
 import "./styles.css";
 import 'reactflow/dist/style.css';
-import { Typography, InputNumber, Modal, Form, Input, Button } from 'antd';
+import { Typography, InputNumber, Modal, Form, Input, Button, Upload } from 'antd';
 import { useCreateImportTemplate } from "../../../../store/import-template/use-create-import-template";
 import { useEffect } from "react";
-
+import {  UploadOutlined } from '@ant-design/icons';
 export const FormCreate = ({ form, open, onClose, onFinish }) => {
 
     return (
@@ -37,10 +37,11 @@ export const FormCreate = ({ form, open, onClose, onFinish }) => {
                     <Input />
                 </Form.Item>
                 <Form.Item
-                    label="Thứ tự hiển thị"
-                    name="displayOrder"
+                    
                 >
-                    <InputNumber />
+                  <Upload>
+                        <Button icon={<UploadOutlined />}>Tải lên mẫu nhập</Button>
+                    </Upload>
                 </Form.Item>
                 <Form.Item >
                     <Button type="primary" htmlType="submit">

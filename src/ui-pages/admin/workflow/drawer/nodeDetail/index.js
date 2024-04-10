@@ -8,49 +8,49 @@ import { BranchDetail } from "./branch";
 import { SendEmailDetail } from "./sendEmail";
 import { FileUploadDetail } from "./fileUpload";
 import { FinishDetail } from "./finish";
-export const NodeDetailDrawer = ({ open, data, onClose }) => {
+export const NodeDetailDrawer = ({ open, data, onClose, onUpdateNodes }) => {
     
     let nodeDetail ;
     switch (data.type) {
         case "Approve":
             nodeDetail = (
-                <ApproveDetail data={data} onClose={onClose}/>
+                <ApproveDetail onUpdateNodes={onUpdateNodes} data={data} onClose={onClose}/>
             );
 
             break;
         case "Cron":
             nodeDetail = (
-                <CronDetail  data={data}  onClose={onClose}/>
+                <CronDetail onUpdateNodes={onUpdateNodes} data={data}  onClose={onClose}/>
             );
             break;
         case "Reject":
             nodeDetail = (
-                <RejectDetail  data={data}  onClose={onClose}/>
+                <RejectDetail onUpdateNodes={onUpdateNodes} data={data}  onClose={onClose}/>
             );
             break;
         case "Condition":
             nodeDetail = (
-                <ConditionDetail  data={data}  onClose={onClose}/>
+                <ConditionDetail onUpdateNodes={onUpdateNodes} data={data}  onClose={onClose}/>
             );
             break;
         case "Branch":
             nodeDetail = (
-                <BranchDetail  data={data}  onClose={onClose}/>
+                <BranchDetail onUpdateNodes={onUpdateNodes} data={data}  onClose={onClose}/>
             );
             break;
         case "SendEmail":
             nodeDetail = (
-                <SendEmailDetail  data={data}  onClose={onClose}/>
+                <SendEmailDetail onUpdateNodes={onUpdateNodes} data={data}  onClose={onClose}/>
             );
             break;
         case "FileUpload":
             nodeDetail =(
-                <FileUploadDetail  data={data}  onClose={onClose}/>
+                <FileUploadDetail onUpdateNodes={onUpdateNodes} data={data}  onClose={onClose}/>
             );
             break;
         case "Finish":
             nodeDetail =(
-                <FinishDetail  data={data}  onClose={onClose}/>
+                <FinishDetail onUpdateNodes={onUpdateNodes} data={data}  onClose={onClose}/>
             );
             break;
         default:

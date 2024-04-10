@@ -21,7 +21,7 @@ const nodeTypes = {
 };
 
 const generateWfDefinitionForApi = ({ id, name, version, nodes, edges }) => {
-
+    console.log("nodes",nodes)
     const activities = nodes.map(node => {
     
         return {
@@ -38,6 +38,12 @@ const generateWfDefinitionForApi = ({ id, name, version, nodes, edges }) => {
                     name: "Position",
                     expressions: {
                         Literal: JSON.stringify(node.position)
+                    }
+                },
+                {
+                    name: "DATA",
+                    expressions: {
+                        Literal: node.data.DATA
                     }
                 }
             ]
@@ -83,7 +89,6 @@ const generateWfDefinitionForUI = ({ nodes, edges }) => {
     // ];
     const initialNodes = nodes.map(x => {
         var position = x.properties.find(p=>p.name === "Position").expressions.Literal;
-       
         return {
             id: x.activityId,
             position: JSON.parse(position),

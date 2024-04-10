@@ -213,7 +213,7 @@ export const WorkflowDetail = (props) => {
             name: wfDefinition.name,
             version: wfDefinition.version
         });
-        console.log("workflow", workflow);
+        // console.log("workflow", workflow);
         requestUpdateWfDefinitionApiData(workflow);
 
     }
@@ -283,6 +283,34 @@ export const WorkflowDetail = (props) => {
         [nodes, edges]
     );
 
+    const onUpdateNodes = ({nodeId, customData}) =>{
+       
+        const newNodes = nodes.map(x=>{
+            if(x.id === nodeId){
+                return {
+                    ...x,
+                    data: {
+                        ...x.data,
+                        DATA : customData
+                    }
+                }
+            }else{
+                return x;
+            }
+        });
+    
+        setNodes([...newNodes]);
+
+        const workflow = generateWfDefinitionForApi({
+            nodes: newNodes,
+            edges,
+            id: wfDefinition.definitionId,
+            name: wfDefinition.name,
+            version: wfDefinition.version
+        });
+       
+        requestUpdateWfDefinitionApiData(workflow);
+    }
 
     return (
         <AdminCommomLayout>
@@ -333,7 +361,7 @@ export const WorkflowDetail = (props) => {
                         </Panel>
                         <Controls showInteractive={false} />
                         <ListNodeDrawer open={openListNodeDrawer} onClose={() => { setOpenListNodeDrawer(false) }}></ListNodeDrawer>
-                        <NodeDetailDrawer open={openNodeDetailDrawer} data={dataNodeDetail} onClose={() => { setNodeDetailDrawer(false) }}></NodeDetailDrawer>
+                        <NodeDetailDrawer onUpdateNodes={onUpdateNodes} open={openNodeDetailDrawer} data={dataNodeDetail} onClose={() => { setNodeDetailDrawer(false) }}></NodeDetailDrawer>
 
                         <Background variant={BackgroundVariant.Dots} />
                     </ReactFlow>
