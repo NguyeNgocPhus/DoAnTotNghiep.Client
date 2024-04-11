@@ -20,3 +20,13 @@ export const myProfileState = atom({
         loading:false
     }
 })
+
+export const getRoles = atom({
+    key:"GET-ROLES-STATE",
+    default:{
+        data:{},
+        state:"",
+        message:"",
+        loading:false
+    }
+})

@@ -41,10 +41,10 @@ export const FileUploadDetail = ({ onUpdateNodes, data, onClose }) => {
         if (nodeDefinitionApiData !== null) {
             if (nodeDefinitionApiData.state === REQUEST_STATE.SUCCESS) {
 
-               var jsonData = JSON.parse(nodeDefinitionApiData.data.data)
+               var jsonData = JSON.parse(nodeDefinitionApiData?.data?.data)
             
-               setImportTemplateId(jsonData.importTemplateId)
-               setDescription(nodeDefinitionApiData.data.description)
+               setImportTemplateId(jsonData?.importTemplateId)
+               setDescription(nodeDefinitionApiData?.data?.description)
             } else if (nodeDefinitionApiData.state === REQUEST_STATE.ERROR) {
 
             } else if (nodeDefinitionApiData.state === REQUEST_STATE.REQUEST) {

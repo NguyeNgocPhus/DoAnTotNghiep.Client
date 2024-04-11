@@ -291,15 +291,16 @@ export const WorkflowDetail = (props) => {
                     ...x,
                     data: {
                         ...x.data,
-                        DATA: customData,
-                        DESCRIPTION: description
+                        data: customData,
+                        description: description
                     }
                 }
             } else {
                 return x;
             }
         });
-
+        // console.log("nodes",nodes)
+        // console.log("newNodes",newNodes)
         setNodes([...newNodes]);
 
         const workflow = generateWfDefinitionForApi({

@@ -53,7 +53,7 @@ export const FinishNode = ({
                     <FinishIcon></FinishIcon>
                 </div>
                 <div className='node-name'>
-                    <Typography.Text strong>{name}</Typography.Text>
+                <Typography.Text strong>{name}</Typography.Text>
                     <Typography.Text>{description}</Typography.Text>
                 </div>
                 

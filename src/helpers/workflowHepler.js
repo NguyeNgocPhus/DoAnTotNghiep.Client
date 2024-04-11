@@ -21,9 +21,9 @@ const nodeTypes = {
 };
 
 const generateWfDefinitionForApi = ({ id, name, version, nodes, edges }) => {
-    console.log("nodes",nodes)
+    console.log("nodes", nodes)
     const activities = nodes.map(node => {
-    
+
         return {
             activityId: node.id,
             category: "",
@@ -41,15 +41,15 @@ const generateWfDefinitionForApi = ({ id, name, version, nodes, edges }) => {
                     }
                 },
                 {
-                    name: "DATA",
+                    name: "Data",
                     expressions: {
-                        Literal: node.data.DATA
+                        Literal: node.data.data
                     }
                 },
                 {
-                    name: "DESCRIPTION",
+                    name: "Description",
                     expressions: {
-                        Literal: node.data.DESCRIPTION
+                        Literal: node.data.description
                     }
                 }
             ]
@@ -94,8 +94,9 @@ const generateWfDefinitionForUI = ({ nodes, edges }) => {
     //     { id: 'b->c', type: 'custom-edge', source: 'b', target: 'c' },
     // ];
     const initialNodes = nodes.map(x => {
-        var position = x.properties.find(p=>p.name === "Position").expressions.Literal;
-        var description = x.properties.find(p=>p.name === "DESCRIPTION")?.expressions?.Literal;
+        var position = x.properties.find(p => p.name === "Position").expressions.Literal;
+        var description = x.properties.find(p => p.name === "Description")?.expressions?.Literal;
+        var data = x.properties.find(p => p.name === "Data")?.expressions?.Literal;
         return {
             id: x.activityId,
             position: JSON.parse(position),
@@ -103,6 +104,7 @@ const generateWfDefinitionForUI = ({ nodes, edges }) => {
             data: {
                 name: x.displayName,
                 description: description,
+                data: data,
                 forceToolbarVisible: false
             }
         }
