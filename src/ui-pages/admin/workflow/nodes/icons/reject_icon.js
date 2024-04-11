@@ -6,7 +6,7 @@ const handleStyle = { left: 10 };
 
 export const RejectIcon = () => {
     return (
-        <div className="approve_icon">
+        <div className="node_icon node_action_icon">
            <CloseOutlined style={{color:'white'}}/>
         </div>
     );

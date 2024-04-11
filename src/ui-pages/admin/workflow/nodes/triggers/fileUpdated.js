@@ -3,7 +3,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { Handle, NodeToolbar, Position, useStore, useStoreActions } from 'reactflow';
 import { ApproveIcon } from '../icons/approve_icon';
 import { FileUploadIcon } from '../icons/file_upload_icon';
-
+import "../styles.css";
 const handleStyle = { left: 10 };
 
 export const FileUploadNode = ({
@@ -34,7 +34,7 @@ export const FileUploadNode = ({
     }
 
 
-    const { name } = data;
+    const { name , description} = data;
 
 
     return (
@@ -46,15 +46,14 @@ export const FileUploadNode = ({
 
                 </div>
             }
-
-            <Handle type="target" position={Position.Top} isConnectable={isConnectable} />
             <div className='node-info'>
                 <div className='node-image'>
                     <FileUploadIcon></FileUploadIcon>
                 </div>
                 <div className='node-name'>
-                    <label htmlFor="text">{type}</label>
-                    <Typography.Text>{name}</Typography.Text>
+                    
+                    <Typography.Text strong>{name}</Typography.Text>
+                    <Typography.Text>{description}</Typography.Text>
                 </div>
                 
                 {/* <input id="text" name="text" onChange={onChange} className="nodrag" /> */}

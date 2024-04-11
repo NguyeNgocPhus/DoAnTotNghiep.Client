@@ -7,7 +7,7 @@ const handleStyle = { left: 10 };
 export const BranchIcon = () => {
 
     return (
-        <div className="approve_icon">
+        <div className="node_icon node_action_icon">
            <BranchesOutlined  style={{color:'white'}}/>
         </div>
     );

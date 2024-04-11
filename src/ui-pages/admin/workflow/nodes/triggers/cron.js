@@ -1,7 +1,8 @@
 import { Button, Typography } from 'antd';
 import { useCallback, useEffect, useState } from 'react';
 import { Handle, NodeToolbar, Position, useStore, useStoreActions } from 'reactflow';
-
+import { CronIcon } from '../icons/cron_icon';
+import "../styles.css";
 const handleStyle = { left: 10 };
 
 export const CronNode = ({
@@ -32,7 +33,7 @@ export const CronNode = ({
     }
 
 
-    const { name } = data;
+    const { name , description} = data;
 
 
     return (
@@ -45,10 +46,15 @@ export const CronNode = ({
                 </div>
             }
 
-            <Handle type="target" position={Position.Top} isConnectable={isConnectable} />
-            <div>
-                <label htmlFor="text">{type}</label>
-                <Typography.Text>{name}</Typography.Text>
+            <div className='node-info'>
+                <div className='node-image'>
+                    <CronIcon></CronIcon>
+                </div>
+                <div className='node-name'>
+                    <Typography.Text strong>{name}</Typography.Text>
+                    <Typography.Text>{description}</Typography.Text>
+                </div>
+                
                 {/* <input id="text" name="text" onChange={onChange} className="nodrag" /> */}
             </div>
             {/* {/* <Handle

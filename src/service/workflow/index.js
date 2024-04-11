@@ -2,6 +2,7 @@ import { REQUEST_STATE } from "../../app-config/constants"
 import { apiCreateWfDefinition, cancelApiCreateWfDefinition } from "../../data-source/workflow/create-wf-definition";
 import { apiDeleteWfDefinition, cancelApiDeleteWfDefinition } from "../../data-source/workflow/delete-wf-definition";
 import { apiGetListWfDefinition, cancelApiGetListWfDefinition } from "../../data-source/workflow/get-list-wf-definition";
+import { apiGetNodeDefinition, cancelApiGetNodeDefinition } from "../../data-source/workflow/get-node-definition";
 import { apiGetWfDefinition, cancelApiGetWfDefinition } from "../../data-source/workflow/get-wf-definition";
 import { apiUpdateWfDefinition, cancelApiUpdateWfDefinition } from "../../data-source/workflow/update-wf-definition";
 
@@ -81,6 +82,20 @@ export const WORKFLOW = {
         apiGetWfDefinition(params).then((response) => {
             if (response && response.state !== REQUEST_STATE.UNMOUNT) {
                 setWfDefinitionData(response);
+            }
+        });
+    },
+    // get node workflow definition
+    cancelApiGetNodeDefinition: cancelApiGetNodeDefinition,
+    getNodeDefinitionAsync: function (params, setNodeDefinitionData) {
+        setNodeDefinitionData({
+            state: REQUEST_STATE.REQUEST,
+            message: "",
+            loading: true
+        })
+        apiGetNodeDefinition(params).then((response) => {
+            if (response && response.state !== REQUEST_STATE.UNMOUNT) {
+                setNodeDefinitionData(response);
             }
         });
     },

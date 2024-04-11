@@ -2,7 +2,7 @@ import { Button ,Typography} from 'antd';
 import { useCallback, useEffect, useState } from 'react';
 import { Handle, NodeToolbar, Position, useStore, useStoreActions } from 'reactflow';
 import { FileAddOutlined } from '@ant-design/icons';
-import "./styles.css";
+import "../styles.css";
 import { ApproveIcon } from '../icons/approve_icon';
 const handleStyle = { left: 10 };
 
@@ -34,7 +34,7 @@ export const ApproveNode = ({
     }
 
 
-    const { name } = data;
+    const { name , description} = data;
 
 
     return (
@@ -53,8 +53,8 @@ export const ApproveNode = ({
                     <ApproveIcon></ApproveIcon>
                 </div>
                 <div className='node-name'>
-                    <label htmlFor="text">{type}</label>
-                    <Typography.Text>{name}</Typography.Text>
+                    <Typography.Text strong>{name}</Typography.Text>
+                    <Typography.Text>{description}</Typography.Text>
                 </div>
                 
                 {/* <input id="text" name="text" onChange={onChange} className="nodrag" /> */}
@@ -66,7 +66,7 @@ export const ApproveNode = ({
                     style={handleStyle}
                     isConnectable={isConnectable}
                 /> */}
-            <Handle type="source" position={Position.Bottom} id="b" isConnectable={isConnectable} />
+            <Handle className="customHandle" type="source" position={Position.Bottom} id="b" isConnectable={isConnectable} />
         </div>
     );
 }

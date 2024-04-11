@@ -1,17 +1,20 @@
-.main-page{
+.main-page {
     margin-top: 60px;
 }
-.fullScreen{
+
+.fullScreen {
     position: relative;
 }
-.menu_left{
+
+.menu_left {
     display: flex;
     justify-content: center;
     align-items: center;
-  
+
     /* padding-top: 50px !important; */
 }
-.icon-phone{
+
+.icon-phone {
     position: fixed;
     z-index: 1000;
     bottom: 20px;
@@ -23,15 +26,18 @@
     width: 70px;
     cursor: pointer;
 }
-.ant-layout-footer{
+
+.ant-layout-footer {
     padding: 0 !important;
-    padding-top:30px !important;
+    padding-top: 30px !important;
     background-color: #ffff !important;
 }
-.service-description{
+
+.service-description {
     font-size: 12px;
 }
-.service-image{
+
+.service-image {
     width: 55px;
     height: 55px;
     background-color: black;
@@ -42,31 +48,36 @@
     margin-bottom: 10px;
     transition: transform .7s ease-in-out;
 }
+
 .service-image:hover {
     transform: rotate(360deg);
-    
+
 }
-.footer-info{
+
+.footer-info {
     background-color: #ffff;
     margin: 0 27px;
-    padding:20px 0;
+    padding: 20px 0;
     border-bottom: 2px solid black;
 }
-.support-item{
+
+.support-item {
     font-size: 12px;
-    padding:0px !important;
+    padding: 0px !important;
     height: 28px !important;
     display: flex !important;
     align-items: center;
 }
-.btn-info{
+
+.btn-info {
     width: 100%;
-    color:#ffff;
+    color: #ffff;
     background-color: #A73340;
     padding: 5px 0;
     margin: 10px 0;
 }
-.footer-admin{
+
+.footer-admin {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -74,12 +85,30 @@
     position: relative;
     bottom: 10px;
 }
-.icon-message{
+
+.icon-message {
     position: fixed;
     bottom: 20px;
     right: 20px;
     height: 70px;
     width: 70px;
     z-index: 100;
+    cursor: pointer;
+}
+
+.user_avatar {
+    position: absolute !important;
+    height: 50px;
+    width: 50px;
+    bottom: 10px;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #1890ff;
+    padding: 10px;
+    border-radius: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
     cursor: pointer;
 }

@@ -18,7 +18,7 @@ export const useProfile = () =>{
             // setMyprofile({});
             Auth.cancelGetMyprofile();
         }
-    })
+    },[])
     return [
         myprofile,
         request

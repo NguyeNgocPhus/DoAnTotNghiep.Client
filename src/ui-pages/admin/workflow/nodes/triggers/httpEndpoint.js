@@ -1,7 +1,7 @@
 import { Button, Typography } from 'antd';
 import { useCallback, useEffect, useState } from 'react';
 import { Handle, NodeToolbar, Position, useStore, useStoreActions } from 'reactflow';
-
+import "../styles.css";
 const handleStyle = { left: 10 };
 
 export const HttpEndpointNode = ({

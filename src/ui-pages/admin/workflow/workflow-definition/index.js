@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import "./styles.css";
 import 'reactflow/dist/style.css';
-import { Button, Col, Input, Row, Space, Table, Typography, Tag, Dropdown, Modal, Form, message, Popconfirm } from 'antd';
+import { Button, Col, Input, Row, Space, Table, Typography, Tag, Dropdown, Modal, Form, message, Popconfirm, Spin } from 'antd';
 import { SearchOutlined, PlusOutlined, DownOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import { REQUEST_STATE } from '../../../../app-config/constants';
 import { useCreateWfDefinition } from '../../../../store/workflow/use-create-wf-definition';
@@ -75,6 +75,7 @@ export const ListWorkflowDefinition = () => {
     const [listWfDefinitionRequestData, requestGetListWfDefinitionData] = useGetListWfDefinition();
     const [deleteWfDefinitionApiData, requestDeleteWfDefinitionApiData] = useDeleteWfDefinition();
 
+    const [loading, setLoading] = useState(false);
     const [listWfDefinition, setListWfDefinition] = useState([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -124,12 +125,12 @@ export const ListWorkflowDefinition = () => {
                         version: x.version
                     }
                 });
-                // console.log("listData",listData)
+                setLoading(false);
                 setListWfDefinition(listData);
             } else if (listWfDefinitionRequestData.state === REQUEST_STATE.ERROR) {
 
             } else if (listWfDefinitionRequestData.state === REQUEST_STATE.REQUEST) {
-
+                setLoading(true);
             }
         }
     }, [listWfDefinitionRequestData])
@@ -144,14 +145,13 @@ export const ListWorkflowDefinition = () => {
             if (deleteWfDefinitionApiData.state === REQUEST_STATE.SUCCESS) {
 
                 message.success('delete success', 2.5);
-                console.log("deleteWfDefinitionApiData.data", deleteWfDefinitionApiData)
                 const newListWfDefinition = listWfDefinition.filter(x => x.id !== deleteWfDefinitionApiData.data)
                 setListWfDefinition(newListWfDefinition);
 
             } else if (deleteWfDefinitionApiData.state === REQUEST_STATE.ERROR) {
                 // message.error('This is an error message');
             } else if (deleteWfDefinitionApiData.state === REQUEST_STATE.REQUEST) {
-                // message.loading('Action in progress..', 2.5)
+
             }
         }
     }, [deleteWfDefinitionApiData])
@@ -171,9 +171,11 @@ export const ListWorkflowDefinition = () => {
                     <Input icon={<SearchOutlined />} style={{ width: '70%' }} size="large" placeholder="Tìm kiếm theo tên, email hoặc số điện thoại" prefix={<SearchOutlined />} />
                 </Col>
                 <Col span={24}>
-                    {listWfDefinition &&
-                        <Table columns={columns} dataSource={listWfDefinition} />
-                    }
+                    <Spin size="large" spinning={loading}>
+                        {listWfDefinition &&
+                            <Table columns={columns} dataSource={listWfDefinition} />
+                        }
+                    </Spin>
                 </Col>
             </Row>
             <Modal title="Tạo flow mới" open={isModalOpen} onCancel={handleCancel} footer={null}>

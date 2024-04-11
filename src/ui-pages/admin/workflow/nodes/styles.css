@@ -1,0 +1,20 @@
+.node-info{
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .node_icon{
+    
+    border-radius: 5px;
+    padding: 10px;
+  }
+  .node_trigger_icon{
+    background-color: rgb(174, 0, 255);
+  }
+  .node_action_icon{
+    background-color: blue;
+  }
+  .node-name{
+    display: flex;
+    flex-direction: column;
+  }

@@ -43,7 +43,8 @@ export const Workflow = () => {
         </Col>
       </Row> */}
       <Tabs 
-        style={{height:'100vh'}}
+        style={{height:'100vh',
+        paddingTop: "20px"}}
         tabPosition={"left"}
         items={tabs}
       />

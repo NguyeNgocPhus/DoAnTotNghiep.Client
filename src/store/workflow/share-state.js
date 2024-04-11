@@ -45,3 +45,12 @@ export const getWfDefinitionState = atom({
         loading:false
     }
 })
+export const getNodeDefinitionState = atom({
+    key:"GET-NODE-DEFINITION-STATE",
+    default:{
+        data:[],
+        state:"",
+        message:"",
+        loading:false
+    }
+})

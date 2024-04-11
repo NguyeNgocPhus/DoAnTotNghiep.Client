@@ -2,7 +2,7 @@ import { Button,Typography } from 'antd';
 import { useCallback, useEffect, useState } from 'react';
 import { Handle, NodeToolbar, Position, useStore, useStoreActions } from 'reactflow';
 import { FileAddOutlined } from '@ant-design/icons';
-import "./styles.css";
+import "../styles.css";
 import { BranchIcon } from '../icons/branch_icon';
 const handleStyle = { left: 10 };
 
@@ -34,7 +34,7 @@ export const BranchNode = ({
     }
 
 
-    const { name } = data;
+    const { name, description } = data;
 
 
     return (
@@ -53,8 +53,8 @@ export const BranchNode = ({
                    <BranchIcon></BranchIcon>
                 </div>
                 <div className='node-name'>
-                    <label htmlFor="text">{type}</label>
-                    <Typography.Text>{name}</Typography.Text>
+                <Typography.Text strong>{name}</Typography.Text>
+                    <Typography.Text>{description}</Typography.Text>
                 </div>
                 
                 {/* <input id="text" name="text" onChange={onChange} className="nodrag" /> */}

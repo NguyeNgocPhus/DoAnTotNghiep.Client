@@ -8,7 +8,7 @@ export const ApproveIcon = () => {
 
 
     return (
-        <div className="approve_icon">
+        <div className="node_icon node_action_icon">
            <CheckOutlined style={{color:'white'}}/>
         </div>
     );

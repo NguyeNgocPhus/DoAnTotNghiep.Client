@@ -1,6 +1,7 @@
 import { ApproveNode } from "../ui-pages/admin/workflow/nodes/actions/approve";
 import { BranchNode } from "../ui-pages/admin/workflow/nodes/actions/branch";
 import { ConditionNode } from "../ui-pages/admin/workflow/nodes/actions/condition";
+import { FinishNode } from "../ui-pages/admin/workflow/nodes/actions/finish";
 import { RejectNode } from "../ui-pages/admin/workflow/nodes/actions/reject";
 import { SendEmailNode } from "../ui-pages/admin/workflow/nodes/actions/sendEmail";
 import { CronNode } from "../ui-pages/admin/workflow/nodes/triggers/cron";
@@ -15,13 +16,14 @@ const nodeTypes = {
     'Reject': RejectNode,
     'Condition': ConditionNode,
     'SendEmail': SendEmailNode,
-    'Branch': BranchNode
+    'Branch': BranchNode,
+    'Finish': FinishNode
 };
 
 const generateWfDefinitionForApi = ({ id, name, version, nodes, edges }) => {
-
+    console.log("nodes", nodes)
     const activities = nodes.map(node => {
-    
+
         return {
             activityId: node.id,
             category: "",
@@ -36,6 +38,18 @@ const generateWfDefinitionForApi = ({ id, name, version, nodes, edges }) => {
                     name: "Position",
                     expressions: {
                         Literal: JSON.stringify(node.position)
+                    }
+                },
+                {
+                    name: "Data",
+                    expressions: {
+                        Literal: node.data.data
+                    }
+                },
+                {
+                    name: "Description",
+                    expressions: {
+                        Literal: node.data.description
                     }
                 }
             ]
@@ -80,14 +94,17 @@ const generateWfDefinitionForUI = ({ nodes, edges }) => {
     //     { id: 'b->c', type: 'custom-edge', source: 'b', target: 'c' },
     // ];
     const initialNodes = nodes.map(x => {
-        var position = x.properties.find(p=>p.name === "Position").expressions.Literal;
-       
+        var position = x.properties.find(p => p.name === "Position").expressions.Literal;
+        var description = x.properties.find(p => p.name === "Description")?.expressions?.Literal;
+        var data = x.properties.find(p => p.name === "Data")?.expressions?.Literal;
         return {
             id: x.activityId,
             position: JSON.parse(position),
             type: x.type,
             data: {
                 name: x.displayName,
+                description: description,
+                data: data,
                 forceToolbarVisible: false
             }
         }
