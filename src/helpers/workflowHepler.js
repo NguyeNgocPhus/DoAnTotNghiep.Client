@@ -24,6 +24,46 @@ const generateWfDefinitionForApi = ({ id, name, version, nodes, edges }) => {
     console.log("nodes", nodes)
     const activities = nodes.map(node => {
 
+        const properties = [
+            {
+                name: "Position",
+                expressions: {
+                    Literal: JSON.stringify(node.position)
+                }
+            },
+            {
+                name: "Data",
+                expressions: {
+                    Literal: node.data.data
+                }
+            },
+            {
+                name: "Description",
+                expressions: {
+                    Literal: node.data.description
+                }
+            }
+        ];
+        if (node.type === "Approve" || node.type === "Reject") {
+            properties.push(
+                {
+                    name: "Signal",
+                    expressions: {
+                        Literal: uuidv4()
+                    }
+                }
+            )
+        }
+        if (node.type === "Branch") {
+            properties.push(
+                {
+                    name: "Branches",
+                    expressions: {
+                        Json: "[\"b1\",\"b2\",\"b3\",\"b4\"]"
+                    }
+                }
+            )
+        }
         return {
             activityId: node.id,
             category: "",
@@ -33,36 +73,26 @@ const generateWfDefinitionForApi = ({ id, name, version, nodes, edges }) => {
             propertyStorageProviders: {},
             saveWorkflowContext: false,
             type: node.type,
-            properties: [
-                {
-                    name: "Position",
-                    expressions: {
-                        Literal: JSON.stringify(node.position)
-                    }
-                },
-                {
-                    name: "Data",
-                    expressions: {
-                        Literal: node.data.data
-                    }
-                },
-                {
-                    name: "Description",
-                    expressions: {
-                        Literal: node.data.description
-                    }
-                }
-            ]
+            properties: properties
         }
     });
-    const connections = edges.map(edge => {
 
+    let index = 1;
+    const connections = edges.map(edge => {
+        let outcome = "Done";
+        const activity = activities.find(x => x.activityId === edge.source);
+        console.log("activity ne", activity);
+        if (activity.type === "Branch") {
+            outcome = `b${index}`;
+            index = index + 1;
+        }
         return {
-            outcome: "DONE",
+            outcome: outcome,
             sourceActivityId: edge.source,
             targetActivityId: edge.target
         }
     });
+
 
     let workflow = {
         workflowDefinitionId: id,
