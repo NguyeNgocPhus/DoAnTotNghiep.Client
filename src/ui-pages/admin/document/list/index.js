@@ -16,12 +16,6 @@ const { Title } = Typography;
 export const ListDocument = () => {
     const columns = [
         {
-            title: 'Id',
-            dataIndex: 'id',
-            key: 'id',
-        
-        },
-        {
             title: 'Name',
             dataIndex: 'name',
             key: 'name',
@@ -57,29 +51,30 @@ export const ListDocument = () => {
             title: '',
             key: 'action',
             dataIndex: 'action',
-            render: (_, { id }) => (
+            render: (_, { key}) => (
                 <>
+                    {/* {console.log("JKey", key)} */}
                     <Row gutter={[10, 20]}>
                         <Col className='import_teamplate_action_icon'>
                             <EditOutlined style={{ cursor: 'pointer' }} onClick={() => {
-                                onUpdateImportTemplate(id);
+                                onUpdateImportTemplate(key);
                             }
 
                             } />
                         </Col>
                         <Col className='import_teamplate_action_icon'>
                             <HistoryOutlined style={{ cursor: 'pointer' }} onClick={() => {
-                                onClickViewHistory(id)
+                                onClickViewHistory(key)
                             }} />
                         </Col>
                         <Col className='import_teamplate_action_icon' >
                             <UploadOutlined style={{ cursor: 'pointer' }} onClick={() => {
-                                onClickUploadDocument(id)
+                                onClickUploadDocument(key)
                             }} />
                         </Col>
                         <Col className='import_teamplate_action_icon'>
                             <DeleteOutlined style={{ cursor: 'pointer', color: 'red' }} onClick={() => {
-                                onDeleteImportTemplate(id)
+                                onDeleteImportTemplate(key)
                             }} />
                         </Col>
                     </Row>
@@ -100,7 +95,8 @@ export const ListDocument = () => {
     const [loading, setLoading] = useState(false);
     const [form] = Form.useForm();
 
-
+    const [fileTemplateId, setFileTemplateId ] = useState(null);
+    const [importTemplateId, setImportTemplateId ] = useState(null);
 
     const showFormCreate = () => {
         setFormCreateOpen(true);
@@ -108,37 +104,26 @@ export const ListDocument = () => {
 
 
     const onCreateImportTemplate = (values) => {
+        // console.log("Onfinish",{...values, fileTemplateId})
         form.resetFields();
-        requestCreateImportTemplateApiData(values);
+        requestCreateImportTemplateApiData({...values, fileTemplateId});
     };
     const onUpdateImportTemplate = (id) => {
-
+        setFormCreateOpen(true);
     };
     const onDeleteImportTemplate = (id) => {
-        console.log(id);
+        // console.log(id);
         requestDeleteImportTemplateApiData({ id });
     };
 
     const onClickViewHistory = () => {
-        console.log("onClickViewHistory")
+        // console.log("onClickViewHistory")
     }
-    const onClickUploadDocument = () => {
+    const onClickUploadDocument = (id) => {
+        setImportTemplateId(id);
         setFormUploadOpen(true);
     }
-    const props = {
-        action: '//jsonplaceholder.typicode.com/posts/',
-        listType: 'picture',
-        previewFile(file) {
-            console.log('Your upload file:', file);
-            // Your process logic. Here we just mock to the same file
-            return fetch('https://next.json-generator.com/api/json/get/4ytyBoLK8', {
-                method: 'POST',
-                body: file,
-            })
-                .then((res) => res.json())
-                .then(({ thumbnail }) => thumbnail);
-        },
-    };
+   
 
     useEffect(() => {
         requestListImportTemplateApi();
@@ -150,9 +135,10 @@ export const ListDocument = () => {
 
                 var data = listImportTemplateApiData.data.map(x => {
                     return {
-                        id: x.id,
+                        // id: x.id,
                         name: x.name,
                         tag: x.tag,
+                        key: x.id,
                         hasWorkflow: x.hasWorkflow,
                         active: x.active,
 
@@ -221,8 +207,8 @@ export const ListDocument = () => {
                     </Spin>
                 </Col>
             </Row>
-            <FormCreate form={form} open={formCreateOpen} onClose={() => { setFormCreateOpen(false) }} onFinish={onCreateImportTemplate}></FormCreate>
-            <FormUpload open={formUploadOpen} onClose={() => { setFormUploadOpen(false) }}></FormUpload>
+            <FormCreate setFileTemplateId={setFileTemplateId} form={form} open={formCreateOpen} onClose={() => { setFormCreateOpen(false) }} onFinish={onCreateImportTemplate}></FormCreate>
+            <FormUpload importTemplateId={importTemplateId} open={formUploadOpen} onClose={() => { setFormUploadOpen(false) }}></FormUpload>
 
         </>
 

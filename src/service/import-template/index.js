@@ -3,6 +3,7 @@ import { apiCreateImportTemplate, cancelApiCreateImportTemplate } from "../../da
 import { apiDeleteImportTemplate, cancelApiDeleteImportTemplate } from "../../data-source/import-template/delete-import-template";
 import { apiGetImportTemplate, cancelApiGetImportTemplate } from "../../data-source/import-template/get-import-template";
 import { apiGetListImportTemplate, cancelApiGetListImportTemplate } from "../../data-source/import-template/get-list-import-template";
+import { apiImportData, cancelApiImportData } from "../../data-source/import-template/import-data";
 import { apiUpdateImportTemplate, cancelApiUpdateImportTemplate } from "../../data-source/import-template/update-import-template";
 
 
@@ -38,6 +39,20 @@ export const IMPORT_TEMPLATE = {
         });
     },
 
+    // import 
+    cancelApiImportData: cancelApiImportData,
+    importDataAsync: function (params, setImportData) {
+        setImportData({
+            state: REQUEST_STATE.REQUEST,
+            message: "",
+            loading: true
+        })
+        apiImportData(params).then((response) => {
+            if (response && response.state !== REQUEST_STATE.UNMOUNT) {
+                setImportData(response);
+            }
+        });
+    },
     // delete 
     cancelDeleteImportTempate: cancelApiDeleteImportTemplate,
     deleteImportTempateAsync: function (params, setDeleteImportTemplateData) {
