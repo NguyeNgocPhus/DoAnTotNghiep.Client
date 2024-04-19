@@ -33,17 +33,28 @@ export const ListDocument = () => {
             dataIndex: 'active',
             render: (_, { active }) => (
                 <>
-                    {active && <CheckOutlined />}
+                    {active && <CheckOutlined style={{color:'green'}}/>}
                 </>
             ),
-        },
+        },    
         {
             title: 'Workflow',
             key: 'hasWorkflow',
             dataIndex: 'hasWorkflow',
             render: (_, { hasWorkflow }) => (
                 <>
-                    {hasWorkflow && <CheckOutlined />}
+                    {hasWorkflow && <CheckOutlined style={{color:'green'}}/>}
+                </>
+            ),
+        },
+        {
+            title: 'File Template',
+            key: 'fileTemplateId',
+            dataIndex: 'fileTemplateId',
+            render: (_, { fileTemplateId }) => (
+                <>
+                    {console.log("fileTemplateId",fileTemplateId)}
+                    {fileTemplateId && <Typography.Link href='http://localhost:5000/Api/FileStorage/Get/b4330c7d-abc9-44bc-b9de-b3963a783c0b?name=TCKT' >Download</Typography.Link>}
                 </>
             ),
         },
@@ -132,7 +143,7 @@ export const ListDocument = () => {
         if (listImportTemplateApiData !== null) {
             if (listImportTemplateApiData.state === REQUEST_STATE.SUCCESS) {
                 setLoading(false);
-
+                // console.log("listImportTemplateApiData.state",listImportTemplateApiData.data);
                 var data = listImportTemplateApiData.data.map(x => {
                     return {
                         // id: x.id,
@@ -141,6 +152,7 @@ export const ListDocument = () => {
                         key: x.id,
                         hasWorkflow: x.hasWorkflow,
                         active: x.active,
+                        fileTemplateId : x.fileTemplateId
 
                     }
                 });
