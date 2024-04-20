@@ -2,40 +2,43 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import "./styles.css";
 import 'reactflow/dist/style.css';
-import { Button, Col, Input, Row, Space, Table, Typography, Tag, Modal, Form } from 'antd';
+import { Button, Col, Input, Row, Space, Table, Typography, Tag, Modal, Form, Spin } from 'antd';
 import { SearchOutlined, PlusOutlined } from '@ant-design/icons';
+import { CreateUser } from './create';
+import { useGetUsers } from '../../../../store/auth/use-get-users';
+import { REQUEST_STATE } from '../../../../app-config/constants';
 const { Title } = Typography;
 const columns = [
     {
         title: 'Name',
-        dataIndex: 'name',
-        key: 'name',
+        dataIndex: 'userName',
+        key: 'userName',
         render: (text) => <a>{text}</a>,
     },
     {
-        title: 'Age',
-        dataIndex: 'age',
-        key: 'age',
+        title: 'Email',
+        dataIndex: 'email',
+        key: 'email',
     },
     {
-        title: 'Address',
-        dataIndex: 'address',
-        key: 'address',
+        title: 'Phone Numner',
+        dataIndex: 'phoneNumber',
+        key: 'phoneNumber',
     },
     {
-        title: 'Tags',
-        key: 'tags',
-        dataIndex: 'tags',
-        render: (_, { tags }) => (
+        title: 'Roles',
+        key: 'roles',
+        dataIndex: 'roles',
+        render: (_, { roles }) => (
             <>
-                {tags.map((tag) => {
-                    let color = tag.length > 5 ? 'geekblue' : 'green';
-                    if (tag === 'loser') {
+                {roles.map((role) => {
+                    let color = role.length > 5 ? 'geekblue' : 'green';
+                    if (role === 'loser') {
                         color = 'volcano';
                     }
                     return (
-                        <Tag color={color} key={tag}>
-                            {tag.toUpperCase()}
+                        <Tag color={color} key={role}>
+                            {role.toUpperCase()}
                         </Tag>
                     );
                 })}
@@ -47,57 +50,72 @@ const columns = [
         key: 'action',
         render: (_, record) => (
             <Space size="middle">
-                <a>Invite {record.name}</a>
+                <a>Edit {record.name}</a>
                 <a>Delete</a>
             </Space>
         ),
     },
 ];
-const data = [
-    {
-        key: '1',
-        name: 'John Brown',
-        age: 32,
-        address: 'New York No. 1 Lake Park',
-        tags: ['nice', 'developer'],
-    },
-    {
-        key: '2',
-        name: 'Jim Green',
-        age: 42,
-        address: 'London No. 1 Lake Park',
-        tags: ['loser'],
-    },
-    {
-        key: '3',
-        name: 'Joe Black',
-        age: 32,
-        address: 'Sydney No. 1 Lake Park',
-        tags: ['cool', 'teacher'],
-    },
-];
+
 export const ListUsers = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const [getUsersApiData, requestGetUsersApiData] = useGetUsers();
+    const [listUser, setListUser] = useState([]);
+
+    useEffect(() => {
+        requestGetUsersApiData();
+    }, []);
+
+
+    useEffect(() => {
+        if (getUsersApiData !== null) {
+            if (getUsersApiData.state === REQUEST_STATE.SUCCESS) {
+                setLoading(false);
+
+                var data = getUsersApiData.data.map(x => {
+                    return {
+                        email: x.email,
+                        key: x.id,
+                        userName: x.userName,
+                        phoneNumber: x.phoneNumber,
+                        roles: x.roles
+                    }
+                })
+                setListUser([...data]);
+
+            } else if (getUsersApiData.state === REQUEST_STATE.ERROR) {
+
+            } else if (getUsersApiData.state === REQUEST_STATE.REQUEST) {
+                setLoading(true);
+            }
+        }
+    }, [getUsersApiData])
+
+    const onCreateUserSuccess = (user) => {
+        setListUser([{
+            email: user.email,
+            key: user.id,
+            userName: user.userName,
+            phoneNumber: user.phoneNumber,
+            roles: user.roles
+        }, ...listUser]);
+    }
     const onOpenModal = () => {
         setIsModalOpen(true);
     };
     const handleCancel = () => {
         setIsModalOpen(false);
     };
-    const onFinish = (values) => {
-        console.log('Success:', values);
-    };
-    const onFinishFailed = (errorInfo) => {
-        console.log('Failed:', errorInfo);
-    };
+
     return (
         <>
-            <Row style={{ padding: '20px' }}>
+            <Row style={{ padding: '20px' }} gutter={[0, 32]}>
                 <Col span={24}>
                     <div className='header_list_users'>
                         <Title level={5}>Danh sách người dùng</Title>
                         <div>
-                            <Button onClick={onOpenModal} icon={<PlusOutlined />} type="primary" size="large">Tạo khách hàng mới</Button>
+                            <Button onClick={onOpenModal} icon={<PlusOutlined />} type="primary" size="large">Tạo người dùng</Button>
                         </div>
                     </div>
                 </Col>
@@ -105,40 +123,11 @@ export const ListUsers = () => {
                     <Input icon={<SearchOutlined />} style={{ width: '70%' }} size="large" placeholder="Tìm kiếm theo tên, email hoặc số điện thoại" prefix={<SearchOutlined />} />
                 </Col>
                 <Col span={24}>
-                    <Table columns={columns} dataSource={data} />
+                    <Table loading={loading} columns={columns} dataSource={listUser} />
+
                 </Col>
             </Row>
-            <Modal title="Tạo flow mới" open={isModalOpen} onCancel={handleCancel} footer={null}>
-                <Form
-                    name="basic"
-                    layout="vertical"
-                    onFinish={onFinish}
-                    onFinishFailed={onFinishFailed}
-                    autoComplete="off"
-                >
-                    <Form.Item
-                        label="Tên Workflow"
-                        name="name"
-
-                    >
-                        <Input />
-                    </Form.Item>
-
-                    <Form.Item
-                        label="Mô tả"
-                        name="description"
-                    >
-                        <Input />
-                    </Form.Item>
-
-
-                    <Form.Item >
-                        <Button type="primary" htmlType="submit">
-                            Submit
-                        </Button>
-                    </Form.Item>
-                </Form>
-            </Modal>
+            <CreateUser isModalOpen={isModalOpen} handleCancel={handleCancel} onCreateUserSuccess={onCreateUserSuccess} ></CreateUser>
         </>
 
 

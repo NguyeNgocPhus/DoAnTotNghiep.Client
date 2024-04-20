@@ -30,3 +30,23 @@ export const getRoles = atom({
         loading:false
     }
 })
+
+export const createUser = atom({
+    key:"CREATE-USER-STATE",
+    default:{
+        data:{},
+        state:"",
+        message:"",
+        loading:false
+    }
+})
+
+export const getUsers = atom({
+    key:"GET-USERS-STATE",
+    default:{
+        data:{},
+        state:"",
+        message:"",
+        loading:false
+    }
+})

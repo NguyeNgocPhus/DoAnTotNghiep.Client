@@ -47,7 +47,17 @@ export const ListApprove = () => {
             title: 'Status',
             dataIndex: 'status',
             key: 'status',
-            render: (text) => <a>{text}</a>,
+            render: (text) => {
+                let color = text.length > 5 ? 'geekblue' : 'green';
+                if (text === 'loser') {
+                    color = 'volcano';
+                }
+                return (
+                    <Tag color={color} key={text}>
+                        {text.toUpperCase()}
+                    </Tag>
+                );
+            },
         },
 
         {
