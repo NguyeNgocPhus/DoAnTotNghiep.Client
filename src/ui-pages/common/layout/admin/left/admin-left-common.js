@@ -5,78 +5,110 @@ import {
     FolderOpenOutlined,
     UserOutlined,
     BranchesOutlined,
+    ProductOutlined,
     UsergroupAddOutlined
 } from '@ant-design/icons';
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 const { Content, Footer } = Layout;
 const { Search } = Input;
 
 
 export const AdminLeftCommomLayout = ({ children }) => {
-    function getItem(label, key, icon, children) {
-        return {
-            key,
-            icon,
-            children,
-            label,
-        };
-    };
-   
-    const [mode, setMode] = useState('inline');
-    const [theme, setTheme] = useState('light');
-    const changeMode = (value) => {
-        setMode(value ? 'vertical' : 'inline');
-    };
-    const changeTheme = (value) => {
-        setTheme(value ? 'dark' : 'light');
-    };
+
+    const [menu1,setMenu1] = useState(null)
+    const [menu2,setMenu2] = useState(null)
+    const [menu3,setMenu3] = useState(null)
+    const [menu4,setMenu4] = useState(null)
+    const navigate = useNavigate();
+    const onClickMenu = (route, key) => {
+        navigate(route);
+        onMenuItemClick(key);
+    }
+    const onMenuItemClick = (key) =>{
+        console.log("key",key)
+       if(key === "1"){
+         setMenu1("menu_item_childen_click"); 
+         setMenu2(null);  
+         setMenu3(null);
+         setMenu4(null);
+       }
+       if(key === "1"){
+        setMenu1("menu_item_childen_click"); 
+        setMenu2(null);  
+        setMenu3(null);
+        setMenu4(null);
+      }
+       if(key === "2"){
+        setMenu1(null); 
+        setMenu2("menu_item_childen_click");  
+        setMenu3(null);
+        setMenu4(null);
+      }
+      if(key === "3"){
+        setMenu1(null); 
+        setMenu2(null);  
+        setMenu3("menu_item_childen_click");
+        setMenu4(null);
+      }
+      if(key === "4"){
+        setMenu1(null); 
+        setMenu2(null);  
+        setMenu3(null);
+        setMenu4("menu_item_childen_click");
+      }
+      
+    }
     return (
-        <Menu
-            style={{ width: '100%', height: '100vh', backgroundColor:'#1890ff'}}
-            defaultSelectedKeys={['1']}
-            defaultOpenKeys={['sub1']}
-            mode={mode}
-            theme={theme}
-
+        <div
+            style={{
+                width: '100%',
+                height: '100vh',
+                backgroundColor: '#1890ff',
+                display: 'flex',
+                flexDirection: 'column',
+                boxShadow: '5px 0px 10px rgba(0, 0, 0, 0.1)'/* Đổ bóng bên phải */
+            }}
         >
-            <Menu.Item style={{ height: '80px' }}>
+            <div style={{ margin:'15px 0' }}>
 
-                <Link to="/admin" className="menu_left">
-                    <div className="logo_avatar">
-                    <img src="/admin_logo.svg"></img>
+                <Link to="/" className="menu_left">
+                    <div className="logo_avatar menu_left">
+                        <img src="/admin_logo.svg"></img>
                     </div>
                 </Link>
                 <div className="divider"></div>
-            </Menu.Item>
-            
-            
-            <Menu.Item style={{ height: '50px' }}>
-                <Tooltip placement="right" title={"Identity"}>
-                    <Link to="/admin/identity" className="menu_left">
-                        <UserOutlined style={{ fontSize: '20px' , color:'white'}} />
-                    </Link>
-                </Tooltip>
-            </Menu.Item>
-           
-            <Menu.Item style={{ height: '50px' }}>
-                <Tooltip placement="right" title={"Nhập dữ liệu"}>
-                    <Link to="/admin/documents" className="menu_left">
-                        <FolderOpenOutlined style={{ fontSize: '20px', color:'white' }} />
-                    </Link>
-                </Tooltip>
-            </Menu.Item>
-            <Menu.Item style={{ height: '50px' }}>
-                <Tooltip placement="right" title={"Workflows"}>
-                    <Link to="/admin/workflows" className="menu_left">
-                        <BranchesOutlined style={{ fontSize: '20px', color:'white'}} />
-                    </Link>
-                </Tooltip>
-            </Menu.Item>
-            <div className="user_avatar">
-                <Typography.Text style={{color:'#1890ff'}}>P</Typography.Text>
+            </div>
+            <div className="menu_item" onClick={() => { onClickMenu("/admin/","4") }}>
+                <div className={`menu_item_childen ${menu4}`} >
+                    <ProductOutlined  style={{ fontSize: '20px' }} />
+                    <span>Dashboard</span>
+                </div> 
             </div>
             
-        </Menu>
+            <div className="menu_item" onClick={() => { onClickMenu("/admin/identity","1") }}>
+                <div className={`menu_item_childen ${menu1}`} >
+                    <UserOutlined style={{ fontSize: '20px' }} />
+                    <span>Identity</span>
+                </div> 
+            </div>
+            {/* menu_item_childen */}
+            <div className="menu_item" onClick={() => { onClickMenu("/admin/documents","2") }}>
+                <div className={`menu_item_childen ${menu2}`}>
+                    <FolderOpenOutlined style={{ fontSize: '20px'}} />
+                    <span>Documents</span>
+                </div>
+            </div>
+            <div className="menu_item" onClick={() => { onClickMenu("/admin/workflows","3") }} >
+                <div className={`menu_item_childen ${menu3}`} >
+                    <BranchesOutlined style={{ fontSize: '20px' }} />
+                    <span>Workflows</span>
+                </div>
+            </div>
+            <div className="user_avatar">
+                <Typography.Text style={{ color: '#1890ff' }}>P</Typography.Text>
+            </div>
+
+        </div>
     )
 }
