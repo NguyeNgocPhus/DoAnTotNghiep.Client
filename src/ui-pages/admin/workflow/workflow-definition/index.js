@@ -158,7 +158,7 @@ export const ListWorkflowDefinition = () => {
     return (
 
         <>
-            <Row style={{ padding: "20px" }}>
+            <Row style={{ padding: "20px" }} gutter={[0, 32]}>
                 <Col span={24}>
                     <div className='header_list_users'>
                         <Title level={5}>Danh sách Workflow Definition</Title>
