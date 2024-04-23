@@ -19,7 +19,7 @@ export const AdminLeftCommomLayout = ({ children }) => {
     const [menu1,setMenu1] = useState(null)
     const [menu2,setMenu2] = useState(null)
     const [menu3,setMenu3] = useState(null)
-    const [menu4,setMenu4] = useState(null)
+    const [menu4,setMenu4] = useState("menu_item_childen_click")
     const navigate = useNavigate();
     const onClickMenu = (route, key) => {
         navigate(route);
