@@ -12,6 +12,7 @@
     "axios": "^0.26.1",
     "caniuse-lite": "^1.0.30001597",
     "chart.js": "^4.4.2",
+    "classnames": "^2.5.1",
     "dagre": "^0.8.5",
     "faker": "^6.6.6",
     "moment": "^2.29.2",
