@@ -98,7 +98,7 @@ export const ListWorkflowDefinition = () => {
     useEffect(() => {
         if (createWfDefinitionApiData !== null) {
             if (createWfDefinitionApiData.state === REQUEST_STATE.SUCCESS) {
-                console.log("createWfDefinitionApiData", createWfDefinitionApiData);
+                // console.log("createWfDefinitionApiData", createWfDefinitionApiData);
                 setIsModalOpen(false);
                 // message.success('Loading finished', 2.5);
                 navigate(`/admin/workflow-definition/${createWfDefinitionApiData.data.definitionId}`)

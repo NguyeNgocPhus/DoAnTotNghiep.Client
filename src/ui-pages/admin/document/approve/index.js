@@ -1,12 +1,12 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from 'react';
 import "./styles.css";
 import 'reactflow/dist/style.css';
-import { Button, Col, Input, Row, Space, Table, Typography, Tag, Modal, Form, Upload, Spin } from 'antd';
-import { AdminCommomLayout } from '../../../common/layout/admin/admin-common';
-import { SearchOutlined, DeleteOutlined, CheckOutlined, UploadOutlined, HistoryOutlined } from '@ant-design/icons';
+import { Col, Input, Row, Table, Typography, Tag, Spin, Modal, Button, Pagination } from 'antd';
+import { SearchOutlined, DeleteOutlined, ShareAltOutlined } from '@ant-design/icons';
 import { useGetListApprove } from '../../../../store/approve/use-get-list-import-template';
 import { REQUEST_STATE } from '../../../../app-config/constants';
+import moment from 'moment';
+import { StepImport } from './step';
 const { Title } = Typography;
 
 
@@ -44,6 +44,16 @@ export const ListApprove = () => {
             ),
         },
         {
+            title: 'Uploaded Time',
+            key: 'createdTime',
+            dataIndex: 'createdTime',
+            render: (_, { createdTime }) => (
+                <>
+                    {createdTime && <Typography.Text >{moment(new Date(createdTime)).format('DD-MM-YYYY HH:mm')}</Typography.Text>}
+                </>
+            ),
+        },
+        {
             title: 'Status',
             dataIndex: 'status',
             key: 'status',
@@ -64,13 +74,14 @@ export const ListApprove = () => {
             title: '',
             key: 'action',
             dataIndex: 'action',
-            render: (_, { key }) => (
+            render: (_, data) => (
                 <>
                     {/* {console.log("JKey", key)} */}
                     <Row gutter={[10, 20]}>
 
-                        <Col className='import_teamplate_action_icon'>
-                            <DeleteOutlined style={{ cursor: 'pointer', color: 'red' }} />
+                        <Col >
+                            <ShareAltOutlined onClick={() => { showWorkflowDetail(data) }} className='import_teamplate_action_icon' style={{ cursor: 'pointer', color: 'green' }} />
+                            <DeleteOutlined className='import_teamplate_action_icon' style={{ cursor: 'pointer', color: 'red' }} />
                         </Col>
                     </Row>
 
@@ -85,6 +96,8 @@ export const ListApprove = () => {
     const [listApproveApiData, requestListApproveApi] = useGetListApprove();
     const [listApprove, setListApprove] = useState([]);
     const [loading, setLoading] = useState(false);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [dataApprove, setDataApprove] = useState(null);
     useEffect(() => {
         requestListApproveApi();
     }, [])
@@ -97,7 +110,7 @@ export const ListApprove = () => {
                 // console.log("listImportTemplateApiData.state",listImportTemplateApiData.data);
                 var data = listApproveApiData.data.map(x => {
                     return {
-
+                        createdTime: x.createdTime,
                         importTemplateName: x.importTemplateName,
                         createdByName: x.createdByName,
                         key: x.id,
@@ -116,6 +129,18 @@ export const ListApprove = () => {
         }
     }, [listApproveApiData])
 
+    const showWorkflowDetail = (data) => {
+        console.log(data);
+        setDataApprove(data);
+        setIsModalOpen(true);
+    }
+
+    const handleOk = () => {
+        setIsModalOpen(false);
+    };
+    const handleCancel = () => {
+        setIsModalOpen(false);
+    };
     return (
         <>
             <Row style={{ padding: '20px' }} gutter={[0, 32]}>
@@ -129,10 +154,23 @@ export const ListApprove = () => {
                 </Col>
                 <Col span={24}>
                     <Spin size="large" spinning={loading}>
-                        <Table columns={columns} dataSource={listApprove} />
+                        <Table pagination={false} columns={columns} style={{marginBottom:'20px'}} dataSource={listApprove} />
+                        <Pagination style={{display:'flex',justifyContent:'end'}}defaultCurrent={1} total={50} />
                     </Spin>
                 </Col>
             </Row>
+            <Modal title={"Phê duyệt tài liệu"} open={isModalOpen} onCancel={handleCancel} footer={null}>
+                {dataApprove && <p>{`${dataApprove.importTemplateName} (${moment(new Date(dataApprove.createdTime)).format('DD-MM-YYYY HH:mm')})`}</p>}
+                <StepImport></StepImport>
+                <StepImport></StepImport>
+                <StepImport></StepImport>
+                <div style={{ display: 'flex', justifyContent: 'end', gap: '10px' }}>
+                    <Button type="primary" style={{ background: "green", borderColor: "green" }}>
+                        Phê duyệt
+                    </Button>
+                    <Button type="primary" style={{ background: "red", borderColor: "red" }}> Từ chối</Button>
+                </div>
+            </Modal>
 
 
         </>
