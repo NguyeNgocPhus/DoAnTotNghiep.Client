@@ -101,7 +101,7 @@ export const AdminLeftCommomLayout = ({ children }) => {
                     <div key={x.name} className="menu_item" >
                         <div className={classNames('menu_item_childen', `${x.isActive ? "menu_item_childen_click" : ""}`)} onClick={() => { onClickMenu(x.route, x.name) }}>
                             {x.icon}
-                            <span>{x.name}</span>
+                            <span style={{fontWeight:"bold"}}>{x.name}</span>
                         </div>
                     </div>
                 )

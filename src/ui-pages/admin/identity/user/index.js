@@ -73,7 +73,7 @@ export const ListUsers = () => {
             if (getUsersApiData.state === REQUEST_STATE.SUCCESS) {
                 setLoading(false);
 
-                var data = getUsersApiData.data.map(x => {
+                var data = getUsersApiData.data.items.map(x => {
                     return {
                         email: x.email,
                         key: x.id,

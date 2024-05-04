@@ -15,7 +15,7 @@ export const apiGetListApprove = async (params) => {
     source = getTokenSource();
  
     try {
-        const response = await GET(`/Api/ImportHistories`, {}, {
+        const response = await GET(`/Api/ImportHistories`, {...params}, {
             cancelToken: source.token
         })
       

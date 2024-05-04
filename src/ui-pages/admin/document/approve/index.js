@@ -92,14 +92,18 @@ export const ListApprove = () => {
         },
     ];
 
-
+    const [selectedRowKeys, setSelectedRowKeys] = useState([]);
     const [listApproveApiData, requestListApproveApi] = useGetListApprove();
     const [listApprove, setListApprove] = useState([]);
     const [loading, setLoading] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [dataApprove, setDataApprove] = useState(null);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [total, setTotal] = useState(0);
     useEffect(() => {
-        requestListApproveApi();
+        requestListApproveApi({
+            page: currentPage
+        });
     }, [])
 
 
@@ -108,7 +112,7 @@ export const ListApprove = () => {
             if (listApproveApiData.state === REQUEST_STATE.SUCCESS) {
                 setLoading(false);
                 // console.log("listImportTemplateApiData.state",listImportTemplateApiData.data);
-                var data = listApproveApiData.data.map(x => {
+                var data = listApproveApiData.data.items.map(x => {
                     return {
                         createdTime: x.createdTime,
                         importTemplateName: x.importTemplateName,
@@ -119,6 +123,8 @@ export const ListApprove = () => {
 
                     }
                 });
+                setTotal(listApproveApiData.data.totalCount);
+                setCurrentPage(listApproveApiData.data.pageIndex)
                 setListApprove(data);
 
             } else if (listApproveApiData.state === REQUEST_STATE.ERROR) {
@@ -135,11 +141,16 @@ export const ListApprove = () => {
         setIsModalOpen(true);
     }
 
-    const handleOk = () => {
-        setIsModalOpen(false);
-    };
     const handleCancel = () => {
         setIsModalOpen(false);
+    };
+
+    const onChange = (page) => {
+       
+        setCurrentPage(page);
+        requestListApproveApi({
+            page: page
+        });
     };
     return (
         <>
@@ -154,8 +165,13 @@ export const ListApprove = () => {
                 </Col>
                 <Col span={24}>
                     <Spin size="large" spinning={loading}>
-                        <Table pagination={false} columns={columns} style={{marginBottom:'20px'}} dataSource={listApprove} />
-                        <Pagination style={{display:'flex',justifyContent:'end'}}defaultCurrent={1} total={50} />
+                        <Table columns={columns} size="middle" dataSource={listApprove}
+                            pagination={false}
+                            scroll={{
+                                y: 450,
+                            }} />
+
+                        <Pagination showTotal={t => `Tổng số : ${t}`} defaultCurrent={1} current={currentPage} onChange={onChange} total={total} />
                     </Spin>
                 </Col>
             </Row>

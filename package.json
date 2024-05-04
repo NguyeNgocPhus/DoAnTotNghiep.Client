@@ -8,7 +8,7 @@
     "@testing-library/react": "^11.2.2",
     "@testing-library/user-event": "^12.5.0",
     "@tinymce/tinymce-react": "^4.0.0",
-    "antd": "^4.19.5",
+    "antd": "4.24.16",
     "axios": "^0.26.1",
     "caniuse-lite": "^1.0.30001597",
     "chart.js": "^4.4.2",
