@@ -36,7 +36,6 @@ function App() {
   useEffect(() => {
     if (userLoginData.data) {
       saveUserInfoToStore(userLoginData.data)
-      // requestMyProfile();
       setIsVerify(true);
     }
   }, [userLoginData])
@@ -83,6 +82,7 @@ function App() {
         })} */}
       </Routes>
       <PrivateRouter path="/admin/" element={<HomePage></HomePage>}></PrivateRouter>
+      <PrivateRouter path="/" element={<HomePage></HomePage>}></PrivateRouter>
       <PrivateRouter path="/admin/workflows" element={<Workflow></Workflow>}></PrivateRouter>
       {/* <PrivateRouter path="/admin/workflow/create" element={<CreateWorkflow></CreateWorkflow>}></PrivateRouter> */}
       <PrivateRouter path="/admin/workflow-definition/:id" element={<WorkflowDetail></WorkflowDetail>}></PrivateRouter>

@@ -6,10 +6,13 @@ import {
     UserOutlined,
     BranchesOutlined,
     ProductOutlined,
-    UsergroupAddOutlined
+    UsergroupAddOutlined,
+    KeyOutlined,
+    LoginOutlined
 } from '@ant-design/icons';
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { removeUserInfo } from "../../../../../app-helper";
 const { Content, Footer } = Layout;
 const { Search } = Input;
 const classNames = require('classnames');
@@ -43,6 +46,7 @@ const menus = [
 ]
 export const AdminLeftCommomLayout = ({ children }) => {
     const [listMenu, setListMenu] = useState([]);
+    const [openUserInfo, setOpenUserInfo] = useState(false);
 
     useEffect(()=>{
         setListMenu([...menus])
@@ -67,7 +71,11 @@ export const AdminLeftCommomLayout = ({ children }) => {
         navigate(route);
         // onMenuItemClick(key);
     }
-
+    
+    const onLogout = () =>{
+        removeUserInfo();
+        navigate("/login");
+    }
     return (
         <div
             style={{
@@ -121,8 +129,22 @@ export const AdminLeftCommomLayout = ({ children }) => {
                     <span>Workflows</span>
                 </div>
             </div> */}
-            <div className="user_avatar">
-                <Typography.Text style={{ color: '#1890ff' }}>P</Typography.Text>
+            <div className="user_avatar" onClick={()=>{setOpenUserInfo(!openUserInfo)}}>
+                <UserOutlined style={{color:"#1890ff"}}/>
+                {openUserInfo &&<div className="user_info">
+                    <div className="user_info_detail">
+                        <UserOutlined/>
+                        <span><b>SuperAdmin@gmail.com</b></span>
+                    </div>
+                    <div className="user_info_detail">
+                        <KeyOutlined />
+                        <span><b>Đổi mật khẩu</b></span>
+                    </div>
+                    <div className="user_info_detail" onClick={onLogout}>
+                        <LoginOutlined />
+                        <span><b>Đăng xuất</b></span>
+                    </div>
+                </div>}
             </div>
 
         </div>
