@@ -50,3 +50,21 @@ export const getUsers = atom({
         loading:false
     }
 })
+export const getUserDetail = atom({
+    key:"GET-USER-DETAIL-STATE",
+    default:{
+        data:{},
+        state:"",
+        message:"",
+        loading:false
+    }
+})
+export const updateUser = atom({
+    key:"UPDATE-USER-STATE",
+    default:{
+        data:{},
+        state:"",
+        message:"",
+        loading:false
+    }
+})
