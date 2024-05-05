@@ -12,45 +12,64 @@ import {
 } from '@ant-design/icons';
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { removeUserInfo } from "../../../../../app-helper";
-const { Content, Footer } = Layout;
-const { Search } = Input;
+import { removeUser, removeUserInfo } from "../../../../../app-helper";
+import { hasRole } from "../../../../../app-helper/jwtHepler";
+import { useGetRoles } from "../../../../../store/auth/use-get-roles";
 const classNames = require('classnames');
 
-
 export const AdminLeftCommomLayout = ({ children }) => {
+    
+
+    var showDashboard = hasRole("SuperAdmin");
+    var showIdentity = hasRole("User") || hasRole("Role") || hasRole("SuperAdmin");
+    var showDocument = hasRole("Document") || hasRole("Approval") || hasRole("SuperAdmin");
+    var showWorkflow = hasRole("Workflow") || hasRole("SuperAdmin");
+
+    let listMenu = [
+
+    ]
+    if(showDashboard){
+        listMenu.push(
+            {
+                icon: <ProductOutlined style={{ fontSize: '20px' }} />,
+                name: "Dashboard",
+                route: "/admin",
+                isActive: true,
+            })
+    }
+    if(showIdentity){
+        listMenu.push(
+            {
+                icon: <UserOutlined style={{ fontSize: '20px' }} />,
+                name: "Người dùng",
+                route: "/admin/identity",
+                isActive: false,
+            })
+    }
+    if(showDocument){
+        listMenu.push(
+            {
+                icon: <FolderOpenOutlined style={{ fontSize: '20px' }} />,
+                name: "Dữ liệu nhập",
+                route: "/admin/documents",
+                isActive: false,
+            })
+    }
+    if(showWorkflow){
+        listMenu.push(
+            {
+                icon: <BranchesOutlined style={{ fontSize: '20px' }} />,
+                name: "Quy trình phê duyệt",
+                route: "/admin/workflows",
+                isActive: false,
+            })
+    }
     const [openUserInfo, setOpenUserInfo] = useState(false);
     const [itemClick, setItemClick] = useState(true);
-    const [menus, setMenus] = useState([
-
-        {
-            icon: <ProductOutlined style={{ fontSize: '20px' }} />,
-            name: "Dashboard",
-            route: "/admin",
-            isActive: true,
-        },
-        {
-            icon: <UserOutlined style={{ fontSize: '20px' }} />,
-            name: "Identity",
-            route: "/admin/identity",
-            isActive: false,
-        },
-        {
-            icon: <FolderOpenOutlined style={{ fontSize: '20px' }} />,
-            name: "Documents",
-            route: "/admin/documents",
-            isActive: false,
-        },
-        {
-            icon: <BranchesOutlined style={{ fontSize: '20px' }} />,
-            name: "Workflows",
-            route: "/admin/workflows",
-            isActive: false,
-        }
-    ]);
+    const [menus, setMenus] = useState([...listMenu]);
     const navigate = useNavigate();
     const onClickMenu = (route, name) => {
-        
+
         setMenus([...menus.map(x => {
             if (x.name === name) {
                 return {
@@ -64,13 +83,14 @@ export const AdminLeftCommomLayout = ({ children }) => {
                 }
             }
         })]);
-        console.log("menus",menus)
+        console.log("menus", menus)
         setItemClick(!itemClick);
         navigate(route);
     }
-    
-    const onLogout = () =>{
+
+    const onLogout = () => {
         removeUserInfo();
+        removeUser()
         navigate("/login");
     }
     return (
@@ -98,39 +118,18 @@ export const AdminLeftCommomLayout = ({ children }) => {
                     <div key={x.name} className="menu_item" >
                         <div className={classNames('menu_item_childen', `${x.isActive ? "menu_item_childen_click" : ""}`)} onClick={() => { onClickMenu(x.route, x.name) }}>
                             {x.icon}
-                            <span style={{fontWeight:"bold"}}>{x.name}</span>
+                            <span style={{ fontWeight: "bold" }}>{x.name}</span>
                         </div>
                     </div>
                 )
 
             })}
 
-
-
-            {/* <div className="menu_item" onClick={() => { onClickMenu("/admin/identity", "1") }}>
-                <div className={`menu_item_childen ${menu1}`} >
-
-                    <span>Identity</span>
-                </div>
-            </div>
-        
-            <div className="menu_item" onClick={() => { onClickMenu("/admin/documents", "2") }}>
-                <div className={`menu_item_childen ${menu2}`}>
-
-                    <span>Documents</span>
-                </div>
-            </div>
-            <div className="menu_item" onClick={() => { onClickMenu("/admin/workflows", "3") }} >
-                <div className={`menu_item_childen ${menu3}`} >
-
-                    <span>Workflows</span>
-                </div>
-            </div> */}
-            <div className="user_avatar" onClick={()=>{setOpenUserInfo(!openUserInfo)}}>
-                <UserOutlined style={{color:"#1890ff"}}/>
-                {openUserInfo &&<div className="user_info">
+            <div className="user_avatar" onClick={() => { setOpenUserInfo(!openUserInfo) }}>
+                <UserOutlined style={{ color: "#1890ff" }} />
+                {openUserInfo && <div className="user_info">
                     <div className="user_info_detail">
-                        <UserOutlined/>
+                        <UserOutlined />
                         <span><b>SuperAdmin@gmail.com</b></span>
                     </div>
                     <div className="user_info_detail">

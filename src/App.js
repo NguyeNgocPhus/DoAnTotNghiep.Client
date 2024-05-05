@@ -9,7 +9,7 @@ import { GetPassword } from './ui-pages/auth/getPassword';
 import { useRecoilState } from 'recoil';
 import { userInfoState } from './store/auth/share-state';
 import { useEffect, useState } from 'react';
-import { getUserInfo, saveUserInfoToStore } from './app-helper';
+import { getUserInfo, saveUserInfoToStore, saveUserToStore } from './app-helper';
 import { Profile } from './ui-pages/profile';
 import { useProfile } from './store/auth/use-my-profile';
 import { Select } from 'antd';
@@ -29,10 +29,11 @@ function App() {
   const [isVerify, setIsVerify] = useState(false);
 
   useEffect(() => {
-    // requestMyProfile();
-    // requestListTypeProduct();
+    let userInfo = getUserInfo();
+    if (userInfo !== null)
+      requestMyProfile();
   }, [])
- 
+
   useEffect(() => {
     if (userLoginData.data) {
       saveUserInfoToStore(userLoginData.data)
@@ -44,6 +45,7 @@ function App() {
 
     if (myProfile.state === REQUEST_STATE.SUCCESS) {
       setIsVerify(true);
+      saveUserToStore(myProfile.data)
     }
 
   }, [myProfile])
@@ -61,10 +63,7 @@ function App() {
       </Routes>
     )
   }
-  const convertPath = (name) => {
-    const path = name.replace(" ", "-");
-    return path;
-  }
+
   return (
     <>
       <Routes>

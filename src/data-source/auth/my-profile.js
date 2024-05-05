@@ -1,5 +1,6 @@
 import { REQUEST_STATE } from "../../app-config/constants";
 import { cancel } from "../../app-helper";
+import { userId } from "../../app-helper/jwtHepler";
 import { GET, getTokenSource } from "../fetch";
 
 
@@ -13,22 +14,33 @@ export const apiGetMyprofileAsync = async () => {
 
     cancelGetMyprofile();
     source = getTokenSource();
-
+    const id = userId();
     try {
-        const response = await GET("/auth/profile", {}, {});
+        const response = await GET(`/api/user/${id}`, {}, {
+            cancelToken: source.token
+        });
 
-        return {
-            data: response.data.data,
-            message: "",
-            state: REQUEST_STATE.SUCCESS,
-            loading: false,
+        if(response?.data?.isSuccess === true){
+            return {
+                message: "",
+                loading: false,
+                data: response?.data.value,
+                state: REQUEST_STATE.SUCCESS
+            }
+        }if(response?.data?.isFailure === true) {
+            return {
+                message: response?.data?.error.message,
+                loading: false,
+                token: response?.data?.error.code,
+                state: REQUEST_STATE.ERROR
+            }
         }
     } catch (error) {
-        // return {
-        //     data:{},
-        //     message:error.response.data.message,
-        //     state:REQUEST_STATE.ERROR,
-        //     loading:false,
-        // }
+        return {
+            message: error?.response?.data?.message,
+            loading: false,
+            token: "",
+            state: REQUEST_STATE.ERROR
+        }
     }
 } 

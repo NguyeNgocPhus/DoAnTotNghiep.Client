@@ -8,7 +8,7 @@ const { Title } = Typography;
 
 var tabs = [
   {
-    label: `Danh sách mẫu nhập`,
+    label: `Mẫu nhập`,
     key: 1,
     children: <ListDocument></ListDocument>,
   },

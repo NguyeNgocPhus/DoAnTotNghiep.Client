@@ -8,12 +8,13 @@ import { useUserLogin } from "../../../store/auth/use-user-login";
 import { REQUEST_STATE } from "../../../app-config/constants";
 import { myProfileState } from "../../../store/auth/share-state";
 import { useRecoilState } from "recoil";
-import { getUserInfo } from "../../../app-helper";
+import { getUserInfo, saveUserInfoToStore, saveUserToStore } from "../../../app-helper";
 import Typography from "antd/lib/typography/Typography";
+import { useProfile } from "../../../store/auth/use-my-profile";
 
 export const UserSignIn = () => {
     const [userLoginData, requestUserLoginData] = useUserLogin();
-    const [myprofile, setMyprofile] = useRecoilState(myProfileState);
+    const [myProfile, requestMyProfile] = useProfile();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
@@ -31,13 +32,6 @@ export const UserSignIn = () => {
         })
     }
     useEffect(() => {
-        // if (myprofile.state === REQUEST_STATE.SUCCESS) {
-        //     navigate("/profile")
-        // }
-
-    }, [myprofile])
-
-    useEffect(() => {
         if (userLoginData.state === REQUEST_STATE.ERROR) {
             // console.log(userLoginData);
             notification.error({
@@ -47,17 +41,20 @@ export const UserSignIn = () => {
                 duration: 5,
             })
         } else if (userLoginData.state === REQUEST_STATE.SUCCESS) {
-            // console.log("userLoginData",userLoginData)
-            navigate("/admin")
+            saveUserInfoToStore(userLoginData.data);
+            requestMyProfile();
         }
     }, [userLoginData])
+
     useEffect(() => {
-        window.scrollTo(0, 0)
-        var userInfo = getUserInfo();
-        if(userInfo){
-            navigate("/admin")
+
+        if (myProfile.state === REQUEST_STATE.SUCCESS) {
+          saveUserToStore(myProfile.data);
+          navigate("/admin");
         }
-    }, [])
+    
+      }, [myProfile])
+
     return (
         <>
             <Row style={{height:'100vh',backgroundColor:'#f0f0f0'}}>

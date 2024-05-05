@@ -20,8 +20,24 @@ export function getUserInfo() {
 export function removeUserInfo() {
     localStorage.removeItem("USER_INFO");
 }
+export function removeUser() {
+    localStorage.removeItem("USER");
+}
 export function saveUserInfoToStore(userInfo) {
     if (userInfo) {
         localStorage.setItem("USER_INFO", JSON.stringify(userInfo));
     }
+}
+export function saveUserToStore(userInfo) {
+    if (userInfo) {
+        localStorage.setItem("USER", JSON.stringify(userInfo));
+    }
+}
+export function getUser() {
+    const userInfo = localStorage.getItem("USER");
+    if (userInfo && userInfo.length) {
+        return JSON.parse(userInfo);
+    }
+
+    return null;
 }
