@@ -8,8 +8,8 @@ export function cancel(source) {
     source && source.cancel && source.cancel(REQUEST_STATE.UNMOUNT);
 }
 
-export function getUserInfo() {
-    const userInfo = localStorage.getItem("USER_INFO");
+export function getToken() {
+    const userInfo = localStorage.getItem("TOKEN");
     if (userInfo && userInfo.length) {
         return JSON.parse(userInfo);
     }
@@ -17,15 +17,13 @@ export function getUserInfo() {
     return null;
 }
 
-export function removeUserInfo() {
-    localStorage.removeItem("USER_INFO");
+export function removeToken() {
+    localStorage.removeItem("TOKEN");
 }
-export function removeUser() {
-    localStorage.removeItem("USER");
-}
-export function saveUserInfoToStore(userInfo) {
+
+export function saveTokenToStore(userInfo) {
     if (userInfo) {
-        localStorage.setItem("USER_INFO", JSON.stringify(userInfo));
+        localStorage.setItem("TOKEN", JSON.stringify(userInfo));
     }
 }
 export function saveUserToStore(userInfo) {
@@ -40,4 +38,7 @@ export function getUser() {
     }
 
     return null;
+}
+export function removeUser() {
+    localStorage.removeItem("USER");
 }

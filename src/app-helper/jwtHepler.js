@@ -1,5 +1,5 @@
 import { jwtDecode } from "jwt-decode";
-import { getUser , getUserInfo} from ".";
+import { getUser , getToken} from ".";
 
 const hasRole = (role) => {
     const userInfo = getUser();
@@ -16,7 +16,7 @@ const hasRole = (role) => {
     return false;
 }
 const userId = () => {
-    const userInfo = getUserInfo();
+    const userInfo = getToken();
     const accessToken = userInfo.accessToken;
     const decoded = jwtDecode(accessToken);
     return decoded.Id;

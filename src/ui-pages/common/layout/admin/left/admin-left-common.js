@@ -12,7 +12,7 @@ import {
 } from '@ant-design/icons';
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { removeUser, removeUserInfo } from "../../../../../app-helper";
+import { removeUser, removeToken } from "../../../../../app-helper";
 import { hasRole } from "../../../../../app-helper/jwtHepler";
 import { useGetRoles } from "../../../../../store/auth/use-get-roles";
 const classNames = require('classnames');
@@ -89,7 +89,7 @@ export const AdminLeftCommomLayout = ({ children }) => {
     }
 
     const onLogout = () => {
-        removeUserInfo();
+        removeToken();
         removeUser()
         navigate("/login");
     }
@@ -127,7 +127,7 @@ export const AdminLeftCommomLayout = ({ children }) => {
 
             <div className="user_avatar" onClick={() => { setOpenUserInfo(!openUserInfo) }}>
                 <UserOutlined style={{ color: "#1890ff" }} />
-                {openUserInfo && <div className="user_info">
+                {openUserInfo && <div className="TOKEN">
                     <div className="user_info_detail">
                         <UserOutlined />
                         <span><b>SuperAdmin@gmail.com</b></span>

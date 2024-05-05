@@ -8,7 +8,7 @@ import { useUserLogin } from "../../../store/auth/use-user-login";
 import { REQUEST_STATE } from "../../../app-config/constants";
 import { myProfileState } from "../../../store/auth/share-state";
 import { useRecoilState } from "recoil";
-import { getUserInfo, saveUserInfoToStore, saveUserToStore } from "../../../app-helper";
+import { getToken, saveTokenToStore, saveUserToStore } from "../../../app-helper";
 import Typography from "antd/lib/typography/Typography";
 import { useProfile } from "../../../store/auth/use-my-profile";
 
@@ -41,7 +41,7 @@ export const UserSignIn = () => {
                 duration: 5,
             })
         } else if (userLoginData.state === REQUEST_STATE.SUCCESS) {
-            saveUserInfoToStore(userLoginData.data);
+            saveTokenToStore(userLoginData.data);
             requestMyProfile();
         }
     }, [userLoginData])

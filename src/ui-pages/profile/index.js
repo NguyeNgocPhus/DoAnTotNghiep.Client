@@ -1,7 +1,7 @@
 import {useState} from "react";
 import { Col, Row } from "antd";
 import { useRecoilState } from "recoil";
-import { saveUserInfoToStore } from "../../app-helper";
+import { saveTokenToStore } from "../../app-helper";
 import { myProfileState } from "../../store/auth/share-state";
 import { CommomLayout } from "../common/layout"
 import { AccountProfile } from "./account";
@@ -19,7 +19,7 @@ export const Profile = () =>{
         history:false,
     })
     const userLogout = () => {
-        saveUserInfoToStore({});
+        saveTokenToStore({});
         setTimeout(() => {
             window.location.href = window.location.origin;
         }, 100);

@@ -9,7 +9,7 @@ import { GetPassword } from './ui-pages/auth/getPassword';
 import { useRecoilState } from 'recoil';
 import { userInfoState } from './store/auth/share-state';
 import { useEffect, useState } from 'react';
-import { getUserInfo, saveUserInfoToStore, saveUserToStore } from './app-helper';
+import { getToken, saveTokenToStore, saveUserToStore } from './app-helper';
 import { Profile } from './ui-pages/profile';
 import { useProfile } from './store/auth/use-my-profile';
 import { Select } from 'antd';
@@ -23,20 +23,20 @@ const { Option } = Select;
 
 
 function App() {
-  const token = getUserInfo();
+  const token = getToken();
   const [userLoginData, setUserLoginData] = useRecoilState(userInfoState);
   const [myProfile, requestMyProfile] = useProfile();
   const [isVerify, setIsVerify] = useState(false);
 
   useEffect(() => {
-    let userInfo = getUserInfo();
+    let userInfo = getToken();
     if (userInfo !== null)
       requestMyProfile();
   }, [])
 
   useEffect(() => {
     if (userLoginData.data) {
-      saveUserInfoToStore(userLoginData.data)
+      saveTokenToStore(userLoginData.data)
       setIsVerify(true);
     }
   }, [userLoginData])

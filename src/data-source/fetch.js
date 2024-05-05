@@ -1,9 +1,9 @@
 import * as axios from "axios";
 import { Configs } from "../app-config/api";
-import { getUserInfo } from "../app-helper";
+import { getToken } from "../app-helper";
 
 export const getOptions = (option) => {
-    const userInfo = getUserInfo();
+    const userInfo = getToken();
 
     const opts = {
         ...option,
