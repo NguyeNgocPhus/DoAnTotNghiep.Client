@@ -225,7 +225,7 @@ export const ListUsers = () => {
                 </Col>
                 <Col span={24}>
                     <Table size="middle" pagination={false} loading={loading} columns={columns} dataSource={listUser} />
-                    <Pagination style={{ marginTop: '10px' }} showTotal={t => `Tổng số : ${t}`} defaultCurrent={1} current={currentPage} onChange={onChange} total={total} />
+                    <Pagination style={{ marginTop: '10px' }} showTotal={t => <b>Tổng số : {t}</b>} defaultCurrent={1} current={currentPage} onChange={onChange} total={total} />
                 </Col>
             </Row>
             <CreateUser isModalOpen={isModalOpenCreate} handleCancel={handleCancelCreate} onCreateUserSuccess={onCreateUserSuccess} ></CreateUser>

@@ -17,7 +17,7 @@ const { Content, Footer } = Layout;
 const { Search } = Input;
 const classNames = require('classnames');
 
-const menus = [
+let menus = [
 
     {
         icon: <ProductOutlined style={{ fontSize: '20px' }} />,
@@ -45,15 +45,13 @@ const menus = [
     }
 ]
 export const AdminLeftCommomLayout = ({ children }) => {
-    const [listMenu, setListMenu] = useState([]);
     const [openUserInfo, setOpenUserInfo] = useState(false);
-
-    useEffect(()=>{
-        setListMenu([...menus])
-    },[])
+    const [itemClick, setItemClick] = useState(true);
+    
     const navigate = useNavigate();
     const onClickMenu = (route, name) => {
-        var newMenus = listMenu.map(x => {
+        
+        menus = menus.map(x => {
             if (x.name === name) {
                 return {
                     ...x,
@@ -67,9 +65,8 @@ export const AdminLeftCommomLayout = ({ children }) => {
             }
         });
         
-        setListMenu([...newMenus]);
+        setItemClick(!itemClick);
         navigate(route);
-        // onMenuItemClick(key);
     }
     
     const onLogout = () =>{
@@ -96,7 +93,7 @@ export const AdminLeftCommomLayout = ({ children }) => {
                 </Link>
                 <div className="divider"></div>
             </div>
-            {listMenu.length && listMenu.map(x => {
+            {itemClick && menus.map(x => {
                 return (
                     <div key={x.name} className="menu_item" >
                         <div className={classNames('menu_item_childen', `${x.isActive ? "menu_item_childen_click" : ""}`)} onClick={() => { onClickMenu(x.route, x.name) }}>
