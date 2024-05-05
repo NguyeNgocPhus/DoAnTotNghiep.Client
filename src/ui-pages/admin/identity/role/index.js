@@ -88,7 +88,7 @@ export const ListRole = () => {
                     <Input icon={<SearchOutlined />} style={{ width: '70%' }} size="large" placeholder="Tìm kiếm theo tên nhóm người dùng" prefix={<SearchOutlined />} />
                 </Col>
                 <Col span={24}>
-                    <Table loading={loading} columns={columns} dataSource={listRole} />
+                    <Table size="middle" loading={loading} columns={columns} dataSource={listRole} />
                 </Col>
             </Row>
             <Modal title="Tạo flow mới" open={isModalOpen} onCancel={handleCancel} footer={null}>

@@ -17,41 +17,41 @@ const { Content, Footer } = Layout;
 const { Search } = Input;
 const classNames = require('classnames');
 
-let menus = [
 
-    {
-        icon: <ProductOutlined style={{ fontSize: '20px' }} />,
-        name: "Dashboard",
-        route: "/admin",
-        isActive: true,
-    },
-    {
-        icon: <UserOutlined style={{ fontSize: '20px' }} />,
-        name: "Identity",
-        route: "/admin/identity",
-        isActive: false,
-    },
-    {
-        icon: <FolderOpenOutlined style={{ fontSize: '20px' }} />,
-        name: "Documents",
-        route: "/admin/documents",
-        isActive: false,
-    },
-    {
-        icon: <BranchesOutlined style={{ fontSize: '20px' }} />,
-        name: "Workflows",
-        route: "/admin/workflows",
-        isActive: false,
-    }
-]
 export const AdminLeftCommomLayout = ({ children }) => {
     const [openUserInfo, setOpenUserInfo] = useState(false);
     const [itemClick, setItemClick] = useState(true);
-    
+    const [menus, setMenus] = useState([
+
+        {
+            icon: <ProductOutlined style={{ fontSize: '20px' }} />,
+            name: "Dashboard",
+            route: "/admin",
+            isActive: true,
+        },
+        {
+            icon: <UserOutlined style={{ fontSize: '20px' }} />,
+            name: "Identity",
+            route: "/admin/identity",
+            isActive: false,
+        },
+        {
+            icon: <FolderOpenOutlined style={{ fontSize: '20px' }} />,
+            name: "Documents",
+            route: "/admin/documents",
+            isActive: false,
+        },
+        {
+            icon: <BranchesOutlined style={{ fontSize: '20px' }} />,
+            name: "Workflows",
+            route: "/admin/workflows",
+            isActive: false,
+        }
+    ]);
     const navigate = useNavigate();
     const onClickMenu = (route, name) => {
         
-        menus = menus.map(x => {
+        setMenus([...menus.map(x => {
             if (x.name === name) {
                 return {
                     ...x,
@@ -63,8 +63,8 @@ export const AdminLeftCommomLayout = ({ children }) => {
                     isActive: false
                 }
             }
-        });
-        
+        })]);
+        console.log("menus",menus)
         setItemClick(!itemClick);
         navigate(route);
     }
@@ -93,7 +93,7 @@ export const AdminLeftCommomLayout = ({ children }) => {
                 </Link>
                 <div className="divider"></div>
             </div>
-            {itemClick && menus.map(x => {
+            {menus && menus.map(x => {
                 return (
                     <div key={x.name} className="menu_item" >
                         <div className={classNames('menu_item_childen', `${x.isActive ? "menu_item_childen_click" : ""}`)} onClick={() => { onClickMenu(x.route, x.name) }}>

@@ -215,7 +215,7 @@ export const ListDocument = () => {
                 </Col>
                 <Col span={24}>
                     <Spin size="large" spinning={loading}>
-                        {listImportTemplate.length > 0 && <Table columns={columns} dataSource={listImportTemplate} />}
+                        {listImportTemplate.length > 0 && <Table  size="middle"  columns={columns} dataSource={listImportTemplate} />}
                     </Spin>
                 </Col>
             </Row>

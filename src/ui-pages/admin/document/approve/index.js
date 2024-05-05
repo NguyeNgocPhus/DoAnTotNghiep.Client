@@ -167,9 +167,7 @@ export const ListApprove = () => {
                     <Spin size="large" spinning={loading}>
                         <Table columns={columns} size="middle" dataSource={listApprove}
                             pagination={false}
-                            scroll={{
-                                y: 450,
-                            }} />
+                         />
 
                         <Pagination showTotal={t => `Tổng số : ${t}`} defaultCurrent={1} current={currentPage} onChange={onChange} total={total} />
                     </Spin>
