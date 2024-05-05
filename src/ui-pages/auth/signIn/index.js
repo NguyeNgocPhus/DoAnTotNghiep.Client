@@ -3,12 +3,13 @@ import { useEffect, useState } from "react"
 import { Link, useNavigate } from "react-router-dom";
 import { CommomLayout } from "../../common/layout"
 import "./styles.css";
-import { FacebookFilled, GooglePlusCircleFilled } from "@ant-design/icons";
+import { UserOutlined, KeyOutlined } from "@ant-design/icons";
 import { useUserLogin } from "../../../store/auth/use-user-login";
 import { REQUEST_STATE } from "../../../app-config/constants";
 import { myProfileState } from "../../../store/auth/share-state";
 import { useRecoilState } from "recoil";
 import { getUserInfo } from "../../../app-helper";
+import Typography from "antd/lib/typography/Typography";
 
 export const UserSignIn = () => {
     const [userLoginData, requestUserLoginData] = useUserLogin();
@@ -46,7 +47,7 @@ export const UserSignIn = () => {
                 duration: 5,
             })
         } else if (userLoginData.state === REQUEST_STATE.SUCCESS) {
-            console.log("userLoginData",userLoginData)
+            // console.log("userLoginData",userLoginData)
             navigate("/admin")
         }
     }, [userLoginData])
@@ -59,13 +60,16 @@ export const UserSignIn = () => {
     }, [])
     return (
         <>
-            <Row>
-                <Col span={12} style={{ padding: "200px 153px", borderRight: "2px solid #f0f2f5", height: '100vh' }}>
-                    <div className="text-signin">
-                        <p>ĐĂNG NHẬP</p>
+            <Row style={{height:'100vh',backgroundColor:'#f0f0f0'}}>
+            
+                <Col span={8} style={{ margin:'auto'}} >
+                    <div className="login_logo">
+                        <img src="/admin_logo.svg" style={{height: "100%",
+                        margin: "auto"}}></img>
                     </div>
-                </Col >
-                <Col span={12} style={{ padding: "150px 100px" }}>
+                   <div  className="form_sigin" >
+                    <div style={{textAlign:"center"}}><h2 ><b>Đăng nhập</b></h2></div>
+                    <Divider></Divider>
                     <Form
                         onFinish={onFinish}
                     >
@@ -78,7 +82,7 @@ export const UserSignIn = () => {
                             ]}
                             onChange={onChangeEmail}
                         >
-                            <Input placeholder="Email" className="input-email input-signin">
+                            <Input placeholder="Tên người dùng hoặc email" prefix={<UserOutlined style={{fontSize:"18px", marginRight:"10px",color:"#8d9ba9"}}/>}  className="input-email input-signin">
                             </Input>
                         </Form.Item>
                         <Form.Item label=""
@@ -90,30 +94,25 @@ export const UserSignIn = () => {
                             ]}
                             onChange={onChangePassword}
                         >
-                            <Input.Password placeholder="Mật khẩu" className="input-password input-signin" >
+                            <Input.Password prefix={<KeyOutlined style={{fontSize:"18px", marginRight:"10px",color:"#8d9ba9"}}/>} placeholder="Mật khẩu" className="input-password input-signin" >
                             </Input.Password>
                         </Form.Item>
                         <Form.Item>
                             <button type="primary" className="btn-signin">
-                                Submit
+                                Đăng nhập
                             </button>
                         </Form.Item>
 
                     </Form>
 
-
-                    <div className="auth-link">
-                        <Link to="/user/getpassword">Quên mật khẩu ?</Link>
-                        <Link to="/user/signup">Đăng kí</Link>
-                    </div>
                     <Divider>Hoặc</Divider>
-                    <button className="signin-by-fb ">
+                    {/* <button className="signin-by-fb ">
                         <FacebookFilled style={{ fontSize: '20px' }} /><span>Đăng nhập bằng tài khoản facebook</span>
+                    </button> */}
+                    <button className="btn-signin">
+                        Đăng nhập qua SSO 
                     </button>
-                    <button className="signin-by-google">
-                        <GooglePlusCircleFilled style={{ fontSize: '20px' }} /><span>Đăng nhập bằng tài khoản google</span>
-                    </button>
-
+                    </div>
                 </Col>
             </Row>
         </>

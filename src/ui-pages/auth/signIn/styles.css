@@ -39,7 +39,7 @@
     height: 55px;
     color: #ffff;
     font-weight: 700;
-    background-color: black;
+    background-color: #1890ff;
     cursor: pointer;
 }
 .auth-link{
@@ -84,4 +84,14 @@
     align-items: center;
     gap: 10px;
     font-weight: 600;
+}
+.form_sigin{
+    padding: 30px;
+    background-color: #fcfcfc;
+    border-radius: 10px;
+    box-shadow:#1a214b1f 0px 2px 16px -2px;
+    /* box-shadow:0 calc(10px * var(--shadow-yoffset, 1)) 40px -4px rgba(var(--shadow-colorbase-rgb), calc(var(--shadow-intensity) * 0.14)), 0 calc(12px * var(--shadow-yoffset, 1)) 28px -12px rgba(var(--shadow-color-rgb), calc(var(--shadow-intensity) * 0.2)); */
+}
+.login_logo{
+    height: 150px;
 }

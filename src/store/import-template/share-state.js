@@ -45,3 +45,12 @@ export const getImportTemplateState = atom({
         loading:false
     }
 })
+export const importDataState = atom({
+    key:"IMPORT-DATA-STATE",
+    default:{
+        data:{},
+        state:"",
+        message:"",
+        loading:false
+    }
+})

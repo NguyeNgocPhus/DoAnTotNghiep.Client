@@ -17,6 +17,9 @@ export function getUserInfo() {
     return null;
 }
 
+export function removeUserInfo() {
+    localStorage.removeItem("USER_INFO");
+}
 export function saveUserInfoToStore(userInfo) {
     if (userInfo) {
         localStorage.setItem("USER_INFO", JSON.stringify(userInfo));

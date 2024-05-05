@@ -14,7 +14,7 @@ export const getOptions = (option) => {
     };
 
     if (userInfo) {
-        opts.headers['Authorization'] = `Bearer ${userInfo.token}`;
+        opts.headers['Authorization'] = `Bearer ${userInfo.accessToken}`;
     }
 
     if (option.cancelToken) {
@@ -73,7 +73,6 @@ export const GET = async (path, params = {}, option = {}) => {
     const _url = Configs.BASE_API + path + (_params === "" ? "" : "?" + _params);
 
     const _option = getOptions(option);
-    console.log(_option);
     return await axios.get(_url, _option);
 
 }

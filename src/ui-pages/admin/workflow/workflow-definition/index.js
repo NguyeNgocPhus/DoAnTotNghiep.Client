@@ -98,7 +98,7 @@ export const ListWorkflowDefinition = () => {
     useEffect(() => {
         if (createWfDefinitionApiData !== null) {
             if (createWfDefinitionApiData.state === REQUEST_STATE.SUCCESS) {
-                console.log("createWfDefinitionApiData", createWfDefinitionApiData);
+                // console.log("createWfDefinitionApiData", createWfDefinitionApiData);
                 setIsModalOpen(false);
                 // message.success('Loading finished', 2.5);
                 navigate(`/admin/workflow-definition/${createWfDefinitionApiData.data.definitionId}`)
@@ -158,7 +158,7 @@ export const ListWorkflowDefinition = () => {
     return (
 
         <>
-            <Row style={{ padding: "20px" }}>
+            <Row style={{ padding: "20px" }} gutter={[0, 32]}>
                 <Col span={24}>
                     <div className='header_list_users'>
                         <Title level={5}>Danh sách Workflow Definition</Title>

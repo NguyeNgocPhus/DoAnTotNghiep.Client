@@ -12,10 +12,10 @@ export const AdminCommomLayout = ({ children }) => {
     return (
         <div className="fullScreen">
             <Row>
-                <Col span={1}>
+                <Col span={3}>
                     <AdminLeftCommomLayout></AdminLeftCommomLayout>
                 </Col>
-                <Col span={23}>
+                <Col span={21}>
                     {children}
                 </Col>
             </Row>
