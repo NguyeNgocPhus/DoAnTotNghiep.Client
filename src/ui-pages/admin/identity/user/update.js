@@ -1,6 +1,6 @@
 import "./styles.css";
 import 'reactflow/dist/style.css';
-import { Button, Input, Typography, Modal, Form, Select, Spin } from 'antd';
+import { Button, Input, Typography, Modal, Form, Select, Spin, notification } from 'antd';
 import { useGetRoles } from "../../../../store/auth/use-get-roles";
 import { useEffect, useState } from "react";
 import { REQUEST_STATE } from "../../../../app-config/constants";
@@ -9,26 +9,26 @@ import { useGetUserDetail } from "../../../../store/auth/use-get-user-detail";
 import { useUpdateUser } from "../../../../store/auth/use-update-user";
 const { Title } = Typography;
 
-export const UpdateUser = ({ id, isModalOpen, handleCancel, onCreateUserSuccess }) => {
-    const [form] = Form.useForm();
+export const UpdateUser = ({ id, isModalOpen, handleCancel, onUpdateUserSuccess }) => {
     const [rolesApiData, requestGetRolesApiData] = useGetRoles();
     const [updateUserApiData, requestUpdateUserApiData] = useUpdateUser();
     const [userDetailApiData, requestGetUserDetailApiData] = useGetUserDetail();
     const [listRole, setListRole] = useState([]);
     const [loading, setLoading] = useState(false);
+    const [userUpdate, setUserUpdate] = useState({});
+
+  
 
     useEffect(() => {
-
         requestGetRolesApiData();
-
     }, []);
+    
     useEffect(() => {
-        if (id !== null && id !== undefined) {
-
+        if (isModalOpen && id !== null && id !== undefined) {
             requestGetUserDetailApiData({ id });
         }
-
-    }, [id]);
+        
+    }, [id,isModalOpen]);
 
     useEffect(() => {
         if (rolesApiData !== null) {
@@ -64,11 +64,15 @@ export const UpdateUser = ({ id, isModalOpen, handleCancel, onCreateUserSuccess 
         if (updateUserApiData !== null) {
             if (updateUserApiData.state === REQUEST_STATE.SUCCESS) {
                 setLoading(false);
+                notification.success({
+                    message: 'Cập nhật thành công',
+                });
+
                 handleCancel();
-                // onCreateUserSuccess(createUserApiData.data);
+                onUpdateUserSuccess(userUpdate);
             } else if (updateUserApiData.state === REQUEST_STATE.ERROR) {
                 setLoading(false);
-                
+
             } else if (updateUserApiData.state === REQUEST_STATE.REQUEST) {
                 setLoading(true);
             }
@@ -77,11 +81,12 @@ export const UpdateUser = ({ id, isModalOpen, handleCancel, onCreateUserSuccess 
 
 
     const onFinish = (values) => {
-       
-        requestUpdateUserApiData({
+        const userUpdate = {
             ...values,
             id
-        })
+        };
+        setUserUpdate(userUpdate)
+        requestUpdateUserApiData(userUpdate)
     };
     const onFinishFailed = (errorInfo) => {
         console.log('Failed:', errorInfo);
@@ -95,6 +100,7 @@ export const UpdateUser = ({ id, isModalOpen, handleCancel, onCreateUserSuccess 
 
         <Modal destroyOnClose={true} title="Chỉnh sửa người dùng" open={isModalOpen} onCancel={() => {
             handleCancel();
+
         }} footer={null}>
             <Spin size="large" spinning={loading}>
                 {userDetailApiData.state == REQUEST_STATE.SUCCESS && <Form
@@ -103,9 +109,8 @@ export const UpdateUser = ({ id, isModalOpen, handleCancel, onCreateUserSuccess 
                     layout="vertical"
                     onFinish={onFinish}
                     onFinishFailed={onFinishFailed}
-                    autoComplete="off"
                     initialValues={userDetailApiData.data}
-                    
+
                 >
                     <Form.Item
                         label="Tên người dùng"
@@ -120,7 +125,7 @@ export const UpdateUser = ({ id, isModalOpen, handleCancel, onCreateUserSuccess 
                         name="email"
 
                     >
-                        <Input disabled/>
+                        <Input disabled />
                     </Form.Item>
 
                     <Form.Item

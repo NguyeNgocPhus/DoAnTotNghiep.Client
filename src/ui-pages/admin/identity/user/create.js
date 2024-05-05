@@ -1,6 +1,6 @@
 import "./styles.css";
 import 'reactflow/dist/style.css';
-import { Button, Input, Typography, Modal, Form, Select, Spin } from 'antd';
+import { Button, Input, Typography, Modal, Form, Select, Spin, notification } from 'antd';
 import { useGetRoles } from "../../../../store/auth/use-get-roles";
 import { useEffect, useState } from "react";
 import { REQUEST_STATE } from "../../../../app-config/constants";
@@ -41,6 +41,10 @@ export const CreateUser = ({ isModalOpen, handleCancel , onCreateUserSuccess}) =
             if (createUserApiData.state === REQUEST_STATE.SUCCESS) {
                 setLoading(false);
                 handleCancel();
+                notification.success({
+                    message: 'Thêm mới thành công',
+                });
+
                 onCreateUserSuccess(createUserApiData.data);
             } else if (createUserApiData.state === REQUEST_STATE.ERROR) {
 

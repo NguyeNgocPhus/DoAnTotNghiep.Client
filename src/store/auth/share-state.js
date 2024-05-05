@@ -40,6 +40,16 @@ export const createUser = atom({
         loading:false
     }
 })
+export const deleteUser = atom({
+    key:"DELETE-USER-STATE",
+    default:{
+        data:{},
+        state:"",
+        message:"",
+        loading:false
+    }
+})
+
 
 export const getUsers = atom({
     key:"GET-USERS-STATE",

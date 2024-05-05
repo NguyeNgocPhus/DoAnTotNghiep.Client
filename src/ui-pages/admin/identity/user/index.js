@@ -2,12 +2,13 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import "./styles.css";
 import 'reactflow/dist/style.css';
-import { Button, Col, Input, Row, Space, Table, Typography, Tag, Modal, Form, Spin, Pagination } from 'antd';
-import { SearchOutlined, PlusOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
+import { Button, Col, Input, Row, Space, Table, Typography, Tag, Modal, Form, Spin, Pagination, Popconfirm, notification } from 'antd';
+import { SearchOutlined, PlusOutlined, EditOutlined, DeleteOutlined, QuestionCircleOutlined } from '@ant-design/icons';
 import { CreateUser } from './create';
 import { useGetUsers } from '../../../../store/auth/use-get-users';
 import { REQUEST_STATE } from '../../../../app-config/constants';
 import { UpdateUser } from './update';
+import { useDeleteUser } from '../../../../store/auth/use-delete-user';
 const { Title } = Typography;
 
 
@@ -55,17 +56,31 @@ export const ListUsers = () => {
             dataIndex: 'action',
             render: (_, data) => (
                 <>
-    
+
                     <Row gutter={[10, 20]}>
-    
+
                         <Col >
-                            <EditOutlined onClick={()=>{onOpenModalUpdate(data.key)}} className='import_teamplate_action_icon' style={{ cursor: 'pointer' }} />
-                            <DeleteOutlined className='import_teamplate_action_icon' style={{ cursor: 'pointer', color: 'red' }} />
+                            <EditOutlined onClick={() => { onOpenModalUpdate(data.key) }} className='import_teamplate_action_icon' style={{ cursor: 'pointer' }} />
+                            <Popconfirm
+                                title="Xác nhận xoá dữ liệu"
+                                onConfirm={() => { onDeleteUser(data.key) }}
+                                // description="Are you sure to delete this task?"
+                                icon={
+                                    <QuestionCircleOutlined
+                                        style={{
+                                            color: 'red',
+                                        }}
+                                    />
+                                }
+                            >
+                                <DeleteOutlined className='import_teamplate_action_icon' style={{ cursor: 'pointer', color: 'red' }} />
+                            </Popconfirm>
+
                         </Col>
                     </Row>
-    
-    
-    
+
+
+
                 </>
             ),
         },
@@ -74,13 +89,16 @@ export const ListUsers = () => {
     const [isModalOpenCreate, setIsModalOpenCreate] = useState(false);
     const [idUserUpdate, setIdUserUpdate] = useState(null);
     const [isModalOpenUpdate, setIsModalOpenUpdate] = useState(false);
-
     const [loading, setLoading] = useState(false);
-    const [getUsersApiData, requestGetUsersApiData] = useGetUsers();
     const [listUser, setListUser] = useState([]);
-
     const [currentPage, setCurrentPage] = useState(1);
     const [total, setTotal] = useState(0);
+    const [idUserDelete, setIdUserDelete] = useState(null);
+
+    const [getUsersApiData, requestGetUsersApiData] = useGetUsers();
+
+    const [deleteUserApiData, requestDeleteUserApiData] = useDeleteUser();
+
     useEffect(() => {
         requestGetUsersApiData({
             page: 1
@@ -114,6 +132,27 @@ export const ListUsers = () => {
         }
     }, [getUsersApiData])
 
+    // delete user
+    useEffect(() => {
+        if (deleteUserApiData !== null) {
+            if (deleteUserApiData.state === REQUEST_STATE.SUCCESS) {
+                setLoading(false);
+                notification.success({
+                    message: 'Xoá thành công',
+                });
+
+                var newListUser = listUser.filter(x => x.key != idUserDelete);
+                setListUser([...newListUser]);
+                setTotal(total - 1);
+
+            } else if (deleteUserApiData.state === REQUEST_STATE.ERROR) {
+
+            } else if (deleteUserApiData.state === REQUEST_STATE.REQUEST) {
+                setLoading(true);
+            }
+        }
+    }, [deleteUserApiData])
+
     const onChange = (page) => {
 
         setCurrentPage(page);
@@ -141,20 +180,20 @@ export const ListUsers = () => {
         setIsModalOpenCreate(false);
     };
 
-     // update user
-     const onUpdateUserSuccess = (user) => {
-        setListUser([{
-            email: user.email,
-            key: user.id,
-            userName: user.userName,
-            phoneNumber: user.phoneNumber,
-            roles: user.roles
-        }, ...listUser]);
-        setTotal(total + 1);
-
+    // update user
+    const onUpdateUserSuccess = (user) => {
+        var newListUser  = listUser.map(x=>{
+            if(x.key === user.id){
+                
+                return {...user, key : user.id};
+            }else{
+                return x;
+            }
+        });
+        setListUser([...newListUser]);
     }
+
     const onOpenModalUpdate = (Id) => {
-        // console.log("Id",Id);
         setIsModalOpenUpdate(true);
         setIdUserUpdate(Id);
     };
@@ -163,6 +202,13 @@ export const ListUsers = () => {
     };
 
 
+
+    // delete user
+    const onDeleteUser = (id) => {
+        setIdUserDelete(id);
+        requestDeleteUserApiData({ id });
+
+    }
     return (
         <>
             <Row style={{ padding: '20px' }} gutter={[0, 32]}>
@@ -183,7 +229,7 @@ export const ListUsers = () => {
                 </Col>
             </Row>
             <CreateUser isModalOpen={isModalOpenCreate} handleCancel={handleCancelCreate} onCreateUserSuccess={onCreateUserSuccess} ></CreateUser>
-            <UpdateUser  id={idUserUpdate} isModalOpen={isModalOpenUpdate} handleCancel={handleCancelUpdate} onCreateUserSuccess={onCreateUserSuccess} ></UpdateUser>
+            <UpdateUser id={idUserUpdate} isModalOpen={isModalOpenUpdate} handleCancel={handleCancelUpdate} onUpdateUserSuccess={onUpdateUserSuccess} ></UpdateUser>
         </>
 
 
