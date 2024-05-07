@@ -2,10 +2,14 @@ import "./styles.css";
 import 'reactflow/dist/style.css';
 import { Modal, Form, Input, Button, Upload, message } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
+import { getToken } from "../../../../app-helper";
+
 export const FormCreate = ({ setFileTemplateId, form, open, onClose, onFinish }) => {
+    var jwt = getToken();
     const props = {
         action: 'http://localhost:5000/Api/FileStorage/Upload',
         name: 'file',
+        headers:{ "Authorization": `Bearer ${jwt.accessToken}` },
         onChange(info) {
             if (info.file.status === 'done') {
                 message.success(`${info.file.name} file uploaded successfully`);

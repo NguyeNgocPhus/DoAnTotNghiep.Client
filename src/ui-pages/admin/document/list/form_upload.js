@@ -5,17 +5,19 @@ import { UploadOutlined } from '@ant-design/icons';
 import { useEffect, useState } from "react";
 import { useImportData } from "../../../../store/import-template/use-import-data";
 import { REQUEST_STATE } from "../../../../app-config/constants";
+import { getToken } from "../../../../app-helper";
 
 export const FormUpload = ({ open, onClose, importTemplateId }) => {
 
     const [fileUploadId, setFileUploadId] = useState(null);
     const [importApiData, requestImportApiData] = useImportData();
     const [loading, setLoading] = useState(false);
-
+    var jwt = getToken();
 
     const props = {
         action: 'http://localhost:5000/Api/FileStorage/Upload',
         name: 'file',
+        headers:{ "Authorization": `Bearer ${jwt.accessToken}` },
         onChange(info) {
             if (info.file.status !== 'uploading') {
                 console.log(info.file, info.fileList);

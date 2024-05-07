@@ -1,5 +1,5 @@
 .step{
-    border: 1px solid green;
+    
     border-radius: 10px;
     padding: 20px;
     display: flex;
@@ -8,6 +8,16 @@
     /* width: 80%;
     margin: auto; */
     margin-bottom: 20px;
+}
+.green{
+    border: 1px solid green;
+}
+.red{
+    border: 1px solid red;
+}
+.smoke{
+    border: 1px solid #f0f0f0;
+    color: #757575;
 }
 .step_info{
     display: flex;

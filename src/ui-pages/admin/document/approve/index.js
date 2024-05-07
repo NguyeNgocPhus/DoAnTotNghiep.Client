@@ -7,6 +7,7 @@ import { useGetListApprove } from '../../../../store/approve/use-get-list-import
 import { REQUEST_STATE } from '../../../../app-config/constants';
 import moment from 'moment';
 import { StepImport } from './step';
+import { useGetWorkflowActivity } from '../../../../store/workflow/use-wf-activity';
 const { Title } = Typography;
 
 
@@ -14,7 +15,7 @@ export const ListApprove = () => {
     const columns = [
 
         {
-            title: 'Create Name',
+            title: 'Người tạo',
             key: 'createdByName',
             dataIndex: 'createdByName',
             render: (_, { createdByName }) => (
@@ -24,7 +25,7 @@ export const ListApprove = () => {
             ),
         },
         {
-            title: 'ImportTemplate Name',
+            title: 'Mẫu nhập',
             key: 'importTemplateName',
             dataIndex: 'importTemplateName',
             render: (_, { importTemplateName }) => (
@@ -34,17 +35,17 @@ export const ListApprove = () => {
             ),
         },
         {
-            title: 'File Upload',
+            title: 'File nhập',
             key: 'fileId',
             dataIndex: 'fileId',
             render: (_, { fileId }) => (
                 <>
-                    {fileId && <Typography.Link href={`http://localhost:5000/Api/FileStorage/Get/${fileId}`} >Download</Typography.Link>}
+                    {fileId && <Typography.Link href={`http://localhost:5000/Api/FileStorage/Get/${fileId}`} >Tải xuống</Typography.Link>}
                 </>
             ),
         },
         {
-            title: 'Uploaded Time',
+            title: 'Ngày tạo',
             key: 'createdTime',
             dataIndex: 'createdTime',
             render: (_, { createdTime }) => (
@@ -54,7 +55,7 @@ export const ListApprove = () => {
             ),
         },
         {
-            title: 'Status',
+            title: 'Trạng thái',
             dataIndex: 'status',
             key: 'status',
             render: (text) => {
@@ -92,7 +93,7 @@ export const ListApprove = () => {
         },
     ];
 
-    const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+    const [workflowActivityData, requestGetWorkflowActivityApi] = useGetWorkflowActivity();
     const [listApproveApiData, requestListApproveApi] = useGetListApprove();
     const [listApprove, setListApprove] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -135,8 +136,23 @@ export const ListApprove = () => {
         }
     }, [listApproveApiData])
 
+
+    useEffect(() => {
+        if (workflowActivityData !== null) {
+            if (workflowActivityData.state === REQUEST_STATE.SUCCESS) {
+                setLoading(false);
+                console.log("workflowActivityData", workflowActivityData)
+                const data = workflowActivityData.data;
+
+            } else if (workflowActivityData.state === REQUEST_STATE.ERROR) {
+                // message.error('This is an error message');
+            } else if (workflowActivityData.state === REQUEST_STATE.REQUEST) {
+                setLoading(true);
+            }
+        }
+    }, [workflowActivityData])
     const showWorkflowDetail = (data) => {
-        console.log(data);
+        requestGetWorkflowActivityApi({ fileId: data.fileId })
         setDataApprove(data);
         setIsModalOpen(true);
     }
@@ -146,7 +162,7 @@ export const ListApprove = () => {
     };
 
     const onChange = (page) => {
-       
+
         setCurrentPage(page);
         requestListApproveApi({
             page: page
@@ -167,23 +183,26 @@ export const ListApprove = () => {
                     <Spin size="large" spinning={loading}>
                         <Table columns={columns} size="middle" dataSource={listApprove}
                             pagination={false}
-                         />
+                        />
 
                         <Pagination showTotal={t => `Tổng số : ${t}`} defaultCurrent={1} current={currentPage} onChange={onChange} total={total} />
                     </Spin>
                 </Col>
             </Row>
             <Modal title={"Phê duyệt tài liệu"} open={isModalOpen} onCancel={handleCancel} footer={null}>
-                {dataApprove && <p>{`${dataApprove.importTemplateName} (${moment(new Date(dataApprove.createdTime)).format('DD-MM-YYYY HH:mm')})`}</p>}
-                <StepImport></StepImport>
-                <StepImport></StepImport>
-                <StepImport></StepImport>
-                <div style={{ display: 'flex', justifyContent: 'end', gap: '10px' }}>
-                    <Button type="primary" style={{ background: "green", borderColor: "green" }}>
-                        Phê duyệt
-                    </Button>
-                    <Button type="primary" style={{ background: "red", borderColor: "red" }}> Từ chối</Button>
-                </div>
+                <Spin size="large" spinning={loading}>
+                    {dataApprove && <p>{`${dataApprove.importTemplateName} (${moment(new Date(dataApprove.createdTime)).format('DD-MM-YYYY HH:mm')})`}</p>}
+                    {workflowActivityData.state === REQUEST_STATE.SUCCESS && workflowActivityData.data.activities.map(x => {
+                        return <StepImport activity={x} actionLogs={workflowActivityData.data.actionLogs}></StepImport>
+                    })}
+
+                    <div style={{ display: 'flex', justifyContent: 'end', gap: '10px' }}>
+                        <Button type="primary" style={{ background: "green", borderColor: "green" }}>
+                            Phê duyệt
+                        </Button>
+                        <Button type="primary" style={{ background: "red", borderColor: "red" }}> Từ chối</Button>
+                    </div>
+                </Spin>
             </Modal>
 
 

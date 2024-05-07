@@ -16,19 +16,19 @@ const { Title } = Typography;
 export const ListDocument = () => {
     const columns = [
         {
-            title: 'Name',
+            title: 'Tên Mẫu nhập',
             dataIndex: 'name',
             key: 'name',
             render: (text) => <a>{text}</a>,
         },
         {
-            title: 'Tag',
+            title: 'Loại Mẫu nhập',
             dataIndex: 'tag',
             key: 'tag',
             render: (text) => <div>{text}</div>,
         },
         {
-            title: 'Active',
+            title: 'Trạng thái',
             key: 'active',
             dataIndex: 'active',
             render: (_, { active }) => (
@@ -38,7 +38,7 @@ export const ListDocument = () => {
             ),
         },    
         {
-            title: 'Workflow',
+            title: 'Đã có quy trình',
             key: 'hasWorkflow',
             dataIndex: 'hasWorkflow',
             render: (_, { hasWorkflow }) => (
@@ -48,13 +48,13 @@ export const ListDocument = () => {
             ),
         },
         {
-            title: 'File Template',
+            title: 'Tải mẫu nhập',
             key: 'fileTemplateId',
             dataIndex: 'fileTemplateId',
             render: (_, { fileTemplateId }) => (
                 <>
                     {console.log("fileTemplateId",fileTemplateId)}
-                    {fileTemplateId && <Typography.Link href='http://localhost:5000/Api/FileStorage/Get/b4330c7d-abc9-44bc-b9de-b3963a783c0b?name=TCKT' >Download</Typography.Link>}
+                    {fileTemplateId && <Typography.Link href='http://localhost:5000/Api/FileStorage/Get/b4330c7d-abc9-44bc-b9de-b3963a783c0b?name=TCKT' >Tải xuống</Typography.Link>}
                 </>
             ),
         },

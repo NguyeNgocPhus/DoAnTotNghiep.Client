@@ -1,8 +1,10 @@
+import moment from "moment";
 import { REQUEST_STATE } from "../../app-config/constants"
 import { apiCreateWfDefinition, cancelApiCreateWfDefinition } from "../../data-source/workflow/create-wf-definition";
 import { apiDeleteWfDefinition, cancelApiDeleteWfDefinition } from "../../data-source/workflow/delete-wf-definition";
 import { apiGetListWfDefinition, cancelApiGetListWfDefinition } from "../../data-source/workflow/get-list-wf-definition";
 import { apiGetNodeDefinition, cancelApiGetNodeDefinition } from "../../data-source/workflow/get-node-definition";
+import { apiGetWorkflowActivity, cancelApiGetWorkflowActivity } from "../../data-source/workflow/get-wf-activity";
 import { apiGetWfDefinition, cancelApiGetWfDefinition } from "../../data-source/workflow/get-wf-definition";
 import { apiUpdateWfDefinition, cancelApiUpdateWfDefinition } from "../../data-source/workflow/update-wf-definition";
 
@@ -96,6 +98,22 @@ export const WORKFLOW = {
         apiGetNodeDefinition(params).then((response) => {
             if (response && response.state !== REQUEST_STATE.UNMOUNT) {
                 setNodeDefinitionData(response);
+            }
+        });
+    },
+
+    // get workflow activity
+    cancelApiGetWorkflowActivity: cancelApiGetWorkflowActivity,
+    getWorkflowActivityAsync: function (params, setWorkflowActivity) {
+        setWorkflowActivity({
+            state: REQUEST_STATE.REQUEST,
+            message: "",
+            loading: true
+        })
+        apiGetWorkflowActivity(params).then((response) => {
+            if (response && response.state !== REQUEST_STATE.UNMOUNT) {
+                
+                setWorkflowActivity(response);
             }
         });
     },

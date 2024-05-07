@@ -14,12 +14,13 @@ var tabs = [
     label: `Workflow Definition`,
     key: 1,
     children: <ListWorkflowDefinition></ListWorkflowDefinition>,
-  },
-  {
-    label: `Workflow Instance`,
-    key: 2,
-    children: <ListWorkflowInstance></ListWorkflowInstance>,
   }
+  // ,
+  // {
+  //   label: `Workflow Instance`,
+  //   key: 2,
+  //   children: <ListWorkflowInstance></ListWorkflowInstance>,
+  // }
 ]
 export const Workflow = () => {
 

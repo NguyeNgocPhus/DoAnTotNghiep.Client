@@ -36,6 +36,15 @@ export const getListWfDefinitionState = atom({
         loading:false
     }
 })
+export const getWorkflowActivityState = atom({
+    key:"GET-WORKFLOW-ACTIVITY-STATE",
+    default:{
+        data:[],
+        state:"",
+        message:"",
+        loading:false
+    }
+})
 export const getWfDefinitionState = atom({
     key:"GET-WF-DEFINITION-STATE",
     default:{

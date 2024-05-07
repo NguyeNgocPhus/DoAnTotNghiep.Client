@@ -29,20 +29,20 @@ export const ListWorkflowDefinition = () => {
     ];
     const columns = [
         {
-            title: 'Name',
+            title: 'Tên quy trình',
             dataIndex: 'name',
             key: 'name',
             render: (_, { id, name }) => (
                 <>
                     <a href={`/admin/workflow-definition/${id}`}>
-                        {name} - {id}
+                        {name}
                     </a>
 
                 </>
             ),
         },
         {
-            title: 'Status',
+            title: 'Trạng thái',
             dataIndex: 'status',
             key: 'status',
             render: (_, { status }) => (
@@ -54,7 +54,7 @@ export const ListWorkflowDefinition = () => {
             ),
         },
         {
-            title: 'version',
+            title: 'Phiên bản',
             dataIndex: 'version',
             key: 'version',
         },
@@ -98,9 +98,7 @@ export const ListWorkflowDefinition = () => {
     useEffect(() => {
         if (createWfDefinitionApiData !== null) {
             if (createWfDefinitionApiData.state === REQUEST_STATE.SUCCESS) {
-                // console.log("createWfDefinitionApiData", createWfDefinitionApiData);
                 setIsModalOpen(false);
-                // message.success('Loading finished', 2.5);
                 navigate(`/admin/workflow-definition/${createWfDefinitionApiData.data.definitionId}`)
 
             } else if (createWfDefinitionApiData.state === REQUEST_STATE.ERROR) {
