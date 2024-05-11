@@ -181,3 +181,42 @@
     background-color: white;
     color: #1890ff;
 }
+.table{
+    box-shadow: 1px 1px 5px 3px rgba(0,0,0,.05);
+    background: #fff;
+    padding: 15px;
+    /* display: flex;
+    flex-direction: row;
+    justify-content: space-between; */
+}
+.table_data{
+    box-shadow: 1px 1px 5px 3px rgba(0,0,0,.05);
+    margin-bottom: 20px;
+}
+.table_filter{
+    margin-bottom: 20px;
+}
+.table_paging{
+    display: flex;
+    justify-content: space-between;
+}
+.table_add{
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: end;
+}
+.header_list_users{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    
+}
+.field_filter{
+    display: flex;
+  
+    align-items: end;
+   
+}
+.field_name{
+    font-weight: bold;
+}

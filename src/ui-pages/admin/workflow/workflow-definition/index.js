@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import "./styles.css";
 import 'reactflow/dist/style.css';
-import { Button, Col, Input, Row, Space, Table, Typography, Tag, Dropdown, Modal, Form, message, Popconfirm, Spin } from 'antd';
+import { Button, Col, Input, Row, Space, Table, Typography, Tag, Dropdown, Modal, Form, message, Popconfirm, Spin, Pagination } from 'antd';
 import { SearchOutlined, PlusOutlined, DownOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import { REQUEST_STATE } from '../../../../app-config/constants';
 import { useCreateWfDefinition } from '../../../../store/workflow/use-create-wf-definition';
@@ -90,6 +90,8 @@ export const ListWorkflowDefinition = () => {
     const [loading, setLoading] = useState(false);
     const [listWfDefinition, setListWfDefinition] = useState([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [total, setTotal] = useState(0);
 
     const onConfirmDelete = (id) => {
         requestDeleteWfDefinitionApiData({ id })
@@ -166,28 +168,67 @@ export const ListWorkflowDefinition = () => {
             }
         }
     }, [deleteWfDefinitionApiData])
+
+    const onChange = (page) => {
+
+        setCurrentPage(page);
+        requestGetListWfDefinitionData({
+            page: page
+        });
+    };
     return (
 
         <>
             <AdminCommomLayout>
-                <Row style={{ padding: "20px" }} gutter={[0, 32]}>
+                <Row style={{ padding: "20px" }}>
                     <Col span={24}>
                         <div className='header_list_users'>
                             <Title level={5}>Danh sách quy trình</Title>
-                            <div>
-                                <Button onClick={showModal} icon={<PlusOutlined />} type="primary" size="large">Tạo workflow</Button>
-                            </div>
+                            
                         </div>
                     </Col>
-                    <Col span={24}>
+                    {/* <Col span={24}>
                         <Input icon={<SearchOutlined />} style={{ width: '70%' }} size="large" placeholder="Tìm kiếm theo tên, email hoặc số điện thoại" prefix={<SearchOutlined />} />
-                    </Col>
+                    </Col> */}
                     <Col span={24}>
-                        <Spin size="large" spinning={loading}>
+                        {/* <Spin size="large" spinning={loading}>
                             {listWfDefinition &&
                                 <Table columns={columns} dataSource={listWfDefinition} />
                             }
-                        </Spin>
+                        </Spin> */}
+                        <div className='table'>
+                            <div className='table_add'>
+                                <Button onClick={showModal} icon={<PlusOutlined />} type="primary" size="large">Tạo workflow</Button>
+                            </div>  
+                            <Row className='table_filter' gutter={[15,0]}>
+                                <Col span={4} className='field_filter'>
+                                    <div className='field_name'>
+                                        Tên quy trình
+                                    </div>
+                                    <Input size="small" placeholder="Tìm kiếm theo tên"/>
+
+                                </Col>
+                                <Col span={4} className='field_filter'>
+                                    <div className='field_name'>
+                                        Trạng thái
+                                    </div>
+                                    <Input  size="small" placeholder="Tìm kiếm theo email" />
+
+                                </Col>
+                            
+                                <Col span={4} style={{display: "flex", alignItems:'end', gap:'10px'}}>
+                                <Button size='small' type='primary'>Lọc</Button>
+                                    <Button size='small'>Clear bộ lọc</Button>
+                                </Col>
+                            </Row>
+                            <Table scroll={{y:450}} className='table_data' size="middle" pagination={false} loading={loading} columns={columns} dataSource={listWfDefinition} />
+
+                            <div className='table_paging'>
+                                <div><b>Tổng số : {total}</b></div>
+                                <Pagination style={{ marginTop: '10px' }} defaultCurrent={1} current={currentPage} onChange={onChange} total={total} />
+
+                            </div>
+                        </div>
                     </Col>
                 </Row>
                 <Modal title="Tạo flow mới" open={isModalOpen} onCancel={handleCancel} footer={null}>

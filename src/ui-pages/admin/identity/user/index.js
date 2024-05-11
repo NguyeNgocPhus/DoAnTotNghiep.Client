@@ -2,20 +2,22 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import "./styles.css";
 import 'reactflow/dist/style.css';
-import { Button, Col, Input, Row, Space, Table, Typography, Tag, Modal, Form, Spin, Pagination, Popconfirm, notification } from 'antd';
+import { Button, Col, Input, Row, Space, Table, Typography, Tag, Modal, Form, Spin, Pagination, Popconfirm, notification, Select } from 'antd';
 import { SearchOutlined, PlusOutlined, EditOutlined, DeleteOutlined, QuestionCircleOutlined } from '@ant-design/icons';
 import { CreateUser } from './create';
 import { useGetUsers } from '../../../../store/auth/use-get-users';
 import { REQUEST_STATE } from '../../../../app-config/constants';
 import { UpdateUser } from './update';
 import { useDeleteUser } from '../../../../store/auth/use-delete-user';
+import { AdminCommomLayout } from '../../../common/layout/admin/admin-common';
+import { useGetRoles } from '../../../../store/auth/use-get-roles';
 const { Title } = Typography;
 
 
 export const ListUsers = () => {
     const columns = [
         {
-            title: 'Name',
+            title: 'Tên',
             dataIndex: 'userName',
             key: 'userName',
             render: (text) => <a>{text}</a>,
@@ -26,12 +28,12 @@ export const ListUsers = () => {
             key: 'email',
         },
         {
-            title: 'Phone Numner',
+            title: 'Số điện thoại',
             dataIndex: 'phoneNumber',
             key: 'phoneNumber',
         },
         {
-            title: 'Roles',
+            title: 'Quyền',
             key: 'roles',
             dataIndex: 'roles',
             render: (_, { roles }) => (
@@ -97,13 +99,40 @@ export const ListUsers = () => {
 
     const [getUsersApiData, requestGetUsersApiData] = useGetUsers();
 
+    const [rolesApiData, requestGetRolesApiData] = useGetRoles();
     const [deleteUserApiData, requestDeleteUserApiData] = useDeleteUser();
+    const [listRole, setListRole] = useState([]);
+
+    // search field
+    const [searchName, setSearchName] = useState("");
+    const [searchEmail, setSearchEmail] = useState("");
+    const [searchPhone, setSearchPhone] = useState("");
+    const [searchRole , setSearchRole] = useState([]);
 
     useEffect(() => {
         requestGetUsersApiData({
             page: 1
         });
+        requestGetRolesApiData();
     }, []);
+    useEffect(() => {
+        if (rolesApiData !== null) {
+            if (rolesApiData.state === REQUEST_STATE.SUCCESS) {
+
+                var roles = rolesApiData.data.map(x => {
+                    return {
+                        label: x.name,
+                        value: x.name,
+                    }
+                });
+                setListRole(roles);
+            } else if (rolesApiData.state === REQUEST_STATE.ERROR) {
+
+            } else if (rolesApiData.state === REQUEST_STATE.REQUEST) {
+
+            }
+        }
+    }, [rolesApiData])
 
     // list user
     useEffect(() => {
@@ -163,14 +192,10 @@ export const ListUsers = () => {
 
     // create user
     const onCreateUserSuccess = (user) => {
-        setListUser([{
-            email: user.email,
-            key: user.id,
-            userName: user.userName,
-            phoneNumber: user.phoneNumber,
-            roles: user.roles
-        }, ...listUser]);
-        setTotal(total + 1);
+       
+        requestGetUsersApiData({
+            page: currentPage
+        });
 
     }
     const onOpenModalCreate = () => {
@@ -182,15 +207,9 @@ export const ListUsers = () => {
 
     // update user
     const onUpdateUserSuccess = (user) => {
-        var newListUser  = listUser.map(x=>{
-            if(x.key === user.id){
-                
-                return {...user, key : user.id};
-            }else{
-                return x;
-            }
+        requestGetUsersApiData({
+            page: currentPage
         });
-        setListUser([...newListUser]);
     }
 
     const onOpenModalUpdate = (Id) => {
@@ -209,27 +228,100 @@ export const ListUsers = () => {
         requestDeleteUserApiData({ id });
 
     }
+    const onFilterUsers = () => {
+        requestGetUsersApiData({
+            page: currentPage,
+            name: searchName,
+            email: searchEmail,
+            phoneNumber: searchPhone,
+            roles: searchRole
+        });
+    };
+    const onClearFilter = (value) => {
+        setSearchEmail("");
+        setSearchName("");
+        setSearchPhone("");
+        setSearchRole([]);
+        requestGetUsersApiData({
+            page: currentPage
+        });
+    };
+
+
     return (
         <>
-            <Row style={{ padding: '20px' }} gutter={[0, 32]}>
-                <Col span={24}>
-                    <div className='header_list_users'>
-                        <Title level={5}>Danh sách người dùng</Title>
-                        <div>
-                            <Button onClick={onOpenModalCreate} icon={<PlusOutlined />} type="primary" size="large">Tạo người dùng</Button>
+            <AdminCommomLayout>
+                <Row style={{ padding: '20px' }}>
+                    <Col span={24}>
+                        <div className='header_list_users'>
+                            <Title level={5}>Danh sách người dùng</Title>
+
                         </div>
-                    </div>
-                </Col>
-                <Col span={24}>
-                    <Input icon={<SearchOutlined />} style={{ width: '70%' }} size="large" placeholder="Tìm kiếm theo tên, email hoặc số điện thoại" prefix={<SearchOutlined />} />
-                </Col>
-                <Col span={24}>
-                    <Table size="middle" pagination={false} loading={loading} columns={columns} dataSource={listUser} />
-                    <Pagination style={{ marginTop: '10px' }} showTotal={t => <b>Tổng số : {t}</b>} defaultCurrent={1} current={currentPage} onChange={onChange} total={total} />
-                </Col>
-            </Row>
-            <CreateUser isModalOpen={isModalOpenCreate} handleCancel={handleCancelCreate} onCreateUserSuccess={onCreateUserSuccess} ></CreateUser>
-            <UpdateUser id={idUserUpdate} isModalOpen={isModalOpenUpdate} handleCancel={handleCancelUpdate} onUpdateUserSuccess={onUpdateUserSuccess} ></UpdateUser>
+                    </Col>
+                    <Col span={24}>
+                        <div className='table'>
+                            <div className='table_add'>
+                                <Button onClick={onOpenModalCreate} icon={<PlusOutlined />} type="primary" size="large">Tạo người dùng</Button>
+                            </div>
+                            <Row className='table_filter' gutter={[15, 0]}>
+                                <Col span={4} className='field_filter'>
+                                    <div className='field_name'>
+                                        Tên
+                                    </div>
+                                    <Input value={searchName} onChange={(e)=>{setSearchName(e.target.value)}} size="small" placeholder="Tìm kiếm theo tên" />
+
+                                </Col>
+                                <Col span={4} className='field_filter'>
+                                    <div className='field_name'>
+                                        Email
+                                    </div>
+                                    <Input value={searchEmail} onChange={(e)=>{setSearchEmail(e.target.value)}} size="small" placeholder="Tìm kiếm theo email" />
+
+                                </Col>
+                                <Col span={4} className='field_filter'>
+                                    <div className='field_name'>
+                                        Số điện thoại
+                                    </div>
+                                    <Input value={searchPhone} onChange={(e)=>{setSearchPhone(e.target.value)}}  size="small" placeholder="Tìm kiếm theo số điện thoại" />
+
+                                </Col>
+                                <Col span={4} className='field_filter'>
+                                    <div className='field_name'>
+                                        Quyền
+                                    </div>
+                                    {listRole.length > 0 && <Select
+                                        size="small"
+                                        mode="multiple"
+                                        allowClear
+                                        style={{
+                                            width: '100%',
+                                        }}
+                                        value={searchRole}
+                                        placeholder="Chọn nhóm người dùng"
+                                        onChange={(values)=>{setSearchRole(values)}}
+                                        options={listRole}
+                                    />}
+
+                                </Col>
+                                <Col span={4} style={{ display: "flex", alignItems: 'end', gap: '10px' }}>
+                                    <Button size='small' type='primary' onClick={onFilterUsers}>Lọc</Button>
+                                    <Button size='small' onClick={onClearFilter}>Clear bộ lọc</Button>
+                                </Col>
+                            </Row>
+                            <Table scroll={{ y: 500 }} className='table_data' size="middle" pagination={false} loading={loading} columns={columns} dataSource={listUser} />
+
+                            <div className='table_paging'>
+                                <div><b>Tổng số : {total}</b></div>
+                                <Pagination style={{ marginTop: '10px' }} defaultCurrent={1} current={currentPage} onChange={onChange} total={total} />
+
+                            </div>
+                        </div>
+
+                    </Col>
+                </Row>
+                <CreateUser isModalOpen={isModalOpenCreate} handleCancel={handleCancelCreate} onCreateUserSuccess={onCreateUserSuccess} ></CreateUser>
+                <UpdateUser id={idUserUpdate} isModalOpen={isModalOpenUpdate} handleCancel={handleCancelUpdate} onUpdateUserSuccess={onUpdateUserSuccess} ></UpdateUser>
+            </AdminCommomLayout>
         </>
 
 

@@ -271,23 +271,51 @@ export const ListApprove = () => {
     return (
         <>
             <AdminCommomLayout>
-                <Row style={{ padding: '20px' }} gutter={[0, 32]}>
+                <Row style={{ padding: '20px' }}>
                     <Col span={24}>
                         <div className='header_list_users'>
                             <Title level={5}>Danh sách dữ liệu phê duyệt</Title>
                         </div>
                     </Col>
+                
                     <Col span={24}>
-                        <Input icon={<SearchOutlined />} style={{ width: '70%' }} size="large" placeholder="Tìm kiếm theo tên mẫu nhập" prefix={<SearchOutlined />} />
-                    </Col>
-                    <Col span={24}>
-                        <Spin size="large" spinning={loading}>
-                            <Table columns={columns} size="middle" dataSource={listApprove}
-                                pagination={false}
-                            />
+                        <div className='table'>
+                            <Row className='table_filter' gutter={[15,0]}>
+                                <Col span={4} className='field_filter'>
+                                    <div className='field_name'>
+                                        Người tạo
+                                    </div>
+                                    <Input size="small" placeholder="Tìm kiếm theo tên"/>
 
-                            <Pagination showTotal={t => `Tổng số : ${t}`} defaultCurrent={1} current={currentPage} onChange={onChange} total={total} />
-                        </Spin>
+                                </Col>
+                                <Col span={4} className='field_filter'>
+                                    <div className='field_name'>
+                                        Mẫu nhập
+                                    </div>
+                                    <Input  size="small" placeholder="Tìm kiếm theo email" />
+
+                                </Col>
+                                <Col span={4} className='field_filter'>
+                                    <div className='field_name'>
+                                        Trạng thái
+                                    </div>
+                                    <Input size="small" placeholder="Tìm kiếm theo số điện thoại"  />
+
+                                </Col>
+                                
+                                <Col span={4} style={{display: "flex", alignItems:'end', gap:'10px'}}>
+                                <Button size='small' type='primary'>Lọc</Button>
+                                    <Button size='small'>Clear bộ lọc</Button>
+                                </Col>
+                            </Row>
+                            <Table scroll={{y:600}} className='table_data' size="middle" pagination={false} loading={loading} columns={columns} dataSource={listApprove} />
+
+                            <div className='table_paging'>
+                                <div><b>Tổng số : {total}</b></div>
+                                <Pagination style={{ marginTop: '10px' }} defaultCurrent={1} current={currentPage} onChange={onChange} total={total} />
+
+                            </div>
+                        </div>
                     </Col>
                 </Row>
                 <Modal title={"Phê duyệt tài liệu"} open={isModalOpen} onCancel={handleCancel} footer={null}>

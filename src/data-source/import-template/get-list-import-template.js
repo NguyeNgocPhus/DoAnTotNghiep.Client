@@ -15,7 +15,7 @@ export const apiGetListImportTemplate = async (params) => {
     source = getTokenSource();
  
     try {
-        const response = await GET(`/Api/ImportTemplates`, {}, {
+        const response = await GET(`/Api/ImportTemplates`, {...params}, {
             cancelToken: source.token
         })
       

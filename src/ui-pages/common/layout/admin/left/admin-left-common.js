@@ -2,7 +2,7 @@ import { Button, Col, Layout, Menu, Row, Input, Tooltip, Typography, Divider } f
 
 
 import {
-    FolderOpenOutlined,
+    UsergroupAddOutlined,
     UserOutlined,
     BranchesOutlined,
     ProductOutlined,
@@ -22,7 +22,8 @@ export const AdminLeftCommomLayout = ({ children }) => {
     
     var currentUser =  getUser();
     var showDashboard = hasRole("SuperAdmin");
-    var showIdentity = hasRole("User") || hasRole("Role") || hasRole("SuperAdmin");
+    var showUser = hasRole("User") || hasRole("SuperAdmin");
+    var showRole = hasRole("Role") || hasRole("SuperAdmin");
     var showDocument = hasRole("Document")  || hasRole("SuperAdmin");
     var showWorkflow = hasRole("Workflow") || hasRole("SuperAdmin");
     var showApprove =  hasRole("Approval") || hasRole("SuperAdmin");
@@ -35,16 +36,25 @@ export const AdminLeftCommomLayout = ({ children }) => {
             {
                 icon: <ProductOutlined style={{ fontSize: '20px' }} />,
                 name: "Dashboard",
-                route: "/admin",
+                route: "/admin/dashboard",
                 isActive: true,
             })
     }
-    if(showIdentity){
+    if(showRole){
+        listMenu.push(
+            {
+                icon: <UsergroupAddOutlined style={{ fontSize: '20px' }} />,
+                name: "Quyền",
+                route: "/admin/roles",
+                isActive: false,
+            })
+    }
+    if(showUser){
         listMenu.push(
             {
                 icon: <UserOutlined style={{ fontSize: '20px' }} />,
                 name: "Người dùng",
-                route: "/admin/identity",
+                route: "/admin/users",
                 isActive: false,
             })
     }

@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from "react-router-dom";
 import "./styles.css";
 import 'reactflow/dist/style.css';
-import { Button, Col, Input, Row, Space, Table, Typography, Tag, Modal, Form, Upload, Spin, Pagination } from 'antd';
+import { Button, Col, Input, Row, Space, Table, Typography, Tag, Modal, Form, Upload, Spin, Pagination, Select } from 'antd';
 import { SearchOutlined, ShareAltOutlined, CheckOutlined, EditOutlined, UploadOutlined, HistoryOutlined, DeleteOutlined } from '@ant-design/icons';
 import { useGetListImportTemplate } from '../../../../store/import-template/use-get-list-import-template';
 import { REQUEST_STATE } from '../../../../app-config/constants';
@@ -14,6 +14,7 @@ import moment from 'moment';
 import { useGetImportTemplate } from '../../../../store/import-template/use-get-import-template';
 import { StepImport } from '../approve/step';
 import { useGetWorkflowActivity } from '../../../../store/workflow/use-wf-activity';
+import { RangePicker } from '../../../../ui-source/date-picker';
 const { Title } = Typography;
 
 export const History = () => {
@@ -108,7 +109,11 @@ export const History = () => {
             ),
         },
     ];
-
+    const listStatus = [
+        { label: "Đã phê duyệt", value: "APPROVE" },
+        { label: "Đã từ chối", value: "REJECT" },
+        { label: "Chờ phê duyệt", value: "PENDING" }
+    ]
     const { id } = useParams()
     const [listHistoryApiData, requestListHistoryApi] = useGetListApprove();
     const [importTemplateApiData, requestImportTemplateApi] = useGetImportTemplate();
@@ -123,9 +128,11 @@ export const History = () => {
     const [total, setTotal] = useState(0);
     const navigate = useNavigate();
     const [isEnd, setIsEnd] = useState(null);
-    const [fileTemplateId, setFileTemplateId] = useState(null);
-    const [importTemplateId, setImportTemplateId] = useState(null);
-
+    // search field
+    const [searchName, setSearchName] = useState("");
+    const [searchStatus, setSearchStatus] = useState([]);
+    const [searchPhone, setSearchPhone] = useState("");
+    const [searchRole, setSearchRole] = useState([]);
 
     useEffect(() => {
         requestListHistoryApi({ importTemplateId: id });
@@ -215,31 +222,89 @@ export const History = () => {
         <div style={{ border: "1px solid #A19C9B", fontWeight: "bold", borderRadius: "5px", padding: "3px", backgroundColor: "#A19C9B", color: '#fff' }}>Đang thực hiện</div>
     )
 
+    const onFilterUsers = () => {
+        requestListHistoryApi({
+            page: currentPage,
+            createdByName: searchName,
+            status: searchStatus
+        });
+    };
+    const onClearFilter = (value) => {
 
+        setSearchName("");
+
+        setSearchStatus([]);
+        requestListHistoryApi({
+            page: currentPage
+        });
+    };
     return (
         <AdminCommomLayout>
-            <Row style={{ padding: '20px' }} gutter={[0, 32]}>
+            <Row style={{ padding: '20px' }}>
                 <Col span={24}>
                     <div className='' style={{ display: "flex", alignItems: "center", gap: "5px" }}>
                         {importTemplateApiData.state === REQUEST_STATE.SUCCESS &&
                             <>
                                 <Title level={5}>Lịch sử nhập liệu mẫu nhập "{importTemplateApiData.data.name}"</Title>
-                                <span onClick={onGoBackListPage} style={{ fontSize: '10px', cursor: 'pointer', color: 'geekblue' }}>( Trở lại danh sách )</span>
+                                <span onClick={onGoBackListPage} style={{ fontSize: '10px', cursor: 'pointer', color: 'blue' }}>( Trở lại danh sách )</span>
                             </>
                         }
 
                     </div>
                 </Col>
-                <Col span={24}>
+                {/* <Col span={24}>
                     <Input icon={<SearchOutlined />} style={{ width: '70%' }} size="large" placeholder="Tìm kiếm theo tên mẫu nhập" prefix={<SearchOutlined />} />
-                </Col>
+                </Col> */}
                 <Col span={24}>
-                    <Spin size="large" spinning={loading}>
+                    {/* <Spin size="large" spinning={loading}>
                         <Table scroll={{ y: 500 }} pagination={false} size="middle" columns={columns} dataSource={listHistory}
                         />
                         <Pagination showTotal={t => `Tổng số : ${t}`} defaultCurrent={1} current={currentPage} onChange={onChange} total={total} />
 
-                    </Spin>
+                    </Spin> */}
+                    <div className='table'>
+
+                        <Row className='table_filter' gutter={[15, 0]}>
+                            
+                            <Col span={4} className='field_filter'>
+                                <div className='field_name'>
+                                    Người nhập liệu
+                                </div>
+                                <Input value={searchName} onChange={(e) => { setSearchName(e.target.value) }} size="small" placeholder="Tìm kiếm theo tên" />
+
+                            </Col>
+
+                            <Col span={4} className='field_filter'>
+                                <div className='field_name'>
+                                    Trạng thái
+                                </div>
+                                {listStatus.length > 0 && <Select
+                                    size="small"
+                                    mode="multiple"
+                                    allowClear
+                                    style={{
+                                        width: '100%',
+                                    }}
+                                    value={searchStatus}
+                                    placeholder="Chọn trạng thái"
+                                    onChange={(values) => { setSearchStatus(values) }}
+                                    options={listStatus}
+                                />}
+                            </Col>
+
+                            <Col span={4} style={{ display: "flex", alignItems: 'end', gap: '10px' }}>
+                                <Button size='small' type='primary' onClick={onFilterUsers}>Lọc</Button>
+                                <Button size='small' onClick={onClearFilter}>Clear bộ lọc</Button>
+                            </Col>
+                        </Row>
+                        <Table scroll={{ y: 500 }} className='table_data' size="middle" pagination={false} loading={loading} columns={columns} dataSource={listHistory} />
+
+                        <div className='table_paging'>
+                            <div><b>Tổng số : {total}</b></div>
+                            <Pagination style={{ marginTop: '10px' }} defaultCurrent={1} current={currentPage} onChange={onChange} total={total} />
+
+                        </div>
+                    </div>
                 </Col>
             </Row>
             <Modal title={"Lịch sử phê duyệt"} open={historyOpen} onCancel={handleCancel} footer={null}>

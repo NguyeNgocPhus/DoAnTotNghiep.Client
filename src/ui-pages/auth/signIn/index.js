@@ -50,7 +50,7 @@ export const UserSignIn = () => {
 
         if (myProfile.state === REQUEST_STATE.SUCCESS) {
           saveUserToStore(myProfile.data);
-          navigate("/admin");
+          navigate("/");
         }
     
       }, [myProfile])

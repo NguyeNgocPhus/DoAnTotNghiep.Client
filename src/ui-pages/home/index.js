@@ -25,35 +25,9 @@ export const HomePage = () => {
   };
   return (
     <AdminCommomLayout>
-      <Row gutter={[0, 40]} style={{padding:'30px'}}>
-        <Col span={24}>
-          <Row gutter={[0, 0]} justify="space-between">
-            <Col span={5} className="dashboad_count">
-              <div className="count_text">User đăng nhập</div>
-              <span className="count_number">0</span>
-            </Col>
-            <Col span={5} className="dashboad_count">
-              <div className="count_text" >Tài liệu upload</div>
-              <span className="count_number">0</span>
-            </Col>
-            <Col span={5} className="dashboad_count">
-              <div className="count_text">Số lượt phê duyệt</div>
-              <span className="count_number">0</span>
-            </Col>
-            <Col span={5} className="dashboad_count">
-              <div className="count_text">Số quy trình phê duyệt</div>
-              <span className="count_number">0</span>
-            </Col>
-          </Row>
-
-        </Col>
-        <Col span={24}>
-          <div className="chart">
-          <Line {...config} />
-          </div>
-          
-        </Col>
-      </Row>
+      <div style={{position:'absolute', top:"50%", left:'40%'}}>
+        <Typography.Title>HỆ THỐNG QUẢN TRỊ</Typography.Title> 
+      </div >
 
 
     </AdminCommomLayout>

@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import "./styles.css";
 import 'reactflow/dist/style.css';
-import { Button, Col, Input, Row, Space, Table, Typography, Tag, Modal, Form, Upload, Spin } from 'antd';
+import { Button, Col, Input, Row, Space, Table, Typography, Tag, Modal, Form, Upload, Spin, Pagination } from 'antd';
 import { SearchOutlined, PlusOutlined, CheckOutlined, EditOutlined, UploadOutlined, HistoryOutlined, DeleteOutlined } from '@ant-design/icons';
 import { FormCreate } from './form_create';
 import { FormUpload } from './form_upload';
@@ -12,10 +12,13 @@ import { useCreateImportTemplate } from '../../../../store/import-template/use-c
 import { useDeleteImportTemplate } from '../../../../store/import-template/use-delete-import-template';
 import { History } from './history';
 import { AdminCommomLayout } from '../../../common/layout/admin/admin-common';
+import { hasRole } from '../../../../app-helper/jwtHepler';
 const { Title } = Typography;
 
 
 export const ListDocument = () => {
+    const hasImportTemplate = hasRole("Document") || hasRole("SuperAdmin");
+    const hasUpload = hasRole("Upload") || hasRole("SuperAdmin");
     const columns = [
         {
             title: 'Tên Mẫu nhập',
@@ -79,11 +82,12 @@ export const ListDocument = () => {
                                 onClickViewHistory(data)
                             }} />
                         </Col>
-                        <Col className='import_teamplate_action_icon' >
+                        {hasUpload && <Col className='import_teamplate_action_icon' >
                             <UploadOutlined style={{ cursor: 'pointer' }} onClick={() => {
                                 onClickUploadDocument(data.key)
                             }} />
-                        </Col>
+                        </Col>}
+
                         <Col className='import_teamplate_action_icon'>
                             <DeleteOutlined style={{ cursor: 'pointer', color: 'red' }} onClick={() => {
                                 onDeleteImportTemplate(data.key)
@@ -108,6 +112,13 @@ export const ListDocument = () => {
     const [listImportTemplate, setListImportTemplate] = useState([]);
     const [loading, setLoading] = useState(false);
     const [form] = Form.useForm();
+    const [currentPage, setCurrentPage] = useState(1);
+    const [total, setTotal] = useState(0);
+    // search field
+    const [searchName, setSearchName] = useState("");
+    const [searchTag, setSearchTag] = useState("");
+
+
     const navigate = useNavigate();
 
     const [fileTemplateId, setFileTemplateId] = useState(null);
@@ -116,6 +127,7 @@ export const ListDocument = () => {
     const showFormCreate = () => {
         setFormCreateOpen(true);
     };
+
 
 
     const onCreateImportTemplate = (values) => {
@@ -142,14 +154,16 @@ export const ListDocument = () => {
 
 
     useEffect(() => {
-        requestListImportTemplateApi();
+        requestListImportTemplateApi({
+            page: 1
+        });
     }, [])
     useEffect(() => {
         if (listImportTemplateApiData !== null) {
             if (listImportTemplateApiData.state === REQUEST_STATE.SUCCESS) {
                 setLoading(false);
                 // console.log("listImportTemplateApiData.state",listImportTemplateApiData.data);
-                var data = listImportTemplateApiData.data.map(x => {
+                var data = listImportTemplateApiData.data.items.map(x => {
                     return {
                         // id: x.id,
                         name: x.name,
@@ -161,6 +175,7 @@ export const ListDocument = () => {
 
                     }
                 });
+                setTotal(listImportTemplateApiData.data.totalCount)
                 setListImportTemplate(data);
 
             } else if (listImportTemplateApiData.state === REQUEST_STATE.ERROR) {
@@ -204,25 +219,86 @@ export const ListDocument = () => {
             }
         }
     }, [createImportTemplateApiData]);
+    const onChange = (page) => {
+
+        setCurrentPage(page);
+        requestListImportTemplateApi({
+            page: page
+        });
+    };
+    const onFilter = () => {
+        requestListImportTemplateApi({
+            page: currentPage,
+            name: searchName,
+            tag: searchTag,
+
+        });
+    };
+    const onClearFilter = (value) => {
+        setSearchName("");
+        setSearchTag("");
+
+        requestListImportTemplateApi({
+            page: currentPage
+        });
+    };
+
     return (
         <>
             <AdminCommomLayout>
-                <Row style={{ padding: '20px' }} gutter={[0, 32]}>
+                <Row style={{ padding: '20px' }}>
                     <Col span={24}>
                         <div className='header_list_users'>
                             <Title level={5}>Danh sách mẫu nhập</Title>
-                            <div>
-                                <Button onClick={showFormCreate} icon={<PlusOutlined />} type="primary" size="large">Tạo mẫu nhập</Button>
-                            </div>
+                            {/* <div>
+                               {hasImportTemplate && <Button onClick={showFormCreate} icon={<PlusOutlined />} type="primary" size="large">Tạo mẫu nhập</Button>} 
+                            </div> */}
                         </div>
                     </Col>
                     <Col span={24}>
-                        <Input icon={<SearchOutlined />} style={{ width: '70%' }} size="large" placeholder="Tìm kiếm theo tên mẫu nhập" prefix={<SearchOutlined />} />
-                    </Col>
-                    <Col span={24}>
-                        <Spin size="large" spinning={loading}>
+                        <div className='table'>
+                            <div className='table_add'>
+
+                                {hasImportTemplate && <Button onClick={showFormCreate} icon={<PlusOutlined />} type="primary" size="large">Tạo mẫu nhập</Button>}
+
+                            </div>
+                            <Row className='table_filter' gutter={[15, 0]}>
+                                <Col span={4} className='field_filter'>
+                                    <div className='field_name'>
+                                        Tên
+                                    </div>
+                                    <Input value={searchName} onChange={(e) => { setSearchName(e.target.value) }} size="small" placeholder="Tìm kiếm theo tên" />
+
+                                </Col>
+                                <Col span={4} className='field_filter'>
+                                    <div className='field_name'>
+                                        Loại mẫu nhập
+                                    </div>
+                                    <Input value={searchTag} onChange={(e) => { setSearchTag(e.target.value) }} size="small" placeholder="Tìm kiếm theo loại mẫu nhập" />
+
+                                </Col>
+
+                                <Col span={4} style={{ display: "flex", alignItems: 'end', gap: '10px' }}>
+                                    <Button size='small' type='primary' onClick={onFilter}>Lọc</Button>
+                                    <Button size='small' onClick={onClearFilter}>Clear bộ lọc</Button>
+                                </Col>
+                            </Row>
+                            <Table scroll={{ y: 600 }} className='table_data' size="middle" pagination={false} loading={loading} columns={columns} dataSource={listImportTemplate} />
+
+                            <div className='table_paging'>
+                                <div><b>Tổng số : {total}</b></div>
+                                <Pagination style={{ marginTop: '10px' }} defaultCurrent={1} current={currentPage} onChange={onChange} total={total} />
+
+                            </div>
+                        </div>
+
+
+
+
+
+                        {/* <Spin size="large" spinning={loading}>
                             {listImportTemplate.length > 0 && <Table size="middle" columns={columns} dataSource={listImportTemplate} />}
-                        </Spin>
+                        </Spin> */}
                     </Col>
                 </Row>
                 <FormCreate setFileTemplateId={setFileTemplateId} form={form} open={formCreateOpen} onClose={() => { setFormCreateOpen(false) }} onFinish={onCreateImportTemplate}></FormCreate>

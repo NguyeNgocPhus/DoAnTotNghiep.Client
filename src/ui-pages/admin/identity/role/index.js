@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import "./styles.css";
 import 'reactflow/dist/style.css';
-import { Button, Col, Input, Row, Space, Table, Typography, Tag, Modal, Form } from 'antd';
+import { Button, Col, Input, Row, Space, Table, Typography, Tag, Modal, Form, Pagination } from 'antd';
 import { AdminCommomLayout } from '../../../common/layout/admin/admin-common';
 import { SearchOutlined, PlusOutlined, CheckOutlined } from '@ant-design/icons';
 import { useGetRoles } from '../../../../store/auth/use-get-roles';
@@ -10,18 +10,24 @@ import { REQUEST_STATE } from '../../../../app-config/constants';
 const { Title } = Typography;
 const columns = [
     {
-        title: 'Name',
+        title: 'Code',
+        dataIndex: 'code',
+        key: 'code',
+        render: (text) => <a>{text}</a>,
+    },
+    {
+        title: 'Tên',
         dataIndex: 'name',
         key: 'name',
         render: (text) => <a>{text}</a>,
     },
     {
-        title: 'Description',
+        title: 'Mô tả',
         dataIndex: 'description',
         key: 'description',
     },
     {
-        title: 'Active',
+        title: 'Trạng thái',
         key: 'active',
         dataIndex: 'active',
         render: (_, { active }) => (
@@ -35,7 +41,8 @@ export const ListRole = () => {
     const [rolesApiData, requestGetRolesApiData] = useGetRoles();
     const [listRole, setListRole] = useState([]);
     const [loading, setLoading] = useState(false);
-  
+    const [currentPage, setCurrentPage] = useState(1);
+    const [total, setTotal] = useState(0);
     useEffect(()=>{
         requestGetRolesApiData();
     },[]);
@@ -47,6 +54,7 @@ export const ListRole = () => {
                     return {
                         key: x.id,
                         name: x.name,
+                        code : x.roleCode,
                         description: x.description,
                         active: true
                     }
@@ -73,9 +81,17 @@ export const ListRole = () => {
     const onFinishFailed = (errorInfo) => {
         console.log('Failed:', errorInfo);
     };
+    const onChange = (page) => {
+
+        setCurrentPage(page);
+        requestGetRolesApiData({
+            page: page
+        });
+    };
     return (
         <>
-            <Row style={{ padding: '20px' }} gutter={[0, 32]}>
+        <AdminCommomLayout>
+            <Row style={{ padding: '20px' }}>
                 <Col span={24}>
                     <div className='header_list_users'>
                         <Title level={5}>Danh sách nhóm người dùng</Title>
@@ -84,11 +100,42 @@ export const ListRole = () => {
                         </div> */}
                     </div>
                 </Col>
-                <Col span={24}>
+                {/* <Col span={24}>
                     <Input icon={<SearchOutlined />} style={{ width: '70%' }} size="large" placeholder="Tìm kiếm theo tên nhóm người dùng" prefix={<SearchOutlined />} />
-                </Col>
+                </Col> */}
                 <Col span={24}>
-                    <Table size="middle" loading={loading} columns={columns} dataSource={listRole} />
+                    {/* <Table size="middle" loading={loading} columns={columns} dataSource={listRole} /> */}
+                    <div className='table'>
+                            <Row className='table_filter' gutter={[15,0]}>
+                                <Col span={4} className='field_filter'>
+                                    <div className='field_name'>
+                                        Tên
+                                    </div>
+                                    <Input size="small" placeholder="Tìm kiếm theo tên"/>
+
+                                </Col>
+                                <Col span={4} className='field_filter'>
+                                    <div className='field_name'>
+                                        Code
+                                    </div>
+                                    <Input size="small" placeholder="Tìm kiếm theo tên"/>
+
+                                </Col>
+                            
+                                
+                                <Col span={4} style={{display: "flex", alignItems:'end', gap:'10px'}}>
+                                <Button size='small' type='primary'>Lọc</Button>
+                                    <Button size='small'>Clear bộ lọc</Button>
+                                </Col>
+                            </Row>
+                            <Table scroll={{y:600}} className='table_data' size="middle" pagination={false} loading={loading} columns={columns} dataSource={listRole} />
+
+                            <div className='table_paging'>
+                                <div><b>Tổng số : {total}</b></div>
+                                <Pagination style={{ marginTop: '10px' }} defaultCurrent={1} current={currentPage} onChange={onChange} total={total} />
+
+                            </div>
+                        </div>
                 </Col>
             </Row>
             <Modal title="Tạo flow mới" open={isModalOpen} onCancel={handleCancel} footer={null}>
@@ -122,6 +169,7 @@ export const ListRole = () => {
                     </Form.Item>
                 </Form>
             </Modal>
+            </AdminCommomLayout>
         </>
     );
 }

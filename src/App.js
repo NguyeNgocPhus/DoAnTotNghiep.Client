@@ -23,6 +23,9 @@ import { ListDocument } from './ui-pages/admin/document/list';
 import { ListApprove } from './ui-pages/admin/document/approve';
 import { History } from './ui-pages/admin/document/list/history';
 import { ListWorkflowDefinition } from './ui-pages/admin/workflow/workflow-definition';
+import { ListUsers } from './ui-pages/admin/identity/user';
+import { ListRole } from './ui-pages/admin/identity/role';
+import { DashBoard } from './ui-pages/admin/dashboard';
 const { Option } = Select;
 
 
@@ -84,12 +87,13 @@ function App() {
           )
         })} */}
       </Routes>
-      <PrivateRouter path="/admin/" element={<HomePage></HomePage>}></PrivateRouter>
+      <PrivateRouter path="/admin/dashboard" element={<DashBoard></DashBoard>}></PrivateRouter>
       <PrivateRouter path="/" element={<HomePage></HomePage>}></PrivateRouter>
       <PrivateRouter path="/admin/workflows" element={<ListWorkflowDefinition></ListWorkflowDefinition>}></PrivateRouter>
       {/* <PrivateRouter path="/admin/workflow/create" element={<CreateWorkflow></CreateWorkflow>}></PrivateRouter> */}
       <PrivateRouter path="/admin/workflow-definition/:id" element={<WorkflowDetail></WorkflowDetail>}></PrivateRouter>
-      <PrivateRouter path="/admin/identity" element={<Identity></Identity>}></PrivateRouter>
+      <PrivateRouter path="/admin/users" element={<ListUsers></ListUsers>}></PrivateRouter>
+      <PrivateRouter path="/admin/roles" element={<ListRole></ListRole>}></PrivateRouter>
       <PrivateRouter path="/admin/documents" element={<ListDocument></ListDocument>}></PrivateRouter>
       <PrivateRouter path="/admin/history/:id" element={<History></History>}></PrivateRouter>
       <PrivateRouter path="/admin/approve" element={<ListApprove></ListApprove>}></PrivateRouter>

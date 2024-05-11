@@ -24,7 +24,7 @@ export const CreateUser = ({ isModalOpen, handleCancel , onCreateUserSuccess}) =
                 var roles = rolesApiData.data.map(x => {
                     return {
                         label: x.name,
-                        value: x.name,
+                        value: x.roleCode,
                     }
                 });
                 setListRole(roles);

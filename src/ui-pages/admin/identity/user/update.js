@@ -33,10 +33,11 @@ export const UpdateUser = ({ id, isModalOpen, handleCancel, onUpdateUserSuccess 
     useEffect(() => {
         if (rolesApiData !== null) {
             if (rolesApiData.state === REQUEST_STATE.SUCCESS) {
+                console.log("rolesApiData",rolesApiData)
                 var roles = rolesApiData.data.map(x => {
                     return {
                         label: x.name,
-                        value: x.name,
+                        value: x.roleCode,
                     }
                 });
                 setListRole(roles);
@@ -81,6 +82,7 @@ export const UpdateUser = ({ id, isModalOpen, handleCancel, onUpdateUserSuccess 
 
 
     const onFinish = (values) => {
+        console.log("values",values)
         const userUpdate = {
             ...values,
             id

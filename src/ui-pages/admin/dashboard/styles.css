@@ -1,0 +1,27 @@
+.dashboad_count{
+    padding: 10px; 
+     height: 100px;
+    box-shadow:1px 1px 5px 3px rgba(0,0,0,.05);
+}
+.count_number{
+    font-weight: 500;
+    font-weight: 700;
+    font-size: 1.875rem;
+    color: #000;
+    display: flex;
+    height: 100%;
+    margin-bottom: 0.625rem;
+}
+.count_text{
+    font-weight: 100;
+    font-weight: 700;
+    font-size: 1.25rem;
+    color: #828282;
+    align-items: center;
+    flex: 1 1;
+    display: flex;
+}
+.chart{
+    box-shadow:1px 1px 5px 3px rgba(0,0,0,.05);
+    
+}
