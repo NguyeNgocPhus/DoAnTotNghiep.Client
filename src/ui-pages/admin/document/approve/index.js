@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import "./styles.css";
 import 'reactflow/dist/style.css';
-import { Col, Input, Row, Table, Typography, Tag, Spin, Modal, Button, Pagination, message, notification } from 'antd';
+import { Col, Input, Row, Table, Typography, Tag, Spin, Modal, Button, Pagination, message, notification, Select } from 'antd';
 import { SearchOutlined, DeleteOutlined, ShareAltOutlined, EyeOutlined } from '@ant-design/icons';
 import { useGetListApprove } from '../../../../store/approve/use-get-list-import-template';
 import { REQUEST_STATE } from '../../../../app-config/constants';
@@ -12,6 +12,8 @@ import TextArea from 'antd/lib/input/TextArea';
 import { useGetCurrentStepWf } from '../../../../store/workflow/use-get-current-step-wf';
 import { useExecuteWfPeding } from '../../../../store/workflow/use-execute-wf';
 import { AdminCommomLayout } from '../../../common/layout/admin/admin-common';
+import { useGetImportTemplate } from '../../../../store/import-template/use-get-import-template';
+import { useGetListImportTemplate } from '../../../../store/import-template/use-get-list-import-template';
 const { Title } = Typography;
 
 
@@ -42,9 +44,9 @@ export const ListApprove = () => {
             title: 'File nhập',
             key: 'fileId',
             dataIndex: 'fileId',
-            render: (_, { fileId }) => (
+            render: (_, { fileId, fileName }) => (
                 <>
-                    {fileId && <Typography.Link href={`http://localhost:5000/Api/FileStorage/Get/${fileId}`} >Tải xuống</Typography.Link>}
+                    {fileId && <Typography.Link href={`http://localhost:5000/Api/FileStorage/Get/${fileId}?name=${fileName}`} >{fileName}</Typography.Link>}
                 </>
             ),
         },
@@ -108,11 +110,18 @@ export const ListApprove = () => {
             ),
         },
     ];
+    const listStatus = [
+        { label: "Đã phê duyệt", value: "APPROVE" },
+        { label: "Đã từ chối", value: "REJECT" },
+        { label: "Chờ phê duyệt", value: "PENDING" }
+    ]
 
     const [workflowActivityData, requestGetWorkflowActivityApi] = useGetWorkflowActivity();
     const [currentStepWf, requestGetCurrentStepWfApi] = useGetCurrentStepWf();
     const [executeWfData, requestExecuteWfPending] = useExecuteWfPeding();
+    const [listImportTemplateApiData, requestListImportTemplateApi] = useGetListImportTemplate();
 
+    const [listImportTemplate, setListImportTemplate] = useState([]);
     const [listApproveApiData, requestListApproveApi] = useGetListApprove();
     const [listApprove, setListApprove] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -124,11 +133,17 @@ export const ListApprove = () => {
     const [total, setTotal] = useState(0);
     const [rejectReason, setRejectReason] = useState("");
     const [isEnd, setIsEnd] = useState(null);
+
+    // search field
+    const [searchName, setSearchName] = useState("");
+    const [searchStatus, setSearchStatus] = useState([]);
+    const [searchImportTemplate, setSearchImportTemplate] = useState([]);
     useEffect(() => {
 
         requestListApproveApi({
             page: currentPage
         });
+        requestListImportTemplateApi();
     }, [])
 
 
@@ -144,7 +159,8 @@ export const ListApprove = () => {
                         createdByName: x.createdByName,
                         key: x.id,
                         status: x.status,
-                        fileId: x.fileId
+                        fileId: x.fileId,
+                        fileName: x.fileName
 
                     }
                 });
@@ -159,13 +175,35 @@ export const ListApprove = () => {
             }
         }
     }, [listApproveApiData])
+    useEffect(() => {
+        if (listImportTemplateApiData !== null) {
+            if (listImportTemplateApiData.state === REQUEST_STATE.SUCCESS) {
+                setLoading(false);
 
+                var data = listImportTemplateApiData.data.items.map(x => {
+                    return {
+                        // id: x.id,
+                        label: x.name,
+                        value: x.id
+
+                    }
+                });
+
+                setListImportTemplate(data);
+
+            } else if (listImportTemplateApiData.state === REQUEST_STATE.ERROR) {
+                // message.error('This is an error message');
+            } else if (listImportTemplateApiData.state === REQUEST_STATE.REQUEST) {
+                setLoading(true);
+            }
+        }
+    }, [listImportTemplateApiData])
 
     useEffect(() => {
         if (workflowActivityData !== null) {
             if (workflowActivityData.state === REQUEST_STATE.SUCCESS) {
                 setLoadingModal(false);
-               
+
                 if (workflowActivityData.data.activities.length === workflowActivityData.data.actionLogs.length) {
                     setIsEnd(true);
                 } else {
@@ -199,7 +237,12 @@ export const ListApprove = () => {
                 setIsModalOpen(false);
                 setIsModalRejectOpen(false);
                 setIsEnd(null);
-
+                requestListApproveApi({
+                    page: currentPage,
+                    createdByName: searchName,
+                    status: searchStatus,
+                    importTemplateIds: searchImportTemplate
+                });
                 notification.success({
                     message: 'Đã thao tác thành công',
                 });
@@ -261,12 +304,28 @@ export const ListApprove = () => {
         setRejectReason(e.target.value);
     }
     const statusEnd = (
-        <div style={{ border: "1px solid green", borderRadius: "5px", padding: "3px", backgroundColor: "green", color: '#fff' }}>Đã kết thúc</div>
+        <div style={{ border: "1px solid green", borderRadius: "5px", padding: "3px", backgroundColor: "green", color: '#fff' }}>Kết thúc quy trình</div>
     )
     const statusProcess = (
-        <div style={{ border: "1px solid blue", borderRadius: "5px", padding: "3px", backgroundColor: "blue", color: '#fff' }}>Đang thực hiện</div>
+        <div style={{ border: "1px solid blue", borderRadius: "5px", padding: "3px", backgroundColor: "blue", color: '#fff' }}>Đang xử lý</div>
     )
+    const onFilter = () => {
+        requestListApproveApi({
+            page: currentPage,
+            createdByName: searchName,
+            status: searchStatus,
+            importTemplateIds: searchImportTemplate
+        });
+    };
+    const onClearFilter = (value) => {
 
+        setSearchName("");
+        setSearchImportTemplate([]);
+        setSearchStatus([]);
+        requestListApproveApi({
+            page: currentPage
+        });
+    };
 
     return (
         <>
@@ -277,38 +336,58 @@ export const ListApprove = () => {
                             <Title level={5}>Danh sách dữ liệu phê duyệt</Title>
                         </div>
                     </Col>
-                
+
                     <Col span={24}>
                         <div className='table'>
-                            <Row className='table_filter' gutter={[15,0]}>
+                            <Row className='table_filter' gutter={[15, 0]}>
                                 <Col span={4} className='field_filter'>
                                     <div className='field_name'>
                                         Người tạo
                                     </div>
-                                    <Input size="small" placeholder="Tìm kiếm theo tên"/>
+                                    <Input size="small" placeholder="Tìm kiếm theo tên" />
 
                                 </Col>
-                                <Col span={4} className='field_filter'>
+                                <Col span={5} className='field_filter'>
                                     <div className='field_name'>
-                                        Mẫu nhập
+                                        Mẫu nhập liệu
                                     </div>
-                                    <Input  size="small" placeholder="Tìm kiếm theo email" />
-
+                                    {listImportTemplate.length > 0 && <Select
+                                        size="small"
+                                        mode="multiple"
+                                        allowClear
+                                        style={{
+                                            width: '100%',
+                                        }}
+                                        value={searchImportTemplate}
+                                        placeholder="Chọn mẫu nhập"
+                                        onChange={(values) => { setSearchImportTemplate(values) }}
+                                        options={listImportTemplate}
+                                    />}
                                 </Col>
                                 <Col span={4} className='field_filter'>
                                     <div className='field_name'>
                                         Trạng thái
                                     </div>
-                                    <Input size="small" placeholder="Tìm kiếm theo số điện thoại"  />
-
+                                    {listStatus.length > 0 && <Select
+                                        size="small"
+                                        mode="multiple"
+                                        allowClear
+                                        style={{
+                                            width: '100%',
+                                        }}
+                                        value={searchStatus}
+                                        placeholder="Chọn trạng thái"
+                                        onChange={(values) => { setSearchStatus(values) }}
+                                        options={listStatus}
+                                    />}
                                 </Col>
-                                
-                                <Col span={4} style={{display: "flex", alignItems:'end', gap:'10px'}}>
-                                <Button size='small' type='primary'>Lọc</Button>
-                                    <Button size='small'>Clear bộ lọc</Button>
+
+                                <Col span={4} style={{ display: "flex", alignItems: 'end', gap: '10px' }}>
+                                    <Button size='small' type='primary' onClick={onFilter}>Lọc</Button>
+                                    <Button size='small' onClick={onClearFilter}>Clear bộ lọc</Button>
                                 </Col>
                             </Row>
-                            <Table scroll={{y:600}} className='table_data' size="middle" pagination={false} loading={loading} columns={columns} dataSource={listApprove} />
+                            <Table scroll={{ y: 600 }} className='table_data' size="middle" pagination={false} loading={loading} columns={columns} dataSource={listApprove} />
 
                             <div className='table_paging'>
                                 <div><b>Tổng số : {total}</b></div>

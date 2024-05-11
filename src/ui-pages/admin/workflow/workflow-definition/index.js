@@ -138,6 +138,7 @@ export const ListWorkflowDefinition = () => {
                         version: x.version
                     }
                 });
+                setTotal(listData.length)
                 setLoading(false);
                 setListWfDefinition(listData);
             } else if (listWfDefinitionRequestData.state === REQUEST_STATE.ERROR) {

@@ -31,7 +31,7 @@ export const FileUploadDetail = ({ onUpdateNodes, data, onClose }) => {
         if (listImportTemplateApiData !== null) {
             if (listImportTemplateApiData.state === REQUEST_STATE.SUCCESS) {
                 setLoading(false)
-                setListImportTemplate(listImportTemplateApiData.data);
+                setListImportTemplate(listImportTemplateApiData.data.items);
             } else if (listImportTemplateApiData.state === REQUEST_STATE.ERROR) {
 
             } else if (listImportTemplateApiData.state === REQUEST_STATE.REQUEST) {

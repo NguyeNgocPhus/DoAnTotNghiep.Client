@@ -56,9 +56,9 @@ export const ListDocument = () => {
             title: 'Tải mẫu nhập',
             key: 'fileTemplateId',
             dataIndex: 'fileTemplateId',
-            render: (_, { fileTemplateId }) => (
+            render: (_, { fileTemplateId, fileTemplateName }) => (
                 <>
-                    {fileTemplateId && <Typography.Link href={`http://localhost:5000/Api/FileStorage/Get/${fileTemplateId}?name=TCKT`}>Tải xuống</Typography.Link>}
+                    {fileTemplateId && <Typography.Link href={`http://localhost:5000/Api/FileStorage/Get/${fileTemplateId}?name=${fileTemplateName}`}>Tải xuống</Typography.Link>}
                 </>
             ),
         },
@@ -131,7 +131,7 @@ export const ListDocument = () => {
 
 
     const onCreateImportTemplate = (values) => {
-        // console.log("Onfinish",{...values, fileTemplateId})
+        console.log("Onfinish",{...values, fileTemplateId})
         form.resetFields();
         requestCreateImportTemplateApiData({ ...values, fileTemplateId });
     };
@@ -169,9 +169,11 @@ export const ListDocument = () => {
                         name: x.name,
                         tag: x.tag,
                         key: x.id,
+
                         hasWorkflow: x.hasWorkflow,
                         active: x.active,
-                        fileTemplateId: x.fileTemplateId
+                        fileTemplateId: x.fileTemplateId,
+                        fileTemplateName: x.fileTemplateName
 
                     }
                 });
@@ -205,13 +207,9 @@ export const ListDocument = () => {
             if (createImportTemplateApiData.state === REQUEST_STATE.SUCCESS) {
                 setLoading(false);
                 setFormCreateOpen(false);
-                setListImportTemplate([{
-                    id: createImportTemplateApiData.data.id,
-                    name: createImportTemplateApiData.data.name,
-                    description: createImportTemplateApiData.data.description,
-                    tag: createImportTemplateApiData.data.tag,
-                    active: 1
-                }, ...listImportTemplate]);
+                requestListImportTemplateApi({
+                    page: 1
+                });
             } else if (createImportTemplateApiData.state === REQUEST_STATE.ERROR) {
 
             } else if (createImportTemplateApiData.state === REQUEST_STATE.REQUEST) {

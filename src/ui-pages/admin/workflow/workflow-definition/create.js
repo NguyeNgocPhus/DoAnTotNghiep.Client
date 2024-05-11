@@ -218,7 +218,7 @@ export const CreateWorkflow = () => {
                     onDragOver={onDragOver}
                 >
                     <Panel position="top-left" onClick={() => { setOpenListNodeDrawer(true) }}>
-                        <Button size='large'>Add Node</Button>
+                        <Button size='large'>Thêm hành động</Button>
                     </Panel>
                     <Controls showInteractive={false} />
                     <ListNodeDrawer open={openListNodeDrawer} onClose={() => { setOpenListNodeDrawer(false) }}></ListNodeDrawer>

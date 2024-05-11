@@ -1,20 +1,15 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from "react-router-dom";
 import "./styles.css";
 import 'reactflow/dist/style.css';
-import { Button, Col, Input, Row, Space, Table, Typography, Tag, Modal, Form, Upload, Spin, Pagination, Select } from 'antd';
-import { SearchOutlined, ShareAltOutlined, CheckOutlined, EditOutlined, UploadOutlined, HistoryOutlined, DeleteOutlined } from '@ant-design/icons';
-import { useGetListImportTemplate } from '../../../../store/import-template/use-get-list-import-template';
+import { Button, Col, Input, Row, Table, Typography, Tag, Modal, Spin, Pagination, Select } from 'antd';
 import { REQUEST_STATE } from '../../../../app-config/constants';
-import { useCreateImportTemplate } from '../../../../store/import-template/use-create-import-template';
-import { useDeleteImportTemplate } from '../../../../store/import-template/use-delete-import-template';
 import { AdminCommomLayout } from '../../../common/layout/admin/admin-common';
 import { useGetListApprove } from '../../../../store/approve/use-get-list-import-template';
 import moment from 'moment';
 import { useGetImportTemplate } from '../../../../store/import-template/use-get-import-template';
 import { StepImport } from '../approve/step';
 import { useGetWorkflowActivity } from '../../../../store/workflow/use-wf-activity';
-import { RangePicker } from '../../../../ui-source/date-picker';
 const { Title } = Typography;
 
 export const History = () => {
@@ -44,9 +39,9 @@ export const History = () => {
             title: 'File đã tải lên',
             key: 'fileId',
             dataIndex: 'fileId',
-            render: (_, { fileId }) => (
+            render: (_, { fileId, fileName }) => (
                 <>
-                    {fileId && <Typography.Link href={`http://localhost:5000/Api/FileStorage/Get/${fileId}`} >Tải xuống</Typography.Link>}
+                    {fileId && <Typography.Link href={`http://localhost:5000/Api/FileStorage/Get/${fileId}?name=${fileName}`} >{fileName}</Typography.Link>}
                 </>
             ),
         },
@@ -131,18 +126,15 @@ export const History = () => {
     // search field
     const [searchName, setSearchName] = useState("");
     const [searchStatus, setSearchStatus] = useState([]);
-    const [searchPhone, setSearchPhone] = useState("");
-    const [searchRole, setSearchRole] = useState([]);
 
     useEffect(() => {
-        requestListHistoryApi({ importTemplateId: id });
+        requestListHistoryApi({ importTemplateIds: [id] });
         requestImportTemplateApi({ id });
     }, [])
     useEffect(() => {
         if (listHistoryApiData !== null) {
             if (listHistoryApiData.state === REQUEST_STATE.SUCCESS) {
                 setLoading(false);
-                console.log("llistHistoryApiData", listHistoryApiData);
                 var data = listHistoryApiData.data.items.map(x => {
                     return {
                         createdTime: x.createdTime,
@@ -150,7 +142,8 @@ export const History = () => {
                         createdByName: x.createdByName,
                         key: x.id,
                         status: x.status,
-                        fileId: x.fileId
+                        fileId: x.fileId,
+                        fileName : x.fileName,
 
                     }
                 });
@@ -222,8 +215,9 @@ export const History = () => {
         <div style={{ border: "1px solid #A19C9B", fontWeight: "bold", borderRadius: "5px", padding: "3px", backgroundColor: "#A19C9B", color: '#fff' }}>Đang thực hiện</div>
     )
 
-    const onFilterUsers = () => {
+    const onFilter = () => {
         requestListHistoryApi({
+            importTemplateIds: [id],
             page: currentPage,
             createdByName: searchName,
             status: searchStatus
@@ -235,6 +229,7 @@ export const History = () => {
 
         setSearchStatus([]);
         requestListHistoryApi({
+            importTemplateIds: [id],
             page: currentPage
         });
     };
@@ -293,7 +288,7 @@ export const History = () => {
                             </Col>
 
                             <Col span={4} style={{ display: "flex", alignItems: 'end', gap: '10px' }}>
-                                <Button size='small' type='primary' onClick={onFilterUsers}>Lọc</Button>
+                                <Button size='small' type='primary' onClick={onFilter}>Lọc</Button>
                                 <Button size='small' onClick={onClearFilter}>Clear bộ lọc</Button>
                             </Col>
                         </Row>

@@ -15,6 +15,7 @@ export const FormCreate = ({ setFileTemplateId, form, open, onClose, onFinish })
                 message.success(`${info.file.name} file uploaded successfully`);
                 console.log("info.file",info.file)
                 const fileId = info.file.response.value.id;
+                console.log(info.file.response.value);
                 setFileTemplateId(fileId);
             } else if (info.file.status === 'error') {
                 message.error(`${info.file.name} file upload failed.`);
