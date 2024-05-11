@@ -30,11 +30,13 @@ export const ListDocument = () => {
             title: 'Loại Mẫu nhập',
             dataIndex: 'tag',
             key: 'tag',
+            width:'250px',
             render: (text) => <div>{text}</div>,
         },
         {
             title: 'Trạng thái',
             key: 'active',
+            width:'100px',
             dataIndex: 'active',
             render: (_, { active }) => (
                 <>
@@ -45,6 +47,7 @@ export const ListDocument = () => {
         {
             title: 'Đã có quy trình',
             key: 'hasWorkflow',
+            width:'150px',
             dataIndex: 'hasWorkflow',
             render: (_, { hasWorkflow }) => (
                 <>
@@ -55,6 +58,7 @@ export const ListDocument = () => {
         {
             title: 'Tải mẫu nhập',
             key: 'fileTemplateId',
+            width:'150px',
             dataIndex: 'fileTemplateId',
             render: (_, { fileTemplateId, fileTemplateName }) => (
                 <>
@@ -65,6 +69,7 @@ export const ListDocument = () => {
         {
             title: '',
             key: 'action',
+            width:'170px',
             dataIndex: 'action',
             render: (_, data) => (
                 <>
@@ -84,7 +89,7 @@ export const ListDocument = () => {
                         </Col>
                         {hasUpload && <Col className='import_teamplate_action_icon' >
                             <UploadOutlined style={{ cursor: 'pointer' }} onClick={() => {
-                                onClickUploadDocument(data.key)
+                                onClickUploadDocument(data.key, data.hasWorkflow)
                             }} />
                         </Col>}
 
@@ -114,6 +119,7 @@ export const ListDocument = () => {
     const [form] = Form.useForm();
     const [currentPage, setCurrentPage] = useState(1);
     const [total, setTotal] = useState(0);
+    const [hasWf, setHasWf] = useState(null);
     // search field
     const [searchName, setSearchName] = useState("");
     const [searchTag, setSearchTag] = useState("");
@@ -147,8 +153,9 @@ export const ListDocument = () => {
         // setHistoryOpen(true);
         navigate(`/admin/history/${data.key}`)
     }
-    const onClickUploadDocument = (id) => {
+    const onClickUploadDocument = (id, haswf) => {
         setImportTemplateId(id);
+        setHasWf(haswf);
         setFormUploadOpen(true);
     }
 
@@ -192,8 +199,12 @@ export const ListDocument = () => {
         if (deleteImportTemplateApiData !== null) {
             if (deleteImportTemplateApiData.state === REQUEST_STATE.SUCCESS) {
                 setLoading(false);
-                var newData = listImportTemplate.filter(x => x.id !== deleteImportTemplateApiData.data.id);
-                setListImportTemplate(newData);
+                requestListImportTemplateApi({
+                    page: currentPage,
+                    name: searchName,
+                    tag: searchTag,
+        
+                });
             } else if (deleteImportTemplateApiData.state === REQUEST_STATE.ERROR) {
 
             } else if (deleteImportTemplateApiData.state === REQUEST_STATE.REQUEST) {
@@ -300,7 +311,7 @@ export const ListDocument = () => {
                     </Col>
                 </Row>
                 <FormCreate setFileTemplateId={setFileTemplateId} form={form} open={formCreateOpen} onClose={() => { setFormCreateOpen(false) }} onFinish={onCreateImportTemplate}></FormCreate>
-                <FormUpload importTemplateId={importTemplateId} open={formUploadOpen} onClose={() => { setFormUploadOpen(false) }}></FormUpload>
+                <FormUpload hasWf={hasWf} importTemplateId={importTemplateId} open={formUploadOpen} onClose={() => { setFormUploadOpen(false) }}></FormUpload>
                 {/* <History dataHistory={dataHistory} historyOpen={historyOpen} setHistoryOpen={setHistoryOpen} ></History> */}
             </AdminCommomLayout>
         </>

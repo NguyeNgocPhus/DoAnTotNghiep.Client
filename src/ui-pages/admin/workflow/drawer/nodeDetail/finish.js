@@ -24,8 +24,8 @@ export const FinishDetail = ({data,onClose}) => {
                 </Col>
                 <Divider />
                 <Col span={24}>
-                    <div>TYpe : {data?.type}</div>
-                    <div>Id : {data?.id}</div>
+                    {/* <div>TYpe : {data?.type}</div>
+                    <div>Id : {data?.id}</div> */}
                 </Col>
 
             </Row>

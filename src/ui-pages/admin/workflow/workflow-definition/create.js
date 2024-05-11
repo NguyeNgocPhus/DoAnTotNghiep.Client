@@ -3,26 +3,15 @@ import ReactFlow, { addEdge, useNodesState, useEdgesState, Panel, Background, Co
 import { CustomEdge } from '../customEdge';
 import "./styles.css";
 import 'reactflow/dist/style.css';
-import { Breadcrumb, Button, Col, Drawer, Row, Space, Tabs } from 'antd';
+import { Breadcrumb, Button, Col, Row } from 'antd';
 import { AdminCommomLayout } from '../../../common/layout/admin/admin-common';
-import { DownloadOutlined, CloseCircleOutlined } from '@ant-design/icons';
+import { DownloadOutlined } from '@ant-design/icons';
 import { ListNodeDrawer } from '../drawer/listNode';
-import { CustomNode } from '../customNode';
 import { CustomConnectionLine } from '../customConnectionLine';
 import { NodeDetailDrawer } from '../drawer/nodeDetail';
 import { nodeTypes } from '../../../../helpers/workflowHepler';
 import { v4 as uuidv4 } from 'uuid';
 import { useUpdateWfDefinition } from '../../../../store/workflow/use-update-wf-definition';
-// const initialNodes = [
-//     { id: 'a', position: { x: 0, y: 0 }, type: 'custom-node', data: { label: 'Node A', forceToolbarVisible: false } },
-//     { id: 'b', position: { x: 0, y: 100 }, type: 'custom-node', data: { label: 'Node B', forceToolbarVisible: false } },
-//     { id: 'c', position: { x: 0, y: 200 }, type: 'custom-node', data: { label: 'Node C', forceToolbarVisible: false } },
-// ];
-
-// const initialEdges = [
-//     { id: 'a->b', type: 'custom-edge', source: 'a', target: 'b' },
-//     { id: 'b->c', type: 'custom-edge', source: 'b', target: 'c' },
-// ];
 
 const edgeTypes = {
     'custom-edge': CustomEdge,

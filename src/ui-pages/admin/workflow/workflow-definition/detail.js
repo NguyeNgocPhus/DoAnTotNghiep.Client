@@ -354,12 +354,12 @@ export const WorkflowDetail = (props) => {
                         onDragOver={onDragOver}
                     >
                         <Panel position="top-left" onClick={() => { setOpenListNodeDrawer(true) }}>
-                            <Button size='large'>Add Node</Button>
+                            <Button size='large'>Thêm hành động</Button>
                         </Panel>
-                        <Panel position="top-right">
+                        <Panel position="top-right" >
 
-                            <Button onClick={() => onLayout('TB')}>vertical</Button>
-                            <Button onClick={() => onLayout('LR')}>horizontal</Button>
+                            <Button onClick={() => onLayout('TB')}>Vertical</Button>
+                            <Button onClick={() => onLayout('LR')}>Horizontal</Button>
                         </Panel>
                         <Controls showInteractive={false} />
                         <ListNodeDrawer open={openListNodeDrawer} onClose={() => { setOpenListNodeDrawer(false) }}></ListNodeDrawer>

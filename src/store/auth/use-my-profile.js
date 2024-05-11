@@ -15,6 +15,7 @@ export const useProfile = () =>{
     }
     useEffect(()=>{
         return ()=>{
+            setMyprofile({});
             Auth.cancelGetMyprofile();
         }
     },[])

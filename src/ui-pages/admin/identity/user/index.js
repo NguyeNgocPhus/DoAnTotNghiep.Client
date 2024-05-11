@@ -20,17 +20,20 @@ export const ListUsers = () => {
             title: 'Tên',
             dataIndex: 'userName',
             key: 'userName',
+            width:'300px',
             render: (text) => <a>{text}</a>,
         },
         {
             title: 'Email',
             dataIndex: 'email',
             key: 'email',
+            width:'300px',
         },
         {
             title: 'Số điện thoại',
             dataIndex: 'phoneNumber',
             key: 'phoneNumber',
+            width:"150px"
         },
         {
             title: 'Quyền',
@@ -55,6 +58,7 @@ export const ListUsers = () => {
         {
             title: '',
             key: 'action',
+            width:'100px',
             dataIndex: 'action',
             render: (_, data) => (
                 <>

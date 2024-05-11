@@ -7,7 +7,7 @@ import { useImportData } from "../../../../store/import-template/use-import-data
 import { REQUEST_STATE } from "../../../../app-config/constants";
 import { getToken } from "../../../../app-helper";
 
-export const FormUpload = ({ open, onClose, importTemplateId }) => {
+export const FormUpload = ({hasWf, open, onClose, importTemplateId }) => {
 
     const [fileUploadId, setFileUploadId] = useState(null);
     const [importApiData, requestImportApiData] = useImportData();
@@ -33,8 +33,18 @@ export const FormUpload = ({ open, onClose, importTemplateId }) => {
     };
 
     const onFinish = () => {
-        if (fileUploadId === null) {
-            message.error(`vui lòng nhập file`);
+        if(!hasWf){
+            notification.error({
+                message: 'vui lòng nhập thiết lập quy trình phê duyệt cho mẫu nhập',
+            });
+
+            
+        }
+        else if(fileUploadId === null) {
+           
+            notification.error({
+                message: 'vui lòng nhập file',
+            });
             return;
         } else {
             
@@ -52,7 +62,7 @@ export const FormUpload = ({ open, onClose, importTemplateId }) => {
                 setLoading(false);
                
                 notification.success({
-                    message: 'Đẩy dữ liệu thành công',
+                    message: 'Nhập dữ liệu thành công',
                 });
                 onClose();
 

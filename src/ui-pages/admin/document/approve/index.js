@@ -92,6 +92,7 @@ export const ListApprove = () => {
             title: '',
             key: 'action',
             dataIndex: 'action',
+            width:'150px',
             render: (_, data) => (
                 <>
                     {/* {console.log("JKey", key)} */}
