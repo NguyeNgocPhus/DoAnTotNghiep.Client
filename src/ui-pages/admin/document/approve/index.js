@@ -1,13 +1,17 @@
 import { useEffect, useState } from 'react';
 import "./styles.css";
 import 'reactflow/dist/style.css';
-import { Col, Input, Row, Table, Typography, Tag, Spin, Modal, Button, Pagination } from 'antd';
-import { SearchOutlined, DeleteOutlined, ShareAltOutlined } from '@ant-design/icons';
+import { Col, Input, Row, Table, Typography, Tag, Spin, Modal, Button, Pagination, message, notification } from 'antd';
+import { SearchOutlined, DeleteOutlined, ShareAltOutlined, EyeOutlined } from '@ant-design/icons';
 import { useGetListApprove } from '../../../../store/approve/use-get-list-import-template';
 import { REQUEST_STATE } from '../../../../app-config/constants';
 import moment from 'moment';
 import { StepImport } from './step';
 import { useGetWorkflowActivity } from '../../../../store/workflow/use-wf-activity';
+import TextArea from 'antd/lib/input/TextArea';
+import { useGetCurrentStepWf } from '../../../../store/workflow/use-get-current-step-wf';
+import { useExecuteWfPeding } from '../../../../store/workflow/use-execute-wf';
+import { AdminCommomLayout } from '../../../common/layout/admin/admin-common';
 const { Title } = Typography;
 
 
@@ -58,14 +62,25 @@ export const ListApprove = () => {
             title: 'Trạng thái',
             dataIndex: 'status',
             key: 'status',
-            render: (text) => {
-                let color = text.length > 5 ? 'geekblue' : 'green';
-                if (text === 'loser') {
-                    color = 'volcano';
+            render: (_, { status }) => {
+                let color = "";
+                let text = "";
+                if (status === "PENDING") {
+                    text = "Chờ phê duyệt";
+                    color = "geekblue";
                 }
+                if (status === "APPROVE") {
+                    text = "Đã phê duyệt";
+                    color = "green";
+                }
+                if (status === "REJECT") {
+                    text = "Đã từ chối";
+                    color = "red";
+                }
+
                 return (
-                    <Tag color={color} key={text}>
-                        {text.toUpperCase()}
+                    <Tag color={color} key={status}>
+                        {text}
                     </Tag>
                 );
             },
@@ -82,6 +97,7 @@ export const ListApprove = () => {
 
                         <Col >
                             <ShareAltOutlined onClick={() => { showWorkflowDetail(data) }} className='import_teamplate_action_icon' style={{ cursor: 'pointer', color: 'green' }} />
+                            <EyeOutlined className='import_teamplate_action_icon' style={{ cursor: 'pointer' }} />
                             <DeleteOutlined className='import_teamplate_action_icon' style={{ cursor: 'pointer', color: 'red' }} />
                         </Col>
                     </Row>
@@ -94,14 +110,22 @@ export const ListApprove = () => {
     ];
 
     const [workflowActivityData, requestGetWorkflowActivityApi] = useGetWorkflowActivity();
+    const [currentStepWf, requestGetCurrentStepWfApi] = useGetCurrentStepWf();
+    const [executeWfData, requestExecuteWfPending] = useExecuteWfPeding();
+
     const [listApproveApiData, requestListApproveApi] = useGetListApprove();
     const [listApprove, setListApprove] = useState([]);
     const [loading, setLoading] = useState(false);
+    const [loadingModal, setLoadingModal] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isModalReject, setIsModalRejectOpen] = useState(false);
     const [dataApprove, setDataApprove] = useState(null);
     const [currentPage, setCurrentPage] = useState(1);
     const [total, setTotal] = useState(0);
+    const [rejectReason, setRejectReason] = useState("");
+    const [isEnd, setIsEnd] = useState(null);
     useEffect(() => {
+
         requestListApproveApi({
             page: currentPage
         });
@@ -140,25 +164,68 @@ export const ListApprove = () => {
     useEffect(() => {
         if (workflowActivityData !== null) {
             if (workflowActivityData.state === REQUEST_STATE.SUCCESS) {
-                setLoading(false);
-                console.log("workflowActivityData", workflowActivityData)
-                const data = workflowActivityData.data;
+                setLoadingModal(false);
+               
+                if (workflowActivityData.data.activities.length === workflowActivityData.data.actionLogs.length) {
+                    setIsEnd(true);
+                } else {
+                    setIsEnd(false);
+                }
 
             } else if (workflowActivityData.state === REQUEST_STATE.ERROR) {
                 // message.error('This is an error message');
             } else if (workflowActivityData.state === REQUEST_STATE.REQUEST) {
-                setLoading(true);
+                setLoadingModal(true);
             }
         }
     }, [workflowActivityData])
+    useEffect(() => {
+        if (currentStepWf !== null) {
+            if (currentStepWf.state === REQUEST_STATE.SUCCESS) {
+                setLoadingModal(false);
+
+            } else if (currentStepWf.state === REQUEST_STATE.ERROR) {
+                // message.error('This is an error message');
+            } else if (currentStepWf.state === REQUEST_STATE.REQUEST) {
+                setLoadingModal(true);
+            }
+        }
+    }, [currentStepWf])
+    useEffect(() => {
+        if (executeWfData !== null) {
+            if (executeWfData.state === REQUEST_STATE.SUCCESS) {
+
+                setLoadingModal(false);
+                setIsModalOpen(false);
+                setIsModalRejectOpen(false);
+                setIsEnd(null);
+
+                notification.success({
+                    message: 'Đã thao tác thành công',
+                });
+
+            } else if (executeWfData.state === REQUEST_STATE.ERROR) {
+                notification.success({
+                    message: 'Đã gặp phải lỗi, vui lòng liên hệ quản trị viên',
+                });
+            } else if (executeWfData.state === REQUEST_STATE.REQUEST) {
+                setLoadingModal(true);
+            }
+        }
+    }, [executeWfData])
     const showWorkflowDetail = (data) => {
         requestGetWorkflowActivityApi({ fileId: data.fileId })
+        requestGetCurrentStepWfApi({ fileId: data.fileId })
         setDataApprove(data);
         setIsModalOpen(true);
     }
 
     const handleCancel = () => {
+        setIsEnd(null);
         setIsModalOpen(false);
+    };
+    const handleRejectCancel = () => {
+        setIsModalRejectOpen(false);
     };
 
     const onChange = (page) => {
@@ -168,44 +235,110 @@ export const ListApprove = () => {
             page: page
         });
     };
+    const onReject = () => {
+        setIsModalRejectOpen(true);
+
+    }
+    const onConfirmReject = (activity, workflowInstanceId) => {
+        setIsModalRejectOpen(false);
+        requestExecuteWfPending({
+            WorkflowInstanceId: workflowInstanceId,
+            ActivityId: activity.activityId,
+            Signal: activity.signal,
+            RejectReason: rejectReason
+        });
+    }
+
+    const onApprove = (activity, workflowInstanceId) => {
+        requestExecuteWfPending({
+            WorkflowInstanceId: workflowInstanceId,
+            ActivityId: activity.activityId,
+            Signal: activity.signal,
+            RejectReason: rejectReason
+        });
+    }
+    const onRejectReason = (e) => {
+        setRejectReason(e.target.value);
+    }
+    const statusEnd = (
+        <div style={{ border: "1px solid green", borderRadius: "5px", padding: "3px", backgroundColor: "green", color: '#fff' }}>Đã kết thúc</div>
+    )
+    const statusProcess = (
+        <div style={{ border: "1px solid blue", borderRadius: "5px", padding: "3px", backgroundColor: "blue", color: '#fff' }}>Đang thực hiện</div>
+    )
+
+
     return (
         <>
-            <Row style={{ padding: '20px' }} gutter={[0, 32]}>
-                <Col span={24}>
-                    <div className='header_list_users'>
-                        <Title level={5}>Danh sách dữ liệu phê duyệt</Title>
-                    </div>
-                </Col>
-                <Col span={24}>
-                    <Input icon={<SearchOutlined />} style={{ width: '70%' }} size="large" placeholder="Tìm kiếm theo tên mẫu nhập" prefix={<SearchOutlined />} />
-                </Col>
-                <Col span={24}>
-                    <Spin size="large" spinning={loading}>
-                        <Table columns={columns} size="middle" dataSource={listApprove}
-                            pagination={false}
-                        />
+            <AdminCommomLayout>
+                <Row style={{ padding: '20px' }} gutter={[0, 32]}>
+                    <Col span={24}>
+                        <div className='header_list_users'>
+                            <Title level={5}>Danh sách dữ liệu phê duyệt</Title>
+                        </div>
+                    </Col>
+                    <Col span={24}>
+                        <Input icon={<SearchOutlined />} style={{ width: '70%' }} size="large" placeholder="Tìm kiếm theo tên mẫu nhập" prefix={<SearchOutlined />} />
+                    </Col>
+                    <Col span={24}>
+                        <Spin size="large" spinning={loading}>
+                            <Table columns={columns} size="middle" dataSource={listApprove}
+                                pagination={false}
+                            />
 
-                        <Pagination showTotal={t => `Tổng số : ${t}`} defaultCurrent={1} current={currentPage} onChange={onChange} total={total} />
+                            <Pagination showTotal={t => `Tổng số : ${t}`} defaultCurrent={1} current={currentPage} onChange={onChange} total={total} />
+                        </Spin>
+                    </Col>
+                </Row>
+                <Modal title={"Phê duyệt tài liệu"} open={isModalOpen} onCancel={handleCancel} footer={null}>
+                    <Spin size="large" spinning={loadingModal}>
+                        {dataApprove && <div>
+                            <span><b>Quy trình : {`${dataApprove.importTemplateName}`}</b></span>
+
+                        </div>
+                        }
+                        {isEnd != null && <div style={{ display: 'flex', alignItems: 'center', marginBottom: '10px', gap: '5px' }}><b>Trạng thái : </b> <div>{isEnd ? statusEnd : statusProcess}</div></div>}
+                        {workflowActivityData.state === REQUEST_STATE.SUCCESS && workflowActivityData.data.activities.map(x => {
+                            return <StepImport setIsEnd={setIsEnd} activity={x} actionLogs={workflowActivityData.data.actionLogs}></StepImport>
+                        })}
+
+
+                        <div style={{ display: 'flex', justifyContent: 'end', gap: '10px' }}>
+
+                            {
+                                currentStepWf.state === REQUEST_STATE.SUCCESS && currentStepWf.data.activities.map(x => {
+                                    if (x.type === "Approve") {
+                                        return (<Button type="primary" onClick={() => { onApprove(x, currentStepWf.data.workflowInstanceId) }} style={{ background: "green", borderColor: "green" }}>
+                                            Phê duyệt
+                                        </Button>)
+                                    }
+                                    if (x.type === "Reject") {
+                                        return (
+                                            <>
+                                                <Button type="primary" onClick={() => { onReject(x, currentStepWf.data.workflowInstanceId) }} style={{ background: "red", borderColor: "red" }}> Từ chối</Button>
+                                                <Modal size="small" title={"Lý do từ chối"} open={isModalReject} onCancel={handleRejectCancel} footer={null}>
+                                                    <TextArea onChange={onRejectReason} placeholder="Nhập lý do từ chối" rows={4} />
+                                                    <div style={{ marginTop: "10px", display: 'flex', justifyContent: 'end', gap: '10px' }}>
+                                                        <Button type="primary" onClick={() => { onConfirmReject(x, currentStepWf.data.workflowInstanceId) }} style={{ background: "red", borderColor: "red" }}>
+                                                            Từ chối
+                                                        </Button>
+
+                                                    </div>
+                                                </Modal>
+                                            </>
+
+                                        )
+                                    }
+                                })
+                            }
+
+
+                        </div>
                     </Spin>
-                </Col>
-            </Row>
-            <Modal title={"Phê duyệt tài liệu"} open={isModalOpen} onCancel={handleCancel} footer={null}>
-                <Spin size="large" spinning={loading}>
-                    {dataApprove && <p>{`${dataApprove.importTemplateName} (${moment(new Date(dataApprove.createdTime)).format('DD-MM-YYYY HH:mm')})`}</p>}
-                    {workflowActivityData.state === REQUEST_STATE.SUCCESS && workflowActivityData.data.activities.map(x => {
-                        return <StepImport activity={x} actionLogs={workflowActivityData.data.actionLogs}></StepImport>
-                    })}
-
-                    <div style={{ display: 'flex', justifyContent: 'end', gap: '10px' }}>
-                        <Button type="primary" style={{ background: "green", borderColor: "green" }}>
-                            Phê duyệt
-                        </Button>
-                        <Button type="primary" style={{ background: "red", borderColor: "red" }}> Từ chối</Button>
-                    </div>
-                </Spin>
-            </Modal>
+                </Modal>
 
 
+            </AdminCommomLayout>
         </>
 
     );

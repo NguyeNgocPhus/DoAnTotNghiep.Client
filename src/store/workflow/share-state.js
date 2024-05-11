@@ -45,6 +45,24 @@ export const getWorkflowActivityState = atom({
         loading:false
     }
 })
+export const getCurrentStepWfState = atom({
+    key:"GET-CURRENT-STEP-WF-STATE",
+    default:{
+        data:[],
+        state:"",
+        message:"",
+        loading:false
+    }
+})
+export const executeWfPedingState = atom({
+    key:"EXECUTE-WF-PENDING-STATE",
+    default:{
+        data:[],
+        state:"",
+        message:"",
+        loading:false
+    }
+})
 export const getWfDefinitionState = atom({
     key:"GET-WF-DEFINITION-STATE",
     default:{

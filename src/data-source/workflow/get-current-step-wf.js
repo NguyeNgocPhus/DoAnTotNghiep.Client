@@ -6,16 +6,16 @@ import { GET, getTokenSource, POST } from "../fetch";
 
 let source = null;
 
-export const cancelApiGetNodeDefinition = () => cancel(source);
+export const cancelApiGetCurrentStepWf = () => cancel(source);
 
-export const apiGetNodeDefinition = async (params) => {
+export const apiCurrentStepWf = async (params) => {
 
-    cancelApiGetNodeDefinition();
+    cancelApiGetCurrentStepWf();
 
     source = getTokenSource();
  
     try {
-        const response = await GET(`/Api/WorkflowDefinition/${params.id}/node/${params.type}?activityId=${params.activityId}`, {}, {
+        const response = await GET(`/Api/CurrentStepWorkflow/${params.fileId}`, {}, {
             cancelToken: source.token
         })
         

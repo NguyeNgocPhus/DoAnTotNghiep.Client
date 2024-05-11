@@ -1,20 +1,18 @@
-import { useEffect, useState } from 'react';
 import "./styles.css";
 import 'reactflow/dist/style.css';
-import { Col, Input, Row, Table, Typography, Tag, Spin, Modal, Button } from 'antd';
-import { ClockCircleFilled, DeleteOutlined, ShareAltOutlined } from '@ant-design/icons';
-import { useGetListApprove } from '../../../../store/approve/use-get-list-import-template';
-import { REQUEST_STATE } from '../../../../app-config/constants';
+import { Typography } from 'antd';
+import { ClockCircleFilled } from '@ant-design/icons';
 import moment from 'moment';
 const { Title } = Typography;
 
 
-export const StepImport = ({ activity, actionLogs }) => {
+export const StepImport = ({ activity, actionLogs , setIsEnd}) => {
     let step = {
         name: "",
         type: "",
         createdByName: "",
         createdTime: "",
+        rejectReason:"",
         msg: null,
         executed: false
     };
@@ -22,8 +20,7 @@ export const StepImport = ({ activity, actionLogs }) => {
     var activities = activity;
 
     activities.forEach(at => {
-
-        var actionLog = actionLogs.find(x => at.type === x.activityName);
+        var actionLog = actionLogs.find(x => at.activityId === x.activityId);
         if (actionLog !== undefined) {
             step.executed = true;
             step.type = actionLog.activityName;
@@ -36,22 +33,25 @@ export const StepImport = ({ activity, actionLogs }) => {
                 step.name = "Phê duyệt"
             }
             if (actionLog.activityName === "Reject") {
-                step.name = "Từ chối"
+                step.name = "Từ chối";
+                step.rejectReason = actionLog.actionReason;
             }
         } else {
-            step.msg = "Chờ phê duyệt";
+            step.msg = at.description;
         }
 
     })
-   
-    const colorBorder = step.executed ? (step.type !== "REJECT" ? "green" :"red") : "smoke";
+    
+    const colorBorder = step.executed ? (step.type !== "Reject" ? "green" : "red") : "smoke";
+    if(step.type === "Reject")
+        setIsEnd(true);
     return (
         <>
 
             <div className={`step ${colorBorder}`}>
                 {step.executed && <>
                     <div className='icon_step'>
-                        <ClockCircleFilled style={{ fontSize: '20px', color: 'green' }} />
+                        <ClockCircleFilled style={{ fontSize: '20px', color: `${step.type === "Reject" ? "red" : "green"}` }} />
                     </div>
                     <div>
 
@@ -67,13 +67,20 @@ export const StepImport = ({ activity, actionLogs }) => {
                             <div><b>Thời gian thực hiện : </b></div>
                             <div>{step.createdTime}</div>
                         </div>
+                        {
+                            step.type === "Reject" && (<div className='step_info name_handler'>
+                                <div><b>Lý do từ chối : </b></div>
+                                <div>{step.rejectReason}</div>
+                            </div>)
+                        }
                     </div>
                 </>}
                 {
                     !step.executed && <div><b>{step.msg}</b></div>
                 }
-            </div>
 
+            </div>
+           
 
         </>
 

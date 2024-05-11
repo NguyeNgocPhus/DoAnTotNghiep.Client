@@ -1,6 +1,6 @@
 import "./styles.css";
 import 'reactflow/dist/style.css';
-import { Modal, Form, Input, Upload, Button, message, Spin } from 'antd';
+import { Modal, Form, Input, Upload, Button, message, Spin, notification } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 import { useEffect, useState } from "react";
 import { useImportData } from "../../../../store/import-template/use-import-data";
@@ -23,7 +23,7 @@ export const FormUpload = ({ open, onClose, importTemplateId }) => {
                 console.log(info.file, info.fileList);
             }
             if (info.file.status === 'done') {
-                message.success(`${info.file.name} file uploaded successfully`);
+                // message.success(`${info.file.name} file uploaded successfully`);
                 const fileId = info.file.response.value.id;
                 setFileUploadId(fileId);
             } else if (info.file.status === 'error') {
@@ -37,8 +37,7 @@ export const FormUpload = ({ open, onClose, importTemplateId }) => {
             message.error(`vui lòng nhập file`);
             return;
         } else {
-            console.log("fileUploadId", fileUploadId);
-            console.log("importTempateId", importTemplateId)
+            
             requestImportApiData({
                 importTemplateId,
                 fileUploadId
@@ -51,7 +50,11 @@ export const FormUpload = ({ open, onClose, importTemplateId }) => {
         if (importApiData !== null) {
             if (importApiData.state === REQUEST_STATE.SUCCESS) {
                 setLoading(false);
-                message.success("import data success");
+               
+                notification.success({
+                    message: 'Đẩy dữ liệu thành công',
+                });
+                onClose();
 
             } else if (importApiData.state === REQUEST_STATE.ERROR) {
 
@@ -77,7 +80,7 @@ export const FormUpload = ({ open, onClose, importTemplateId }) => {
                     </Form.Item>
                     <Form.Item >
                         <Button type="primary" htmlType="submit">
-                            Submit
+                            Nhập
                         </Button>
                     </Form.Item>
                 </Form>

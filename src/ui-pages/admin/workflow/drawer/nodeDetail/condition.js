@@ -2,8 +2,8 @@ import { Row, Col, Divider, Typography, Select, Button } from "antd";
 import { CloseCircleOutlined, SettingOutlined } from '@ant-design/icons';
 import "./styles.css";
 import { ConditionIcon } from "../../nodes/icons/condition_icon";
-import { Field, QueryBuilder, RuleGroupType } from 'react-querybuilder';
-import 'react-querybuilder/dist/query-builder.css';
+// import { Field, QueryBuilder, RuleGroupType } from 'react-querybuilder';
+// import 'react-querybuilder/dist/query-builder.css';
 import { useState } from "react";
 
 
@@ -51,7 +51,7 @@ export const ConditionDetail = ({ data, onClose }) => {
                     </div>
 
                     <div>
-                        <QueryBuilder fields={fields} query={query} onQueryChange={setQuery} />
+                        {/* <QueryBuilder fields={fields} query={query} onQueryChange={setQuery} /> */}
                     </div>
                     <div style={{ display: 'flex', justifyContent: 'end' }}>
                         <Button type="primary" style={{ margin: '10px 0' }} onClick={saveConfigNode}>Save</Button>

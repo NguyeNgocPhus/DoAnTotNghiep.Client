@@ -6,19 +6,19 @@ import { GET, getTokenSource, POST } from "../fetch";
 
 let source = null;
 
-export const cancelApiGetNodeDefinition = () => cancel(source);
+export const cancelApiExecuteWf = () => cancel(source);
 
-export const apiGetNodeDefinition = async (params) => {
+export const apiExecuteWf = async (params) => {
 
-    cancelApiGetNodeDefinition();
+    cancelApiExecuteWf();
 
     source = getTokenSource();
  
     try {
-        const response = await GET(`/Api/WorkflowDefinition/${params.id}/node/${params.type}?activityId=${params.activityId}`, {}, {
+        const response = await POST('/Api/ExecuteWorkflow', {...params}, {
             cancelToken: source.token
         })
-        
+        // console.log("response",response)
         if(response?.data?.isSuccess === true){
             return {
                 message: "",

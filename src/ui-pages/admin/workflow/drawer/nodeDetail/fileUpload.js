@@ -22,6 +22,7 @@ export const FileUploadDetail = ({ onUpdateNodes, data, onClose }) => {
 
         requestGetNodeTemplateApiData({
             id: id,
+            activityId: data.id,
             type: data.type
         });
     }, []);
@@ -93,7 +94,7 @@ export const FileUploadDetail = ({ onUpdateNodes, data, onClose }) => {
                 </Col>
                 <Divider />
                 <Col span={24}>
-                    <Spin size="large" spinning={loading}>
+                    <Spin size="small" spinning={loading}>
 
 
                         <div style={{ display: 'flex', justifyContent: 'start', gap: '10px', alignItems: 'center', margin: '10px 0' }}>

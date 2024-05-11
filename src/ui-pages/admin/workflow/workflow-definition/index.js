@@ -8,6 +8,7 @@ import { useCreateWfDefinition } from '../../../../store/workflow/use-create-wf-
 import { useGetListWfDefinition } from '../../../../store/workflow/use-get-list-wf-definition';
 import { useNavigate } from 'react-router-dom';
 import { useDeleteWfDefinition } from '../../../../store/workflow/use-delete-wf-definition';
+import { AdminCommomLayout } from '../../../common/layout/admin/admin-common';
 const { Title } = Typography;
 
 export const ListWorkflowDefinition = () => {
@@ -37,6 +38,17 @@ export const ListWorkflowDefinition = () => {
                     <a href={`/admin/workflow-definition/${id}`}>
                         {name}
                     </a>
+
+                </>
+            ),
+        },
+        {
+            title: 'Mô tả',
+            dataIndex: 'description',
+            key: 'description',
+            render: (_, { description }) => (
+                <>
+                    {description}
 
                 </>
             ),
@@ -118,6 +130,7 @@ export const ListWorkflowDefinition = () => {
                     return {
                         id: x.definitionId,
                         key: x.definitionId,
+                        description: x.description,
                         status: "publish",
                         name: x.name,
                         version: x.version
@@ -156,58 +169,59 @@ export const ListWorkflowDefinition = () => {
     return (
 
         <>
-            <Row style={{ padding: "20px" }} gutter={[0, 32]}>
-                <Col span={24}>
-                    <div className='header_list_users'>
-                        <Title level={5}>Danh sách Workflow Definition</Title>
-                        <div>
-                            <Button onClick={showModal} icon={<PlusOutlined />} type="primary" size="large">Tạo workflow</Button>
+            <AdminCommomLayout>
+                <Row style={{ padding: "20px" }} gutter={[0, 32]}>
+                    <Col span={24}>
+                        <div className='header_list_users'>
+                            <Title level={5}>Danh sách quy trình</Title>
+                            <div>
+                                <Button onClick={showModal} icon={<PlusOutlined />} type="primary" size="large">Tạo workflow</Button>
+                            </div>
                         </div>
-                    </div>
-                </Col>
-                <Col span={24}>
-                    <Input icon={<SearchOutlined />} style={{ width: '70%' }} size="large" placeholder="Tìm kiếm theo tên, email hoặc số điện thoại" prefix={<SearchOutlined />} />
-                </Col>
-                <Col span={24}>
-                    <Spin size="large" spinning={loading}>
-                        {listWfDefinition &&
-                            <Table columns={columns} dataSource={listWfDefinition} />
-                        }
-                    </Spin>
-                </Col>
-            </Row>
-            <Modal title="Tạo flow mới" open={isModalOpen} onCancel={handleCancel} footer={null}>
-                <Form
-                    name="basic"
-                    layout="vertical"
-                    onFinish={onFinish}
-                    onFinishFailed={onFinishFailed}
-                    autoComplete="off"
-                >
-                    <Form.Item
-                        label="Tên Workflow"
-                        name="name"
-
+                    </Col>
+                    <Col span={24}>
+                        <Input icon={<SearchOutlined />} style={{ width: '70%' }} size="large" placeholder="Tìm kiếm theo tên, email hoặc số điện thoại" prefix={<SearchOutlined />} />
+                    </Col>
+                    <Col span={24}>
+                        <Spin size="large" spinning={loading}>
+                            {listWfDefinition &&
+                                <Table columns={columns} dataSource={listWfDefinition} />
+                            }
+                        </Spin>
+                    </Col>
+                </Row>
+                <Modal title="Tạo flow mới" open={isModalOpen} onCancel={handleCancel} footer={null}>
+                    <Form
+                        name="basic"
+                        layout="vertical"
+                        onFinish={onFinish}
+                        onFinishFailed={onFinishFailed}
+                        autoComplete="off"
                     >
-                        <Input />
-                    </Form.Item>
+                        <Form.Item
+                            label="Tên Workflow"
+                            name="name"
 
-                    <Form.Item
-                        label="Mô tả"
-                        name="description"
-                    >
-                        <Input />
-                    </Form.Item>
+                        >
+                            <Input />
+                        </Form.Item>
+
+                        <Form.Item
+                            label="Mô tả"
+                            name="description"
+                        >
+                            <Input />
+                        </Form.Item>
 
 
-                    <Form.Item >
-                        <Button type="primary" htmlType="submit">
-                            Submit
-                        </Button>
-                    </Form.Item>
-                </Form>
-            </Modal>
-
+                        <Form.Item >
+                            <Button type="primary" htmlType="submit">
+                                Submit
+                            </Button>
+                        </Form.Item>
+                    </Form>
+                </Modal>
+            </AdminCommomLayout>
         </>
 
     );

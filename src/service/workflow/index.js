@@ -7,6 +7,8 @@ import { apiGetNodeDefinition, cancelApiGetNodeDefinition } from "../../data-sou
 import { apiGetWorkflowActivity, cancelApiGetWorkflowActivity } from "../../data-source/workflow/get-wf-activity";
 import { apiGetWfDefinition, cancelApiGetWfDefinition } from "../../data-source/workflow/get-wf-definition";
 import { apiUpdateWfDefinition, cancelApiUpdateWfDefinition } from "../../data-source/workflow/update-wf-definition";
+import { cancelApiGetCurrentStepWf, apiCurrentStepWf } from "../../data-source/workflow/get-current-step-wf";
+import { apiExecuteWf, cancelApiExecuteWf } from "../../data-source/workflow/execute-wf-pending";
 
 
 
@@ -112,12 +114,43 @@ export const WORKFLOW = {
         })
         apiGetWorkflowActivity(params).then((response) => {
             if (response && response.state !== REQUEST_STATE.UNMOUNT) {
-                
+
                 setWorkflowActivity(response);
             }
         });
     },
 
+    // get current step wf
+    cancelApiGetCurrentStepWf: cancelApiGetCurrentStepWf,
+    getCurrentStepWfAsync: function (params, setCurrentStepWf) {
+        setCurrentStepWf({
+            state: REQUEST_STATE.REQUEST,
+            message: "",
+            loading: true
+        })
+        apiCurrentStepWf(params).then((response) => {
+            if (response && response.state !== REQUEST_STATE.UNMOUNT) {
+
+                setCurrentStepWf(response);
+            }
+        });
+    },
+
+    // execute wf
+    cancelApiExecuteWf: cancelApiExecuteWf,
+    executeWfAsync: function (params, setExecuteWf) {
+        setExecuteWf({
+            state: REQUEST_STATE.REQUEST,
+            message: "",
+            loading: true
+        })
+        apiExecuteWf(params).then((response) => {
+            if (response && response.state !== REQUEST_STATE.UNMOUNT) {
+
+                setExecuteWf(response);
+            }
+        });
+    },
 
 
 }

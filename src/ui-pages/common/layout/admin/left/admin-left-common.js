@@ -6,7 +6,8 @@ import {
     UserOutlined,
     BranchesOutlined,
     ProductOutlined,
-    UsergroupAddOutlined,
+    SolutionOutlined,
+    DownloadOutlined,
     KeyOutlined,
     LoginOutlined
 } from '@ant-design/icons';
@@ -22,8 +23,9 @@ export const AdminLeftCommomLayout = ({ children }) => {
     var currentUser =  getUser();
     var showDashboard = hasRole("SuperAdmin");
     var showIdentity = hasRole("User") || hasRole("Role") || hasRole("SuperAdmin");
-    var showDocument = hasRole("Document") || hasRole("Approval") || hasRole("SuperAdmin");
+    var showDocument = hasRole("Document")  || hasRole("SuperAdmin");
     var showWorkflow = hasRole("Workflow") || hasRole("SuperAdmin");
+    var showApprove =  hasRole("Approval") || hasRole("SuperAdmin");
 
     let listMenu = [
 
@@ -49,9 +51,18 @@ export const AdminLeftCommomLayout = ({ children }) => {
     if(showDocument){
         listMenu.push(
             {
-                icon: <FolderOpenOutlined style={{ fontSize: '20px' }} />,
-                name: "Dữ liệu nhập",
+                icon: <DownloadOutlined  style={{ fontSize: '20px' }} />,
+                name: "Nhập dữ liệu",
                 route: "/admin/documents",
+                isActive: false,
+            })
+    }
+    if(showApprove){
+        listMenu.push(
+            {
+                icon: <SolutionOutlined style={{ fontSize: '20px' }} />,
+                name: "Phê duyệt",
+                route: "/admin/approve",
                 isActive: false,
             })
     }

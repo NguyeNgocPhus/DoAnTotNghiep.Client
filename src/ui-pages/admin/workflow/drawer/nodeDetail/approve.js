@@ -1,4 +1,4 @@
-import { Row, Col, Divider, Typography, Select, Button } from "antd";
+import { Row, Col, Divider, Typography, Select, Button, Spin } from "antd";
 import { CloseCircleOutlined, SettingOutlined } from '@ant-design/icons';
 import "./styles.css";
 import { ApproveIcon } from "../../nodes/icons/approve_icon";
@@ -14,15 +14,16 @@ export const ApproveDetail = ({ onUpdateNodes, data, onClose }) => {
 
     const [rolesApiData, requestGetRolesApiData] = useGetRoles();
     const [nodeDefinitionApiData, requestGetNodeTemplateApiData] = useGetNodeDefinition();
-
+    const [loading,setLoading] = useState(false);
     const [description, setDescription] = useState("");
     const { id } = useParams();
 
     useEffect(() => {
         requestGetRolesApiData();
-
+        console.log("data",data)
         requestGetNodeTemplateApiData({
             id: id,
+            activityId: data.id,
             type: data.type
         });
     }, []);
@@ -30,12 +31,12 @@ export const ApproveDetail = ({ onUpdateNodes, data, onClose }) => {
     useEffect(() => {
         if (rolesApiData !== null) {
             if (rolesApiData.state === REQUEST_STATE.SUCCESS) {
-
+                setLoading(false);
                 setListRole(rolesApiData.data);
             } else if (rolesApiData.state === REQUEST_STATE.ERROR) {
 
             } else if (rolesApiData.state === REQUEST_STATE.REQUEST) {
-
+                setLoading(true);
             }
         }
     }, [rolesApiData])
@@ -44,13 +45,13 @@ export const ApproveDetail = ({ onUpdateNodes, data, onClose }) => {
             if (nodeDefinitionApiData.state === REQUEST_STATE.SUCCESS) {
 
                 var jsonData = JSON.parse(nodeDefinitionApiData?.data?.data)
-
+                setLoading(false);
                 setRoleId(jsonData?.roleId)
                 setDescription(nodeDefinitionApiData?.data?.description)
             } else if (nodeDefinitionApiData.state === REQUEST_STATE.ERROR) {
 
             } else if (nodeDefinitionApiData.state === REQUEST_STATE.REQUEST) {
-
+                setLoading(true);
             }
         }
     }, [nodeDefinitionApiData])
@@ -59,7 +60,7 @@ export const ApproveDetail = ({ onUpdateNodes, data, onClose }) => {
         setRoleId(value);
     }
     const saveConfigNode = () => {
-
+        console.log("roleId", roleId);
         const data1 = {
             roleId: roleId,
         };
@@ -83,8 +84,7 @@ export const ApproveDetail = ({ onUpdateNodes, data, onClose }) => {
                 </Col>
                 <Divider />
                 <Col span={24}>
-                    {/* <div>TYpe : {data?.type}</div>
-                    <div>Id : {data?.id}</div> */}
+                   <Spin size="small" spinning={loading}>
                     <div style={{ display: 'flex', justifyContent: 'start', gap: '10px', alignItems: 'center', margin: '10px 0' }}>
                         <SettingOutlined />
                         <Typography.Title style={{ margin: 0 }} level={5}>Thiết lập action</Typography.Title>
@@ -104,7 +104,7 @@ export const ApproveDetail = ({ onUpdateNodes, data, onClose }) => {
                     <div style={{ display: 'flex', justifyContent: 'end' }}>
                         <Button type="primary" style={{ margin: '10px 0' }} onClick={saveConfigNode}>Save</Button>
                     </div>
-
+                    </Spin>
                 </Col>
 
             </Row>

@@ -24,13 +24,7 @@ export const Document = () => {
   return (
     <AdminCommomLayout>
     
-      <Tabs 
-        style={{height:'100vh',
-        paddingTop: "20px"}}
-        tabPosition={"left"}
-        items={tabs}
-      />
-    
+        <ListDocument></ListDocument>
 
     </AdminCommomLayout>
 

@@ -10,6 +10,8 @@ import { useGetListImportTemplate } from '../../../../store/import-template/use-
 import { REQUEST_STATE } from '../../../../app-config/constants';
 import { useCreateImportTemplate } from '../../../../store/import-template/use-create-import-template';
 import { useDeleteImportTemplate } from '../../../../store/import-template/use-delete-import-template';
+import { History } from './history';
+import { AdminCommomLayout } from '../../../common/layout/admin/admin-common';
 const { Title } = Typography;
 
 
@@ -33,17 +35,17 @@ export const ListDocument = () => {
             dataIndex: 'active',
             render: (_, { active }) => (
                 <>
-                    {active && <CheckOutlined style={{color:'green'}}/>}
+                    {active && <CheckOutlined style={{ color: 'green' }} />}
                 </>
             ),
-        },    
+        },
         {
             title: 'Đã có quy trình',
             key: 'hasWorkflow',
             dataIndex: 'hasWorkflow',
             render: (_, { hasWorkflow }) => (
                 <>
-                    {hasWorkflow && <CheckOutlined style={{color:'green'}}/>}
+                    {hasWorkflow && <CheckOutlined style={{ color: 'green' }} />}
                 </>
             ),
         },
@@ -53,8 +55,7 @@ export const ListDocument = () => {
             dataIndex: 'fileTemplateId',
             render: (_, { fileTemplateId }) => (
                 <>
-                    {console.log("fileTemplateId",fileTemplateId)}
-                    {fileTemplateId && <Typography.Link href='http://localhost:5000/Api/FileStorage/Get/b4330c7d-abc9-44bc-b9de-b3963a783c0b?name=TCKT' >Tải xuống</Typography.Link>}
+                    {fileTemplateId && <Typography.Link href={`http://localhost:5000/Api/FileStorage/Get/${fileTemplateId}?name=TCKT`}>Tải xuống</Typography.Link>}
                 </>
             ),
         },
@@ -62,30 +63,30 @@ export const ListDocument = () => {
             title: '',
             key: 'action',
             dataIndex: 'action',
-            render: (_, { key}) => (
+            render: (_, data) => (
                 <>
                     {/* {console.log("JKey", key)} */}
                     <Row gutter={[10, 20]}>
                         <Col className='import_teamplate_action_icon'>
                             <EditOutlined style={{ cursor: 'pointer' }} onClick={() => {
-                                onUpdateImportTemplate(key);
+                                onUpdateImportTemplate(data.key);
                             }
 
                             } />
                         </Col>
                         <Col className='import_teamplate_action_icon'>
                             <HistoryOutlined style={{ cursor: 'pointer' }} onClick={() => {
-                                onClickViewHistory(key)
+                                onClickViewHistory(data)
                             }} />
                         </Col>
                         <Col className='import_teamplate_action_icon' >
                             <UploadOutlined style={{ cursor: 'pointer' }} onClick={() => {
-                                onClickUploadDocument(key)
+                                onClickUploadDocument(data.key)
                             }} />
                         </Col>
                         <Col className='import_teamplate_action_icon'>
                             <DeleteOutlined style={{ cursor: 'pointer', color: 'red' }} onClick={() => {
-                                onDeleteImportTemplate(key)
+                                onDeleteImportTemplate(data.key)
                             }} />
                         </Col>
                     </Row>
@@ -102,12 +103,15 @@ export const ListDocument = () => {
     const [listImportTemplateApiData, requestListImportTemplateApi] = useGetListImportTemplate();
     const [formCreateOpen, setFormCreateOpen] = useState(false);
     const [formUploadOpen, setFormUploadOpen] = useState(false);
+    const [historyOpen, setHistoryOpen] = useState(false);
+    const [dataHistory, setDataHistory] = useState(null);
     const [listImportTemplate, setListImportTemplate] = useState([]);
     const [loading, setLoading] = useState(false);
     const [form] = Form.useForm();
+    const navigate = useNavigate();
 
-    const [fileTemplateId, setFileTemplateId ] = useState(null);
-    const [importTemplateId, setImportTemplateId ] = useState(null);
+    const [fileTemplateId, setFileTemplateId] = useState(null);
+    const [importTemplateId, setImportTemplateId] = useState(null);
 
     const showFormCreate = () => {
         setFormCreateOpen(true);
@@ -117,7 +121,7 @@ export const ListDocument = () => {
     const onCreateImportTemplate = (values) => {
         // console.log("Onfinish",{...values, fileTemplateId})
         form.resetFields();
-        requestCreateImportTemplateApiData({...values, fileTemplateId});
+        requestCreateImportTemplateApiData({ ...values, fileTemplateId });
     };
     const onUpdateImportTemplate = (id) => {
         setFormCreateOpen(true);
@@ -127,14 +131,15 @@ export const ListDocument = () => {
         requestDeleteImportTemplateApiData({ id });
     };
 
-    const onClickViewHistory = () => {
-        // console.log("onClickViewHistory")
+    const onClickViewHistory = (data) => {
+        // setHistoryOpen(true);
+        navigate(`/admin/history/${data.key}`)
     }
     const onClickUploadDocument = (id) => {
         setImportTemplateId(id);
         setFormUploadOpen(true);
     }
-   
+
 
     useEffect(() => {
         requestListImportTemplateApi();
@@ -152,7 +157,7 @@ export const ListDocument = () => {
                         key: x.id,
                         hasWorkflow: x.hasWorkflow,
                         active: x.active,
-                        fileTemplateId : x.fileTemplateId
+                        fileTemplateId: x.fileTemplateId
 
                     }
                 });
@@ -201,27 +206,29 @@ export const ListDocument = () => {
     }, [createImportTemplateApiData]);
     return (
         <>
-            <Row style={{ padding: '20px' }} gutter={[0, 32]}>
-                <Col span={24}>
-                    <div className='header_list_users'>
-                        <Title level={5}>Danh sách mẫu nhập</Title>
-                        <div>
-                            <Button onClick={showFormCreate} icon={<PlusOutlined />} type="primary" size="large">Tạo mẫu nhập</Button>
+            <AdminCommomLayout>
+                <Row style={{ padding: '20px' }} gutter={[0, 32]}>
+                    <Col span={24}>
+                        <div className='header_list_users'>
+                            <Title level={5}>Danh sách mẫu nhập</Title>
+                            <div>
+                                <Button onClick={showFormCreate} icon={<PlusOutlined />} type="primary" size="large">Tạo mẫu nhập</Button>
+                            </div>
                         </div>
-                    </div>
-                </Col>
-                <Col span={24}>
-                    <Input icon={<SearchOutlined />} style={{ width: '70%' }} size="large" placeholder="Tìm kiếm theo tên mẫu nhập" prefix={<SearchOutlined />} />
-                </Col>
-                <Col span={24}>
-                    <Spin size="large" spinning={loading}>
-                        {listImportTemplate.length > 0 && <Table  size="middle"  columns={columns} dataSource={listImportTemplate} />}
-                    </Spin>
-                </Col>
-            </Row>
-            <FormCreate setFileTemplateId={setFileTemplateId} form={form} open={formCreateOpen} onClose={() => { setFormCreateOpen(false) }} onFinish={onCreateImportTemplate}></FormCreate>
-            <FormUpload importTemplateId={importTemplateId} open={formUploadOpen} onClose={() => { setFormUploadOpen(false) }}></FormUpload>
-
+                    </Col>
+                    <Col span={24}>
+                        <Input icon={<SearchOutlined />} style={{ width: '70%' }} size="large" placeholder="Tìm kiếm theo tên mẫu nhập" prefix={<SearchOutlined />} />
+                    </Col>
+                    <Col span={24}>
+                        <Spin size="large" spinning={loading}>
+                            {listImportTemplate.length > 0 && <Table size="middle" columns={columns} dataSource={listImportTemplate} />}
+                        </Spin>
+                    </Col>
+                </Row>
+                <FormCreate setFileTemplateId={setFileTemplateId} form={form} open={formCreateOpen} onClose={() => { setFormCreateOpen(false) }} onFinish={onCreateImportTemplate}></FormCreate>
+                <FormUpload importTemplateId={importTemplateId} open={formUploadOpen} onClose={() => { setFormUploadOpen(false) }}></FormUpload>
+                {/* <History dataHistory={dataHistory} historyOpen={historyOpen} setHistoryOpen={setHistoryOpen} ></History> */}
+            </AdminCommomLayout>
         </>
 
     );
