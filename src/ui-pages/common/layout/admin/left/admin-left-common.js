@@ -1,4 +1,3 @@
-import { Button, Col, Layout, Menu, Row, Input, Tooltip, Typography, Divider } from "antd";
 
 
 import {
@@ -7,15 +6,11 @@ import {
     BranchesOutlined,
     ProductOutlined,
     SolutionOutlined,
-    DownloadOutlined,
-    KeyOutlined,
-    LoginOutlined
-} from '@ant-design/icons';
-import { useEffect, useState } from "react";
+    DownloadOutlined} from '@ant-design/icons';
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { removeUser, removeToken, getUser } from "../../../../../app-helper";
+import { getUser } from "../../../../../app-helper";
 import { hasRole } from "../../../../../app-helper/jwtHepler";
-import { useGetRoles } from "../../../../../store/auth/use-get-roles";
 const classNames = require('classnames');
 
 export const AdminLeftCommomLayout = ({ children }) => {
@@ -85,7 +80,7 @@ export const AdminLeftCommomLayout = ({ children }) => {
                 isActive: false,
             })
     }
-    const [openUserInfo, setOpenUserInfo] = useState(false);
+  
     const [itemClick, setItemClick] = useState(true);
     const [menus, setMenus] = useState([...listMenu]);
     const navigate = useNavigate();
@@ -109,11 +104,6 @@ export const AdminLeftCommomLayout = ({ children }) => {
         navigate(route);
     }
 
-    const onLogout = () => {
-        removeToken();
-        removeUser()
-        navigate("/login");
-    }
     return (
         <div
             style={{
@@ -146,23 +136,7 @@ export const AdminLeftCommomLayout = ({ children }) => {
 
             })}
 
-            <div className="user_avatar" onClick={() => { setOpenUserInfo(!openUserInfo) }}>
-                <UserOutlined style={{ color: "#1890ff" }} />
-                {openUserInfo && <div className="TOKEN">
-                    <div className="user_info_detail">
-                        <UserOutlined />
-                        <span><b>{currentUser.email}</b></span>
-                    </div>
-                    <div className="user_info_detail">
-                        <KeyOutlined />
-                        <span><b>Đổi mật khẩu</b></span>
-                    </div>
-                    <div className="user_info_detail" onClick={onLogout}>
-                        <LoginOutlined />
-                        <span><b>Đăng xuất</b></span>
-                    </div>
-                </div>}
-            </div>
+            
 
         </div>
     )

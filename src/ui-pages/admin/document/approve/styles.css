@@ -11,13 +11,15 @@
 }
 .green{
     border: 1px solid green;
+    
 }
 .red{
     border: 1px solid red;
 }
 .smoke{
     border: 1px solid #f0f0f0;
-    color: #757575;
+    color: #5f5a5a;
+    box-shadow: 1px 1px 5px 3px rgba(0,0,0,.05);
 }
 .step_info{
     display: flex;

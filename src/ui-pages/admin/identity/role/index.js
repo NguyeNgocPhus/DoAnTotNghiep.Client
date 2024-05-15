@@ -100,9 +100,7 @@ export const ListRole = () => {
                         </div> */}
                     </div>
                 </Col>
-                {/* <Col span={24}>
-                    <Input icon={<SearchOutlined />} style={{ width: '70%' }} size="large" placeholder="Tìm kiếm theo tên nhóm người dùng" prefix={<SearchOutlined />} />
-                </Col> */}
+              
                 <Col span={24}>
                     {/* <Table size="middle" loading={loading} columns={columns} dataSource={listRole} /> */}
                     <div className='table'>
