@@ -43,7 +43,7 @@ export const HeaderCommomLayout = ({ children }) => {
         setOpen(newOpen);
     };
     useEffect(() => {
-       console.log("countUnreadNotificationData",countUnreadNotificationData)
+        console.log("countUnreadNotificationData", countUnreadNotificationData)
     }, [countUnreadNotificationData])
 
     return (
@@ -80,21 +80,26 @@ export const HeaderCommomLayout = ({ children }) => {
                     <span><b>{currentUser?.email}</b></span>
                 </div>
 
-                {openUserInfo && <div className="TOKEN">
-                    <div className="user_info_detail">
-                        <UserOutlined />
 
-                    </div>
-                    <div className="user_info_detail">
-                        <KeyOutlined />
-                        <span><b>Đổi mật khẩu</b></span>
-                    </div>
-                    <div className="user_info_detail" onClick={onLogout}>
+                
+            </div>
+            <Popover
+                    content={<div className="" onClick={onLogout}>
                         <LoginOutlined />
                         <span><b>Đăng xuất</b></span>
-                    </div>
-                </div>}
-            </div>
+                    </div>}
+                    placement="bottom"
+                    trigger="click"
+                    open={openUserInfo}
+                    overlayStyle={{
+                        width: "250px",
+                        height: "500px",
+                        // overflow: "scroll"
+                    }}
+                    onOpenChange={handleOpenChange}
+                >
+
+                </Popover>
 
 
         </div>
