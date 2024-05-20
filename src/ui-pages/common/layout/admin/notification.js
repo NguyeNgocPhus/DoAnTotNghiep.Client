@@ -1,78 +1,86 @@
 import React, { useEffect, useState } from 'react';
 import { Avatar, Button, List, Skeleton } from 'antd';
-const count = 2;
-const fakeDataUrl = `https://randomuser.me/api/?results=${count}&inc=name,gender,email,nat,picture&noinfo`;
-export const Notification = () => {
-  const [initLoading, setInitLoading] = useState(true);
-  const [loading, setLoading] = useState(false);
-  const [data, setData] = useState([]);
-  const [list, setList] = useState([]);
-  useEffect(() => {
-    fetch(fakeDataUrl)
-      .then((res) => res.json())
-      .then((res) => {
-        setInitLoading(false);
-        setData(res.results);
-        setList(res.results);
-      });
-  }, []);
-  const onLoadMore = () => {
-    setLoading(true);
-    setList(
-      data.concat(
-        [...new Array(count)].map(() => ({
-          loading: true,
-          name: {},
-          picture: {},
-        })),
-      ),
+import { useGetListNotification } from '../../../../store/notification/use-get-list-notification';
+import { REQUEST_STATE } from '../../../../app-config/constants';
+import moment from 'moment';
+import classNames from 'classnames';
+
+export const Notification = ({ }) => {
+    const [initLoading, setInitLoading] = useState(true);
+    const [loading, setLoading] = useState(false);
+    const [listNoficationApiData, requestGetListNotification] = useGetListNotification();
+
+    const [page, setPage] = useState(1);
+    const [data, setData] = useState([]);
+    const [list, setList] = useState([]);
+
+    useEffect(() => {
+        if (listNoficationApiData !== null) {
+            if (listNoficationApiData.state === REQUEST_STATE.SUCCESS) {
+                setLoading(false);
+                setInitLoading(false);
+                
+                setList(listNoficationApiData.data);
+                console.log("listNoficationApiData",listNoficationApiData.data);
+            } else if (listNoficationApiData.state === REQUEST_STATE.ERROR) {
+
+            } else if (listNoficationApiData.state === REQUEST_STATE.REQUEST) {
+                setLoading(true);
+            }
+        }
+    }, [listNoficationApiData])
+    const onLoadMore = () => {
+
+        setLoading(true);
+        requestGetListNotification({
+            page: page + 1
+        })
+        setPage(page + 1);
+    };
+    const loadMore =
+        !initLoading && !loading ? (
+            <div
+                style={{
+                    textAlign: 'center',
+                    marginTop: 12,
+                    cursor: 'pointer',
+                    color: 'rgb(24, 144, 255)'
+                    // height: 32,
+                    // lineHeight: '32px',
+                }}
+            >
+                <span onClick={onLoadMore}>tải thêm</span>
+
+            </div>
+        ) : null;
+    return (
+        <List
+            className='list-notification'
+            loading={initLoading}
+            itemLayout="horizontal"
+            loadMore={loadMore}
+            dataSource={list}
+            renderItem={(item) => (
+                <List.Item
+                >
+                    <Skeleton avatar title={false} loading={loading} active>
+                        <div style={{ display: "flex", alignItems: "center", gap:"4px" }}>
+                            <div className={classNames('', `${item.read ? "" : "notification_read"}`)}  style={{height:"6px",width:"6px", borderRadius:"50%"}}></div>
+                            <div style={{width:'100%'}}>
+                                <List.Item.Meta
+
+                                    title={<a target="_blank" href={`http://localhost:3000/admin/approve?importHistoryId=${item.contextId}`}>{item.title}</a>}
+                                    description={item.text}
+                                />
+                                <div className='date_item'>{moment(new Date(item.createdTime)).format('DD-MM-YYYY HH:mm')}</div>
+                            </div>
+                        </div>
+
+
+                    </Skeleton>
+
+                </List.Item>
+            )}
+        />
     );
-    fetch(fakeDataUrl)
-      .then((res) => res.json())
-      .then((res) => {
-        const newData = data.concat(res.results);
-        setData(newData);
-        setList(newData);
-        setLoading(false);
-        // Resetting window's offsetTop so as to display react-virtualized demo underfloor.
-        // In real scene, you can using public method of react-virtualized:
-        // https://stackoverflow.com/questions/46700726/how-to-use-public-method-updateposition-of-react-virtualized
-        window.dispatchEvent(new Event('resize'));
-      });
-  };
-  const loadMore =
-    !initLoading && !loading ? (
-      <div
-        style={{
-          textAlign: 'center',
-          marginTop: 12,
-          height: 32,
-          lineHeight: '32px',
-        }}
-      >
-        <Button onClick={onLoadMore}>loading more</Button>
-      </div>
-    ) : null;
-  return (
-    <List
-      loading={initLoading}
-      itemLayout="horizontal"
-      loadMore={loadMore}
-      dataSource={list}
-      renderItem={(item) => (
-        <List.Item
-        
-        >
-          <Skeleton avatar title={false} loading={item.loading} active>
-            <List.Item.Meta
-              title={<a href="https://ant.design">{item.name?.last}</a>}
-              description="Ant Design, a design language for background applications, is refined by Ant UED Team"
-            />
-           
-          </Skeleton>
-         
-        </List.Item>
-      )}
-    />
-  );
 };

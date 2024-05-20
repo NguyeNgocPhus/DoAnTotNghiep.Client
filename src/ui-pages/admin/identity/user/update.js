@@ -155,7 +155,7 @@ export const UpdateUser = ({ id, isModalOpen, handleCancel, onUpdateUserSuccess 
 
                     <Form.Item >
                         <Button type="primary" htmlType="submit">
-                            Save
+                            Lưu
                         </Button>
                     </Form.Item>
                 </Form>}

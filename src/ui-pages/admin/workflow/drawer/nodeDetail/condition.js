@@ -54,7 +54,7 @@ export const ConditionDetail = ({ data, onClose }) => {
                         {/* <QueryBuilder fields={fields} query={query} onQueryChange={setQuery} /> */}
                     </div>
                     <div style={{ display: 'flex', justifyContent: 'end' }}>
-                        <Button type="primary" style={{ margin: '10px 0' }} onClick={saveConfigNode}>Save</Button>
+                        <Button type="primary" style={{ margin: '10px 0' }} onClick={saveConfigNode}>Lưu</Button>
                     </div>
 
                 </Col>

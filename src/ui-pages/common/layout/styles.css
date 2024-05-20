@@ -124,7 +124,7 @@
     justify-content: center;
     font-size: 15px;
     cursor: pointer;
-    z-index: 1000000;
+    /* z-index: 1000000; */
 }
 
 .TOKEN{
@@ -246,4 +246,26 @@
 }
 .field_name{
     font-weight: bold;
+}
+
+.ant-list-item{
+    display: block !important;
+   
+   
+}
+.ant-spin-container{
+   
+}
+.date_item{
+    font-size: 11px;
+}
+.ant-list-item{
+    padding: 2px 0px !important;
+}
+.notification_read{
+    background-color :rgb(24, 144, 255)
+}
+.list-notification{
+    max-width: 500px;
+    overflow-y: scroll;
 }

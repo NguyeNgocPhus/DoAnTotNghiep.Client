@@ -8,8 +8,8 @@ import { UserSignUp } from './ui-pages/auth/signUp';
 import { GetPassword } from './ui-pages/auth/getPassword';
 import { useRecoilState } from 'recoil';
 import { userInfoState } from './store/auth/share-state';
-import { useEffect, useState } from 'react';
-import { getToken, saveTokenToStore, saveUserToStore } from './app-helper';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { getToken, getUser, saveTokenToStore, saveUserToStore } from './app-helper';
 import { Profile } from './ui-pages/profile';
 import { useProfile } from './store/auth/use-my-profile';
 import { Select } from 'antd';
@@ -26,6 +26,10 @@ import { ListWorkflowDefinition } from './ui-pages/admin/workflow/workflow-defin
 import { ListUsers } from './ui-pages/admin/identity/user';
 import { ListRole } from './ui-pages/admin/identity/role';
 import { DashBoard } from './ui-pages/admin/dashboard';
+import { useCountUnreadNotification } from './store/notification/use-get-count-unread-noti';
+import { getCoutUnreadNotificationState } from './store/notification/share-state';
+import useWebSocket, { ReadyState } from "react-use-websocket"
+
 const { Option } = Select;
 
 
@@ -34,11 +38,46 @@ function App() {
   const [userLoginData, setUserLoginData] = useRecoilState(userInfoState);
   const [myProfile, requestMyProfile] = useProfile();
   const [isVerify, setIsVerify] = useState(false);
+  const [countUnreadNotificationData, setCountUnreadNotificationData] = useRecoilState(getCoutUnreadNotificationState);
 
   useEffect(() => {
     let userInfo = getToken();
     if (userInfo !== null)
       requestMyProfile();
+  }, [])
+  const connection = useRef(null)
+
+  useEffect(() => {
+    setTimeout(x=>{
+      const socket = new WebSocket("ws://localhost:5000/echo")
+      const user = getUser();
+      // Connection opened
+      socket.addEventListener("open", (event) => {
+        socket.send(JSON.stringify({
+          command:"subscribe",
+          identifier: user.id
+        }));
+        socket.send(JSON.stringify({
+          command:"getCountNotification",
+          identifier: user.id
+        }))
+    
+      })
+     
+      // Listen for messages
+      socket.addEventListener("message", (event) => {
+        console.log("Message from server ", event.data)
+        const messages = JSON.parse(event.data);
+        if(messages.type === "getCountNotification"){
+          setCountUnreadNotificationData(messages.data)
+        }
+      })
+  
+      connection.current = socket
+    },1000)
+    
+
+    return () => connection.close()
   }, [])
 
   useEffect(() => {
@@ -56,7 +95,6 @@ function App() {
     }
 
   }, [myProfile])
-
   const PrivateRouter = ({ element, ...rest }) => {
     return (
       <Routes>

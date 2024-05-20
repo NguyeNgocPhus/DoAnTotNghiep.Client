@@ -103,7 +103,7 @@ export const RejectDetail = ({ onUpdateNodes, data, onClose }) => {
                         </Select>
                     </div>
                     <div style={{ display: 'flex', justifyContent: 'end' }}>
-                        <Button type="primary" style={{ margin: '10px 0' }} onClick={saveConfigNode}>Save</Button>
+                        <Button type="primary" style={{ margin: '10px 0' }} onClick={saveConfigNode}>Lưu</Button>
                     </div>
                     </Spin>
                 </Col>

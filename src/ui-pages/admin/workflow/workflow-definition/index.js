@@ -9,6 +9,7 @@ import { useGetListWfDefinition } from '../../../../store/workflow/use-get-list-
 import { useNavigate } from 'react-router-dom';
 import { useDeleteWfDefinition } from '../../../../store/workflow/use-delete-wf-definition';
 import { AdminCommomLayout } from '../../../common/layout/admin/admin-common';
+import { HeaderCommomLayout } from '../../../common/layout/admin/header-common';
 const { Title } = Typography;
 
 export const ListWorkflowDefinition = () => {
@@ -151,6 +152,7 @@ export const ListWorkflowDefinition = () => {
 
 
     useEffect(() => {
+      
         requestGetListWfDefinitionData({});
     }, [])
 
@@ -181,6 +183,7 @@ export const ListWorkflowDefinition = () => {
 
         <>
             <AdminCommomLayout>
+                {/* <HeaderCommomLayout></HeaderCommomLayout> */}
                 <Row style={{ padding: "20px" }}>
                     <Col span={24}>
                         <div className='header_list_users'>

@@ -12,11 +12,11 @@ export const useGetListWfDefinition = () => {
         WORKFLOW.getListWfDefinitionAsync(params, setListWfDefinitionData);
     }
     
-    useEffect(() => {
-        return () => {
-            WORKFLOW.cancelGetListWfDefinition();
-        }
-    }, [])
+    // useEffect(() => {
+    //     return () => {
+    //         WORKFLOW.cancelGetListWfDefinition();
+    //     }
+    // }, [])
     return [
         listWfDefinitionData,
         request

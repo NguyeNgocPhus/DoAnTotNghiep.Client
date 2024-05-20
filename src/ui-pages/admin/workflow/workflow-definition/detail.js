@@ -34,7 +34,7 @@ const containerStyle = {
     position: 'relative',
 
     with: '100vw',
-    height: 'calc(100vh - 50px)',
+    height: 'calc(100vh - 100px)',
 };
 const defaultEdgeOptions = {
     style: { strokeWidth: 1, stroke: 'black' },

@@ -14,10 +14,11 @@ import { useExecuteWfPeding } from '../../../../store/workflow/use-execute-wf';
 import { AdminCommomLayout } from '../../../common/layout/admin/admin-common';
 import { useGetImportTemplate } from '../../../../store/import-template/use-get-import-template';
 import { useGetListImportTemplate } from '../../../../store/import-template/use-get-list-import-template';
+import { useParams, useRoutes, useSearchParams } from 'react-router-dom';
 const { Title } = Typography;
 
 
-export const ListApprove = () => {
+export const ListApprove = (props) => {
     const columns = [
 
         {
@@ -117,6 +118,11 @@ export const ListApprove = () => {
         { label: "Chờ phê duyệt", value: "PENDING" }
     ]
 
+    let search = window.location.search;
+    let params = new URLSearchParams(search);
+    let importHistoryId = params.get('importHistoryId');
+    
+
     const [workflowActivityData, requestGetWorkflowActivityApi] = useGetWorkflowActivity();
     const [currentStepWf, requestGetCurrentStepWfApi] = useGetCurrentStepWf();
     const [executeWfData, requestExecuteWfPending] = useExecuteWfPeding();
@@ -168,6 +174,13 @@ export const ListApprove = () => {
                 setTotal(listApproveApiData.data.totalCount);
                 setCurrentPage(listApproveApiData.data.pageIndex)
                 setListApprove(data);
+                
+
+                if(importHistoryId !== null && importHistoryId !== undefined){
+                    const detail = data.find(x=>x.key === importHistoryId);
+                   
+                    showWorkflowDetail(detail);
+                }
 
             } else if (listApproveApiData.state === REQUEST_STATE.ERROR) {
                 // message.error('This is an error message');

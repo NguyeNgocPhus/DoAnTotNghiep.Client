@@ -9,7 +9,6 @@ export const HistoryProfile = () =>{
     const [tinyMCEData,setTinyMCEData] = useState("hi");
 
     const onEditorChange = (data) =>{
-        console.log(data);
         setTinyMCEData(data)
     }
     function uploadFileOfTinyMCE(blobInfo, success, failure, progress, callback) {
