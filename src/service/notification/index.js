@@ -7,11 +7,12 @@ import { apiImportData, cancelApiImportData } from "../../data-source/import-tem
 import { apiUpdateImportTemplate, cancelApiUpdateImportTemplate } from "../../data-source/import-template/update-import-template";
 import { apiGetCountUnreadtNotification, cancelApiGetCountUnreadNotification } from "../../data-source/notification/count-unread-notification";
 import { apiGetListNotification, cancelApiGetListNotification } from "../../data-source/notification/get-list-notification";
+import { apiUpdateNotification, cancelApiUpdateNotification } from "../../data-source/notification/update-notification";
 
 
 
 export const NOTIFICATION = {
-    
+
 
 
     // get list 
@@ -40,6 +41,20 @@ export const NOTIFICATION = {
         apiGetCountUnreadtNotification(params).then((response) => {
             if (response && response.state !== REQUEST_STATE.UNMOUNT) {
                 setCountUnreadNotification(response);
+            }
+        });
+    },
+    // update 
+    cancelApiUpdateNotification: cancelApiUpdateNotification,
+    updateNotification: function (params, setUpdateNotification) {
+        setUpdateNotification({
+            state: REQUEST_STATE.REQUEST,
+            message: "",
+            loading: true
+        })
+        apiUpdateNotification(params).then((response) => {
+            if (response && response.state !== REQUEST_STATE.UNMOUNT) {
+                setUpdateNotification(response);
             }
         });
     },

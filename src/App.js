@@ -48,36 +48,7 @@ function App() {
   const connection = useRef(null)
 
   useEffect(() => {
-    setTimeout(x=>{
-      const socket = new WebSocket("ws://localhost:5000/echo")
-      const user = getUser();
-      // Connection opened
-      socket.addEventListener("open", (event) => {
-        socket.send(JSON.stringify({
-          command:"subscribe",
-          identifier: user.id
-        }));
-        socket.send(JSON.stringify({
-          command:"getCountNotification",
-          identifier: user.id
-        }))
     
-      })
-     
-      // Listen for messages
-      socket.addEventListener("message", (event) => {
-        console.log("Message from server ", event.data)
-        const messages = JSON.parse(event.data);
-        if(messages.type === "getCountNotification"){
-          setCountUnreadNotificationData(messages.data)
-        }
-      })
-  
-      connection.current = socket
-    },1000)
-    
-
-    return () => connection.close()
   }, [])
 
   useEffect(() => {
@@ -92,6 +63,7 @@ function App() {
     if (myProfile.state === REQUEST_STATE.SUCCESS) {
       setIsVerify(true);
       saveUserToStore(myProfile.data)
+    
     }
 
   }, [myProfile])

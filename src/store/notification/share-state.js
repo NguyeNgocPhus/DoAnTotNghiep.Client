@@ -14,3 +14,13 @@ export const getCoutUnreadNotificationState = atom({
     key:"GET-COUNT-UNREAD-NOTIFICATION-STATE",
     default: 0
 })
+
+export const updateNotificationState = atom({
+    key:"UPDATE-NOTIFICATION-STATE",
+    default:{
+        data:{},
+        state:"",
+        message:"",
+        loading:false
+    }
+})

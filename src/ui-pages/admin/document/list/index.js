@@ -21,13 +21,13 @@ export const ListDocument = () => {
     const hasUpload = hasRole("Upload") || hasRole("SuperAdmin");
     const columns = [
         {
-            title: 'Tên Mẫu nhập',
+            title: 'Tên Báo cáo',
             dataIndex: 'name',
             key: 'name',
             render: (text) => <a>{text}</a>,
         },
         {
-            title: 'Loại Mẫu nhập',
+            title: 'Loại Báo cáo',
             dataIndex: 'tag',
             key: 'tag',
             width:'250px',
@@ -56,7 +56,7 @@ export const ListDocument = () => {
             ),
         },
         {
-            title: 'Tải mẫu nhập',
+            title: 'Tải mẫu báo cáo',
             key: 'fileTemplateId',
             width:'150px',
             dataIndex: 'fileTemplateId',
@@ -281,7 +281,7 @@ export const ListDocument = () => {
                                 </Col>
                                 <Col span={4} className='field_filter'>
                                     <div className='field_name'>
-                                        Loại mẫu nhập
+                                        Loại báo cáo
                                     </div>
                                     <Input value={searchTag} onChange={(e) => { setSearchTag(e.target.value) }} size="small" placeholder="Tìm kiếm theo loại mẫu nhập" />
 

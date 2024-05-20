@@ -20,7 +20,17 @@ const { Title } = Typography;
 
 export const ListApprove = (props) => {
     const columns = [
-
+        {
+            title: 'Mã báo cáo',
+            key: 'code',
+            width:'100px',
+            dataIndex: 'code',
+            render: (_, { code }) => (
+                <>
+                    {code && <div>{code}</div>}
+                </>
+            ),
+        },
         {
             title: 'Người tạo',
             key: 'createdByName',
@@ -32,7 +42,7 @@ export const ListApprove = (props) => {
             ),
         },
         {
-            title: 'Mẫu nhập',
+            title: 'Mẫu báo cáo',
             key: 'importTemplateName',
             dataIndex: 'importTemplateName',
             render: (_, { importTemplateName }) => (
@@ -42,7 +52,7 @@ export const ListApprove = (props) => {
             ),
         },
         {
-            title: 'File nhập',
+            title: 'Dữ liệu nhập',
             key: 'fileId',
             dataIndex: 'fileId',
             render: (_, { fileId, fileName }) => (
@@ -143,6 +153,7 @@ export const ListApprove = (props) => {
 
     // search field
     const [searchName, setSearchName] = useState("");
+    const [searchCode, setSearchCode] = useState("");
     const [searchStatus, setSearchStatus] = useState([]);
     const [searchImportTemplate, setSearchImportTemplate] = useState([]);
     useEffect(() => {
@@ -165,6 +176,7 @@ export const ListApprove = (props) => {
                         importTemplateName: x.importTemplateName,
                         createdByName: x.createdByName,
                         key: x.id,
+                        code : x.code,
                         status: x.status,
                         fileId: x.fileId,
                         fileName: x.fileName
@@ -328,6 +340,7 @@ export const ListApprove = (props) => {
             page: currentPage,
             createdByName: searchName,
             status: searchStatus,
+            code: searchCode,
             importTemplateIds: searchImportTemplate
         });
     };
@@ -354,16 +367,23 @@ export const ListApprove = (props) => {
                     <Col span={24}>
                         <div className='table'>
                             <Row className='table_filter' gutter={[15, 0]}>
+                            <Col span={4} className='field_filter'>
+                                    <div className='field_name'>
+                                        Mã báo cáo
+                                    </div>
+                                    <Input value={searchCode} onChange={(e) => { setSearchCode(e.target.value) }} size="small" placeholder="Tìm kiếm theo mã" />
+
+                                </Col>
                                 <Col span={4} className='field_filter'>
                                     <div className='field_name'>
                                         Người tạo
                                     </div>
-                                    <Input size="small" placeholder="Tìm kiếm theo tên" />
+                                    <Input value={searchName}  onChange={(e) => { setSearchName(e.target.value) }} size="small" placeholder="Tìm kiếm theo tên" />
 
                                 </Col>
                                 <Col span={5} className='field_filter'>
                                     <div className='field_name'>
-                                        Mẫu nhập liệu
+                                        Mẫu báo cáo
                                     </div>
                                     {listImportTemplate.length > 0 && <Select
                                         size="small"
@@ -373,7 +393,7 @@ export const ListApprove = (props) => {
                                             width: '100%',
                                         }}
                                         value={searchImportTemplate}
-                                        placeholder="Chọn mẫu nhập"
+                                        placeholder="Chọn mẫu báo cáo"
                                         onChange={(values) => { setSearchImportTemplate(values) }}
                                         options={listImportTemplate}
                                     />}

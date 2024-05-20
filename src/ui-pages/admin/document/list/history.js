@@ -16,7 +16,18 @@ export const History = () => {
     const columns = [
 
         {
-            title: 'Người nhập liệu',
+            title: 'Mã báo cáo',
+            key: 'code',
+            width:'100px',
+            dataIndex: 'code',
+            render: (_, { code }) => (
+                <>
+                    {code && <div>{code}</div>}
+                </>
+            ),
+        },
+        {
+            title: 'Người nhập báo cáo',
             key: 'createdByName',
             dataIndex: 'createdByName',
             render: (_, { createdByName }) => (
@@ -36,7 +47,7 @@ export const History = () => {
         //     ),
         // },
         {
-            title: 'File đã tải lên',
+            title: 'Báo cáo tải lên',
             key: 'fileId',
             dataIndex: 'fileId',
             render: (_, { fileId, fileName }) => (
@@ -46,7 +57,7 @@ export const History = () => {
             ),
         },
         {
-            title: 'Ngày nhập liệu',
+            title: 'Ngày nhập báo cáo',
             key: 'createdTime',
             dataIndex: 'createdTime',
             render: (_, { createdTime }) => (
@@ -125,6 +136,7 @@ export const History = () => {
     const [isEnd, setIsEnd] = useState(null);
     // search field
     const [searchName, setSearchName] = useState("");
+    const [searchCode, setSearchCode] = useState("");
     const [searchStatus, setSearchStatus] = useState([]);
 
     useEffect(() => {
@@ -141,6 +153,7 @@ export const History = () => {
                         importTemplateName: x.importTemplateName,
                         createdByName: x.createdByName,
                         key: x.id,
+                        code: x.code,
                         status: x.status,
                         fileId: x.fileId,
                         fileName : x.fileName,
@@ -220,7 +233,8 @@ export const History = () => {
             importTemplateIds: [id],
             page: currentPage,
             createdByName: searchName,
-            status: searchStatus
+            status: searchStatus,
+            code: searchCode,
         });
     };
     const onClearFilter = (value) => {
@@ -260,7 +274,13 @@ export const History = () => {
                     <div className='table'>
 
                         <Row className='table_filter' gutter={[15, 0]}>
-                            
+                        <Col span={4} className='field_filter'>
+                                <div className='field_name'>
+                                    Mã báo cáo
+                                </div>
+                                <Input value={searchCode} onChange={(e) => { setSearchCode(e.target.value) }} size="small" placeholder="Tìm kiếm theo tên" />
+
+                            </Col>
                             <Col span={4} className='field_filter'>
                                 <div className='field_name'>
                                     Người nhập liệu

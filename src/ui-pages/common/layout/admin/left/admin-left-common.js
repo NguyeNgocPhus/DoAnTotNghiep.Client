@@ -8,7 +8,7 @@ import {
     SolutionOutlined,
     DownloadOutlined} from '@ant-design/icons';
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { getUser } from "../../../../../app-helper";
 import { hasRole } from "../../../../../app-helper/jwtHepler";
 const classNames = require('classnames');
@@ -26,13 +26,16 @@ export const AdminLeftCommomLayout = ({ children }) => {
     let listMenu = [
 
     ]
+    const location = useLocation();
+   
     if(showDashboard){
+        
         listMenu.push(
             {
                 icon: <ProductOutlined style={{ fontSize: '20px' }} />,
                 name: "Dashboard",
                 route: "/admin/dashboard",
-                isActive: true,
+                isActive: location.pathname === "/admin/dashboard",
             })
     }
     if(showRole){
@@ -41,7 +44,7 @@ export const AdminLeftCommomLayout = ({ children }) => {
                 icon: <UsergroupAddOutlined style={{ fontSize: '20px' }} />,
                 name: "Quyền",
                 route: "/admin/roles",
-                isActive: false,
+                isActive: location.pathname === "/admin/roles",
             })
     }
     if(showUser){
@@ -50,7 +53,7 @@ export const AdminLeftCommomLayout = ({ children }) => {
                 icon: <UserOutlined style={{ fontSize: '20px' }} />,
                 name: "Người dùng",
                 route: "/admin/users",
-                isActive: false,
+                isActive: location.pathname === "/admin/users",
             })
     }
     if(showDocument){
@@ -59,7 +62,7 @@ export const AdminLeftCommomLayout = ({ children }) => {
                 icon: <DownloadOutlined  style={{ fontSize: '20px' }} />,
                 name: "Nhập dữ liệu",
                 route: "/admin/documents",
-                isActive: false,
+                isActive: location.pathname === "/admin/documents",
             })
     }
     if(showApprove){
@@ -68,7 +71,7 @@ export const AdminLeftCommomLayout = ({ children }) => {
                 icon: <SolutionOutlined style={{ fontSize: '20px' }} />,
                 name: "Phê duyệt",
                 route: "/admin/approve",
-                isActive: false,
+                isActive:  location.pathname === "/admin/approve",
             })
     }
     if(showWorkflow){
@@ -80,6 +83,9 @@ export const AdminLeftCommomLayout = ({ children }) => {
                 isActive: false,
             })
     }
+
+    
+    
   
     const [itemClick, setItemClick] = useState(true);
     const [menus, setMenus] = useState([...listMenu]);
