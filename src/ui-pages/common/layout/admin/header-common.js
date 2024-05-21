@@ -43,7 +43,7 @@ export const HeaderCommomLayout = ({ children }) => {
         setOpen(newOpen);
     };
     useEffect(() => {
-        console.log("countUnreadNotificationData", countUnreadNotificationData)
+        
     }, [countUnreadNotificationData])
 
     return (

@@ -4,7 +4,12 @@ import {atom} from "recoil";
 export const defaultUserInfo = {
     token:''
 }
-
+export const viewDashboardState = atom({
+    key:'VIEW-DASHBOARD-STATE',
+    default:{
+        ...defaultUserInfo
+    }
+})
 export const userInfoState = atom({
     key:'USER-INFO-STATE',
     default:{

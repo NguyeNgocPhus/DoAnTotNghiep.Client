@@ -2,85 +2,89 @@ import "./styles.css";
 import 'reactflow/dist/style.css';
 
 import { Line } from '@ant-design/charts';
-import { Col, DatePicker, Row, Typography } from "antd";
+import { Col, DatePicker, Row, Spin, Typography } from "antd";
 import { AdminCommomLayout } from "../../common/layout/admin/admin-common";
+import { useEffect, useState } from "react";
+import { useViewDashboard } from "../../../store/auth/use-view-dashboard";
+import { REQUEST_STATE } from "../../../app-config/constants";
+import moment from "moment";
+
 export const DashBoard = () => {
 
-  const data = [
-    { year: '1h', value: 3, category: "người dùng đăng nhập" },
-    { year: '2h', value: 4, category: "count_document_upload" },
-    { year: '3h', value: 3.5, category: "người dùng đăng nhập" },
-    { year: '4h', value: 5, category: "count_workflow" },
-    { year: '5h', value: 4.9, category: "count_workflow" },
-    { year: '6h', value: 6, category: "người dùng đăng nhập" },
-    { year: '7h', value: 7, category: "count_workflow" },
-    { year: '8h', value: 9, category: "user_login" },
-    { year: '9h', value: 13, category: "count_approve" },
-    { year: '10h', value: 13, category: "count_approve" },
-    { year: '11h', value: 13, category: "count_approve" },
-    { year: '12h', value: 2, category: "count_approve" },
-    { year: '13h', value: 13, category: "count_approve" },
-    { year: '14h', value: 13, category: "count_approve" },
-    { year: '15h', value: 13, category: "count_approve" },
-    { year: '16h', value: 13, category: "count_approve" },
-    { year: '17h', value: 13, category: "count_approve" },
-    { year: '18h', value: 13, category: "count_approve" },
-    { year: '19h', value: 13, category: "count_approve" },
-    { year: '20h', value: 13, category: "count_approve" },
-    { year: '21h', value: 13, category: "count_approve" },
-    { year: '22h', value: 13, category: "count_approve" },
-    { year: '23h', value: 13, category: "count_approve" },
-    
-  ];
+  const [dateFilter, setDateFilter] = useState(Date.now());
+  const [countApprove, setCountApprove] = useState(0);
+  const [countReject, setCountReject] = useState(0);
+  const [countUpload, setCountUpload] = useState(0);
+  const [listData, setListData] = useState([]);
+  const [loading, setLoading] = useState(false);
 
-  const config = {
-    data,
-    
-    xField: 'year',
-    yField: 'value',
-    colorField: 'category',
-  };
+  const [viewDashboardApiData, requestViewDashboardApiData] = useViewDashboard();
+
+
+  useEffect(() => {
+    requestViewDashboardApiData({ date: dateFilter })
+  }, [])
+  useEffect(() => {
+    if (viewDashboardApiData.state === REQUEST_STATE.SUCCESS) {
+
+      var list = [];
+      list = list.concat(viewDashboardApiData.data.approves);
+      list = list.concat(viewDashboardApiData.data.rejects);
+      list = list.concat(viewDashboardApiData.data.uploads);
+      console.log(list)
+      setListData([...list])
+      setCountApprove(viewDashboardApiData.data.countApprove);
+      setCountReject(viewDashboardApiData.data.countReject);
+      setCountUpload(viewDashboardApiData.data.countUpload);
+      setLoading(false);
+
+    } else if (viewDashboardApiData.state === REQUEST_STATE.ERROR) {
+      // message.error('This is an error message');
+    } else if (viewDashboardApiData.state === REQUEST_STATE.REQUEST) {
+      setLoading(true);
+    }
+  }, [viewDashboardApiData])
+
   const onChange = (date, dateString) => {
-    console.log(date, dateString);
+
+    requestViewDashboardApiData({ date: moment(date).valueOf() })
   };
   return (
     <AdminCommomLayout>
-      <Row gutter={[0, 40]} style={{ padding: '30px' }}>
-        <Col span={24}>
-          <Row gutter={[0, 0]} justify="space-between">
-            <Col span={5} className="dashboad_count">
-              <div className="count_text">User đăng nhập</div>
-              <span className="count_number">0</span>
-            </Col>
-            <Col span={5} className="dashboad_count">
-              <div className="count_text" >Tài liệu upload</div>
-              <span className="count_number">0</span>
-            </Col>
-            <Col span={5} className="dashboad_count">
-              <div className="count_text">Số lượt phê duyệt</div>
-              <span className="count_number">0</span>
-            </Col>
-            <Col span={5} className="dashboad_count">
-              <div className="count_text">Số lượt từ chối</div>
-              <span className="count_number">0</span>
-            </Col>
-          </Row>
+      <Spin spinning={loading}>
+        <Row gutter={[0, 20]} style={{ padding: '30px' }}>
+          <Col span={24}>
+            <Row gutter={[0, 20]} style={{ display: 'flex', justifyContent: 'flex-start', gap: '20px' }}>
 
-        </Col>
-        <Col span={24} className="chart" style={{ padding: "20px" }}>
-          <div style={{ marginBottom: "20px", marginTop: "20px", display:'flex', justifyContent:'space-between'}}>
-            <b>Biểu đồ thống kê</b>
-            <DatePicker size="small" onChange={onChange} />
-          </div>
-          <div className="chart">
+              <Col span={5} className="dashboad_count">
+                <div className="count_text" >Số báo cáo nhập</div>
+                <span className="count_number">{countUpload}</span>
+              </Col>
+              <Col span={5} className="dashboad_count">
+                <div className="count_text">Số lượt phê duyệt</div>
+                <span className="count_number">{countApprove}</span>
+              </Col>
+              <Col span={5} className="dashboad_count">
+                <div className="count_text">Số lượt từ chối</div>
+                <span className="count_number">{countReject}</span>
+              </Col>
+            </Row>
 
-            <Line {...config} />
-          </div>
+          </Col>
+          <Col span={24} className="chart" style={{ padding: "20px" }}>
+            <div style={{ marginBottom: "20px", padding: "10px", display: 'flex', justifyContent: 'space-between' }}>
+              <b>Biểu đồ thống kê</b>
+              <DatePicker format={"DD/MM/YYYY"} defaultValue={moment(new Date(), "DD/MM/YYYY")} size="small" onChange={onChange} />
+            </div>
+            <div className="chart">
 
-        </Col>
-      </Row>
+              <Line style={{ lineWidth: 2 }} data={listData} xField={'hour'} yField={'value'} colorField={'category'} height={400} />
+            </div>
 
+          </Col>
+        </Row>
 
+      </Spin>
     </AdminCommomLayout>
 
   );

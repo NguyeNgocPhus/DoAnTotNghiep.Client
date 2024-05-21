@@ -7,6 +7,7 @@ import { apiGetUsersAsync, cancelGetUsers } from "../../data-source/auth/get-use
 import { apiGetMyprofileAsync, cancelGetMyprofile } from "../../data-source/auth/my-profile";
 import { apiUpdateUser, cancelApiUpdateUser } from "../../data-source/auth/update-user";
 import { apiUserLogin, cancelApiUserLogin } from "../../data-source/auth/user-login"
+import { apiViewDashboard, cancelViewDashboard } from "../../data-source/view-dashboard";
 
 
 
@@ -127,5 +128,19 @@ export const Auth = {
                 setDeleteUser(response);
             }
         })
-    }
+    },
+     // View dashboard
+     cancelApiViewDashboard: cancelViewDashboard,
+     viewDashboardAsync: function (params, setViewDashboard) {
+        setViewDashboard({
+             state: REQUEST_STATE.REQUEST,
+             message: "",
+             loading: true
+         })
+         apiViewDashboard(params).then((response) => {
+             if (response && response.state !== REQUEST_STATE.UNMOUNT) {
+                setViewDashboard(response);
+             }
+         })
+     }
 }
