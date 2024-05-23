@@ -1,28 +1,105 @@
-import { Row, Col, Divider, Typography, Select, Button } from "antd";
+import { Row, Col, Divider, Typography, Select, Button, Spin } from "antd";
 import { CloseCircleOutlined, SettingOutlined } from '@ant-design/icons';
 import "./styles.css";
+import { useEffect, useState } from "react";
 import { ConditionIcon } from "../../nodes/icons/condition_icon";
-// import { Field, QueryBuilder, RuleGroupType } from 'react-querybuilder';
-// import 'react-querybuilder/dist/query-builder.css';
-import { useState } from "react";
+import { Field, QueryBuilder, defaultOperators } from 'react-querybuilder';
+import 'react-querybuilder/dist/query-builder.css';
+import { useGetRoles } from "../../../../../store/auth/use-get-roles";
+import { useGetNodeDefinition } from "../../../../../store/workflow/use-get-node-definition";
+import { useParams } from "react-router-dom";
+import { REQUEST_STATE } from "../../../../../app-config/constants";
+
+const operators = defaultOperators.filter((op) => op.name === '=' || op.name === '!=')
+const fields = [
+    {
+        name: 'role', 
+        operators: operators, 
+        label: 'Quyền',
+        valueEditorType: 'select',
+        values: [
+            {name:"68fc4ec0-18e1-4481-b0f0-24dd4ca3e364",label:'2'}
+        ]
+    }
+];
+
+export const ConditionDetail = ({ onUpdateNodes, data, onClose }) => {
+    const [rolesApiData, requestGetRolesApiData] = useGetRoles();
+    const [nodeDefinitionApiData, requestGetNodeTemplateApiData] = useGetNodeDefinition();
+    const [loading, setLoading] = useState(false);
+    const [initializeField, setInitializeFields] = useState(fields);
 
 
-export const ConditionDetail = ({ data, onClose }) => {
-    const fields = [
-        { name: 'firstName', label: 'First Name' },
-        { name: 'lastName', label: 'Last Name' },
-    ];
+    const { id } = useParams();
+    useEffect(() => {
+        requestGetRolesApiData();
+        requestGetNodeTemplateApiData({
+            id: id,
+            activityId: data.id,
+            type: data.type
+        });
+    }, []);
+
+    useEffect(() => {
+        if (rolesApiData !== null) {
+            if (rolesApiData.state === REQUEST_STATE.SUCCESS) {
+                setLoading(false);
+              
+                var roles = rolesApiData.data.map(x => {
+                    return {
+                        name: x.id,
+                        label: x.name,
+                    }
+
+                })
+                var data = initializeField.map(x=>{
+                    if(x.name === "role"){
+                        x.values = roles;
+                        return x;
+                    }
+                    return x;
+                })
+                setInitializeFields([...data])
+            } else if (rolesApiData.state === REQUEST_STATE.ERROR) {
+
+            } else if (rolesApiData.state === REQUEST_STATE.REQUEST) {
+                setLoading(true);
+            }
+        }
+    }, [rolesApiData])
+
+    useEffect(() => {
+        if (nodeDefinitionApiData !== null) {
+            if (nodeDefinitionApiData.state === REQUEST_STATE.SUCCESS) {
+
+                var jsonData = JSON.parse(nodeDefinitionApiData?.data?.data)
+                setQuery(jsonData);
+                setLoading(false);
+               
+            } else if (nodeDefinitionApiData.state === REQUEST_STATE.ERROR) {
+
+            } else if (nodeDefinitionApiData.state === REQUEST_STATE.REQUEST) {
+                setLoading(true);
+            }
+        }
+    }, [nodeDefinitionApiData])
+
+
+
     const [query, setQuery] = useState({
         combinator: 'and',
         rules: [
-            { field: 'firstName', operator: '=', value: 'Steve' },
-            { field: 'lastName', operator: '=', value: 'Vai' },
+
         ],
     });
     const onChange = (value) => {
+        setQuery(value);
     }
     const saveConfigNode = () => {
-
+        onUpdateNodes({
+            nodeId: data.id,
+            customData: JSON.stringify(query),
+        });
     }
     return (
         <>
@@ -37,26 +114,24 @@ export const ConditionDetail = ({ data, onClose }) => {
                             <Typography.Text>{data?.data?.name}</Typography.Text>
                         </div>
 
-                        {/* <input id="text" name="text" onChange={onChange} className="nodrag" /> */}
                     </div>
                     <CloseCircleOutlined onClick={onClose} ></CloseCircleOutlined>
                 </Col>
                 <Divider />
                 <Col span={24}>
-                    {/* <div>TYpe : {data?.type}</div>
-                    <div>Id : {data?.id}</div> */}
-                    <div style={{ display: 'flex', justifyContent: 'start', gap: '10px', alignItems: 'center', margin: '10px 0' }}>
-                        <SettingOutlined />
-                        <Typography.Title style={{ margin: 0 }} level={5}>Thiết lập action</Typography.Title>
-                    </div>
+                    <Spin size="small" spinning={loading}>
+                        <div style={{ display: 'flex', justifyContent: 'start', gap: '10px', alignItems: 'center', margin: '10px 0' }}>
+                            <SettingOutlined />
+                            <Typography.Title style={{ margin: 0 }} level={5}>Thiết lập bộ lọc</Typography.Title>
+                        </div>
 
-                    <div>
-                        {/* <QueryBuilder fields={fields} query={query} onQueryChange={setQuery} /> */}
-                    </div>
-                    <div style={{ display: 'flex', justifyContent: 'end' }}>
-                        <Button type="primary" style={{ margin: '10px 0' }} onClick={saveConfigNode}>Lưu</Button>
-                    </div>
-
+                        <div>
+                            <QueryBuilder controlClassnames={{ queryBuilder: 'queryBuilder-branches' }} fields={initializeField} query={query} onQueryChange={onChange} />
+                        </div>
+                        <div style={{ display: 'flex', justifyContent: 'end' }}>
+                            <Button type="primary" style={{ margin: '10px 0' }} onClick={saveConfigNode}>Lưu</Button>
+                        </div>
+                    </Spin>
                 </Col>
 
             </Row>

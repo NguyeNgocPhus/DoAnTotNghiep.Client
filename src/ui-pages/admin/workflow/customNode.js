@@ -44,23 +44,16 @@ export const CustomNode = ({
             {
                 data.forceToolbarVisible &&
                 <div style={{position:'absolute', top:'-50%'}}>
-                    <button onClick={onClick}>Bước tiếp theo</button>
+                    <button onClick={onClick}>Biếp theo</button>
 
                 </div>
             }
 
-             <Handle type="target" position={Position.Top} isConnectable={isConnectable} />
+                <Handle type="target" position={Position.Top} isConnectable={isConnectable} />
             <div>
                 <label htmlFor="text">{label} :</label>
                 {/* <input id="text" name="text" onChange={onChange} className="nodrag" /> */}
             </div>
-            {/* {/* <Handle
-                type="source"
-                position={Position.Bottom}
-                id="a"
-                style={handleStyle}
-                isConnectable={isConnectable}
-            /> */}
             <Handle type="source" position={Position.Bottom} id="b" isConnectable={isConnectable} />
         </div>
     );

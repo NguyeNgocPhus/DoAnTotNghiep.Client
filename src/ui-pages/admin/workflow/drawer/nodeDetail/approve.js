@@ -14,13 +14,13 @@ export const ApproveDetail = ({ onUpdateNodes, data, onClose }) => {
 
     const [rolesApiData, requestGetRolesApiData] = useGetRoles();
     const [nodeDefinitionApiData, requestGetNodeTemplateApiData] = useGetNodeDefinition();
-    const [loading,setLoading] = useState(false);
+    const [loading, setLoading] = useState(false);
     const [description, setDescription] = useState("");
     const { id } = useParams();
 
     useEffect(() => {
         requestGetRolesApiData();
-        console.log("data",data)
+        console.log("data", data)
         requestGetNodeTemplateApiData({
             id: id,
             activityId: data.id,
@@ -84,26 +84,26 @@ export const ApproveDetail = ({ onUpdateNodes, data, onClose }) => {
                 </Col>
                 <Divider />
                 <Col span={24}>
-                   <Spin size="small" spinning={loading}>
-                    <div style={{ display: 'flex', justifyContent: 'start', gap: '10px', alignItems: 'center', margin: '10px 0' }}>
-                        <SettingOutlined />
-                        <Typography.Title style={{ margin: 0 }} level={5}>Thiết lập action</Typography.Title>
-                    </div>
+                    <Spin size="small" spinning={loading}>
+                        <div style={{ display: 'flex', justifyContent: 'start', gap: '10px', alignItems: 'center', margin: '10px 0' }}>
+                            <SettingOutlined />
+                            <Typography.Title style={{ margin: 0 }} level={5}>Thiết lập action</Typography.Title>
+                        </div>
 
-                    <div>
-                        <Typography.Text level={5}>Chọn quyền phê duyệt</Typography.Text>
-                        <Select style={{ width: '100%' }} value={roleId} onChange={onChange}>
-                            {listRole.length > 0 && listRole.map(x => {
-                                return (
-                                    <Select.Option key={x.id} value={x.id}>{x.name}</Select.Option>
-                                )
-                            })}
+                        <div>
+                            <Typography.Text level={5}>Chọn quyền phê duyệt</Typography.Text>
+                            <Select style={{ width: '100%' }} value={roleId} onChange={onChange}>
+                                {listRole.length > 0 && listRole.map(x => {
+                                    return (
+                                        <Select.Option key={x.id} value={x.id}>{x.name}</Select.Option>
+                                    )
+                                })}
 
-                        </Select>
-                    </div>
-                    <div style={{ display: 'flex', justifyContent: 'end' }}>
-                        <Button type="primary" style={{ margin: '10px 0' }} onClick={saveConfigNode}>Lưu</Button>
-                    </div>
+                            </Select>
+                        </div>
+                        <div style={{ display: 'flex', justifyContent: 'end' }}>
+                            <Button type="primary" style={{ margin: '10px 0' }} onClick={saveConfigNode}>Lưu</Button>
+                        </div>
                     </Spin>
                 </Col>
 

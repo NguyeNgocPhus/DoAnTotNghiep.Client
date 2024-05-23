@@ -1,9 +1,9 @@
 import { useCallback } from 'react';
-import { useStore, getStraightPath , getBezierPath} from 'reactflow';
+import { useStore, getStraightPath ,EdgeLabelRenderer, getBezierPath} from 'reactflow';
 
 import { getEdgeParams } from './utils.js';
 
-export const CustomEdge = ({ id, source, target, markerEnd, style }) => {
+export const CustomEdge = ({ id, source, target, markerEnd, style, data }) => {
   const sourceNode = useStore(useCallback((store) => store.nodeInternals.get(source), [source]));
   const targetNode = useStore(useCallback((store) => store.nodeInternals.get(target), [target]));
 
@@ -13,121 +13,51 @@ export const CustomEdge = ({ id, source, target, markerEnd, style }) => {
 
   const { sx, sy, tx, ty } = getEdgeParams(sourceNode, targetNode);
 
-  const [edgePath] = getBezierPath({
+  const [edgePath, labelX, labelY] = getBezierPath({
     sourceX: sx,
     sourceY: sy,
     targetX: tx,
     targetY: ty,
   });
-
   return (
-    <path
+    <>
+     <path
       id={id}
       className="react-flow__edge-path"
       d={edgePath}
       markerEnd={markerEnd}
       style={style}
     />
+    {data !==undefined && <EdgeLabelRenderer>
+        <div
+          style={{
+            position: 'absolute',
+            transform: `translate(-50%, -50%) translate(${labelX}px,${labelY}px)`,
+           
+        
+           
+            // everything inside EdgeLabelRenderer has no pointer events by default
+            // if you have an interactive element, set pointer-events: all
+            pointerEvents: 'all',
+          }}
+          className="nodrag nopan"
+        >
+          {data ?  
+            <div style={{ padding:'2px',
+            fontSize: 12,
+            borderRadius:'10px',
+            fontSize:'9px',
+            color:'white',backgroundColor:"green"}}>Đúng</div>:
+            <div style={{padding:'2px',
+            fontSize: 12,
+            borderRadius:'10px',
+            fontSize:'9px',
+            color:'white',backgroundColor:"red"}}>Sai</div>
+          }
+        </div>
+      </EdgeLabelRenderer>}
+    
+    </>
+   
   );
 }
-
-
-// import { useEffect, useState } from 'react';
-// import {
-//   BaseEdge,getBezierPath, getStraightPath, EdgeLabelRenderer,
-//   useReactFlow,
-// } from 'reactflow';
-
-// export const CustomEdge = ({
-//   id,
-//   animated,
-//   data,
-//   style,
-//   selected,
-//   source,
-//   target,
-//   sourceHandleId,
-//   targetHandleId,
-//   interactionWidth,
-//   sourceX,
-//   sourceY,
-//   targetX,
-//   targetY,
-//   sourcePosition,
-//   targetPosition,
-//   label,
-//   labelStyle,
-//   labelShowBg,
-//   labelBgStyle,
-//   labelBgPadding,
-//   labelBgBorderRadius,
-//   markerStart,
-//   markerEnd,
-//   pathOptions
-// }) => {
-//   // console.log("custom edge", {
-//   //   id,
-//   //   animated,
-//   //   data,
-//   //   style,
-//   //   selected,
-//   //   source,
-//   //   target,
-//   //   sourceHandleId,
-//   //   targetHandleId,
-//   //   interactionWidth,
-//   //   sourceX,
-//   //   sourceY,
-//   //   targetX,
-//   //   targetY,
-//   //   sourcePosition,
-//   //   targetPosition,
-//   //   label,
-//   //   labelStyle,
-//   //   labelShowBg,
-//   //   labelBgStyle,
-//   //   labelBgPadding,
-//   //   labelBgBorderRadius,
-//   //   markerStart,
-//   //   markerEnd,
-//   //   pathOptions
-//   // });
-//   const { setEdges } = useReactFlow();
-//   const [ showBtnDeleteEdge, setShowBtnDeleteEdge ] = useState(false);
-
-//   const [edgePath, labelX, labelY] = getBezierPath({
-//     sourceX,
-//     sourceY,
-//     targetX,
-//     targetY,
-//   });
-//   useEffect(() => {
-//     if (selected) {
-//       setShowBtnDeleteEdge(true);
-//     } else {
-//       setShowBtnDeleteEdge(false);
-//     }
-//   }, [selected]);
-
-//   return (
-//     <>
-//       <BaseEdge id={id} path={edgePath} />
-//       <EdgeLabelRenderer>
-//         {showBtnDeleteEdge && <button
-//           style={{
-//             position: 'absolute',
-//             transform: `translate(-50%, -50%) translate(${labelX}px, ${labelY}px)`,
-//             pointerEvents: 'all',
-//           }}
-          
-//           onClick={() => {
-//             setEdges((es) => es.filter((e) => e.id !== id));
-//           }}
-//         >
-//           delete
-//         </button>}
-
-//       </EdgeLabelRenderer>
-//     </>
-//   );
-// }

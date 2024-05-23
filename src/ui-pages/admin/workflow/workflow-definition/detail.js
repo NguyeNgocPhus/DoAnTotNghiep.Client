@@ -16,16 +16,7 @@ import { useParams } from 'react-router-dom';
 import { REQUEST_STATE } from '../../../../app-config/constants';
 import { useUpdateWfDefinition } from '../../../../store/workflow/use-update-wf-definition';
 import dagre from 'dagre';
-// const initialNodes = [
-//     { id: 'a', position: { x: 0, y: 0 }, type: 'custom-node', data: { label: 'Node A', forceToolbarVisible: false } },
-//     { id: 'b', position: { x: 0, y: 100 }, type: 'custom-node', data: { label: 'Node B', forceToolbarVisible: false } },
-//     { id: 'c', position: { x: 0, y: 200 }, type: 'custom-node', data: { label: 'Node C', forceToolbarVisible: false } },
-// ];
 
-// const initialEdges = [
-//     { id: 'a->b', type: 'custom-edge', source: 'a', target: 'b' },
-//     { id: 'b->c', type: 'custom-edge', source: 'b', target: 'c' },
-// ];
 
 const edgeTypes = {
     'custom-edge': CustomEdge,
@@ -106,11 +97,15 @@ export const WorkflowDetail = (props) => {
     const onConnect = useCallback(
         (connection) => {
 
-            const callBackSetEdge = () => {
+            const callBackSetEdge = (bool) => {
+
+                connection.type = "custom-edge";
+                connection.data = bool;
                 setEdges((eds) => addEdge(connection, eds));
                 setNodes((nds) => {
                     return nds.map(node => {
                         if (node.id === connection.target) {
+                           
                             return {
                                 ...node,
                                 data: {
@@ -125,11 +120,15 @@ export const WorkflowDetail = (props) => {
             }
             setNodes((nds) => {
                 return nds.map(node => {
+                
                     if (node.id === connection.target) {
+                        const isNodeCondition = nds.some(x=>x.id === connection.source && x.type === "Condition");
+                        console.log("is", isNodeCondition);
                         return {
                             ...node,
                             data: {
                                 ...node.data,
+                                isNodeCondition: isNodeCondition,
                                 forceToolbarVisible: true,
                                 callBackSetEdge: callBackSetEdge
                             }
@@ -169,7 +168,7 @@ export const WorkflowDetail = (props) => {
             if (typeof typeNode === 'undefined' || !typeNode) {
                 return;
             }
-            console.log("typeNode", typeNode);
+        
 
             // reactFlowInstance.project was renamed to reactFlowInstance.screenToFlowPosition
             // and you don't need to subtract the reactFlowBounds.left/top anymore

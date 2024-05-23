@@ -21,9 +21,8 @@ const nodeTypes = {
 };
 
 const generateWfDefinitionForApi = ({ id, name, version, nodes, edges }) => {
-    console.log("nodes", nodes)
     const activities = nodes.map(node => {
-
+    
         const properties = [
             {
                 name: "Position",
@@ -54,6 +53,7 @@ const generateWfDefinitionForApi = ({ id, name, version, nodes, edges }) => {
                 }
             )
         }
+
         if (node.type === "Branch") {
             properties.push(
                 {
@@ -81,9 +81,13 @@ const generateWfDefinitionForApi = ({ id, name, version, nodes, edges }) => {
     const connections = edges.map(edge => {
         let outcome = "Done";
         const activity = activities.find(x => x.activityId === edge.source);
-        console.log("activity ne", activity);
+        
         if (activity.type === "Branch") {
             outcome = `b${index}`;
+            index = index + 1;
+        }
+        if (activity.type === "Condition") {
+            outcome = edge.data === true ? "True" :"False";
             index = index + 1;
         }
         return {
@@ -113,16 +117,6 @@ const generateWfDefinitionForApi = ({ id, name, version, nodes, edges }) => {
 }
 const generateWfDefinitionForUI = ({ nodes, edges }) => {
 
-    // const initialNodes = [
-    //     { id: 'a', position: { x: 0, y: 0 }, type: 'custom-node', data: { label: 'Node A', forceToolbarVisible: false } },
-    //     { id: 'b', position: { x: 0, y: 100 }, type: 'custom-node', data: { label: 'Node B', forceToolbarVisible: false } },
-    //     { id: 'c', position: { x: 0, y: 200 }, type: 'custom-node', data: { label: 'Node C', forceToolbarVisible: false } },
-    // ];
-
-    // const initialEdges = [
-    //     { id: 'a->b', type: 'custom-edge', source: 'a', target: 'b' },
-    //     { id: 'b->c', type: 'custom-edge', source: 'b', target: 'c' },
-    // ];
     const initialNodes = nodes.map(x => {
         var position = x.properties.find(p => p.name === "Position").expressions.Literal;
         var description = x.properties.find(p => p.name === "Description")?.expressions?.Literal;
@@ -141,62 +135,23 @@ const generateWfDefinitionForUI = ({ nodes, edges }) => {
 
     });
     const initialEdges = edges.map((x, index) => {
+        let data = undefined;
+        if(x.outcome === "True"){
+            data= true;
+        }else if(x.outcome === "False"){
+            data= false;
+        }
+
+
         return {
             id: index,
             type: 'custom-edge',
+            data: data,
             source: x.sourceActivityId,
             target: x.targetActivityId
         }
     });
     return { initialNodes, initialEdges }
-}
-
-const viewWorkflow = (nodes, edges) => {
-
-    const activities = nodes.map(node => {
-
-        return {
-            activityId: node.id,
-            category: "",
-            displayName: node.data.name,
-            loadWorkflowContext: false,
-            persistWorkflow: false,
-            propertyStorageProviders: {},
-            saveWorkflowContext: false,
-            type: node.type,
-            properties: [
-                {
-                    name: "Path",
-                    expressions: {
-                        Literal: "/api/test"
-                    }
-                }
-            ]
-        }
-    });
-    const connections = edges.map(edge => {
-
-        return {
-            outcome: "DONE",
-            sourceActivityId: edge.source,
-            targetActivityId: edge.target
-        }
-    });
-
-    let workflow = {
-        workflowDefinitionId: uuidv4(),
-        variables: "{}",
-        publish: true,
-        persistenceBehavior: "WorkflowBurst",
-        isSingleton: false,
-        deleteCompletedInstances: false,
-        activities: activities,
-        connections: connections,
-        name: "oke test",
-        displayName: "display name"
-    };
-
-    return workflow;
 }
 
 export {

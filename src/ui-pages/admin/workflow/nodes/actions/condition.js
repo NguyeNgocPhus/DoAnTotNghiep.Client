@@ -1,4 +1,4 @@
-import { Button ,Typography} from 'antd';
+import { Button, Typography } from 'antd';
 import { useCallback, useEffect, useState } from 'react';
 import { Handle, NodeToolbar, Position, useStore, useStoreActions } from 'reactflow';
 import "../styles.css";
@@ -28,34 +28,34 @@ export const ConditionNode = ({
     const isTarget = connectionNodeId && connectionNodeId !== id;
 
 
-    const onClick = () => {
-        data.callBackSetEdge();
+    const onClick = (bool) => {
+        data.callBackSetEdge(bool);
     }
 
 
-    const { name , description} = data;
+    const { name, description, isNodeCondition } = data;
 
 
     return (
         <div className="text-updater-node">
             {
-                data.forceToolbarVisible &&
-                <div style={{ position: 'absolute', top: '-50%' }}>
-                    <button onClick={onClick}>Bước tiếp theo</button>
-
-                </div>
+                data.forceToolbarVisible && (
+                    <div style={{ position: 'absolute', top: '-50%' }}>
+                          <button onClick={()=>onClick(undefined)}>Bước tiếp theo</button>
+                    </div> 
+                )
             }
 
             <Handle type="target" position={Position.Top} isConnectable={isConnectable} />
             <div className='node-info'>
                 <div className='node-image'>
-                   <ConditionIcon></ConditionIcon>
+                    <ConditionIcon></ConditionIcon>
                 </div>
                 <div className='node-name'>
-                <Typography.Text strong>{name}</Typography.Text>
+                    <Typography.Text strong>{name}</Typography.Text>
                     <Typography.Text>{description}</Typography.Text>
                 </div>
-                
+
                 {/* <input id="text" name="text" onChange={onChange} className="nodrag" /> */}
             </div>
             {/* {/* <Handle

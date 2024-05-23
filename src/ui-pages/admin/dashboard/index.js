@@ -78,7 +78,7 @@ export const DashBoard = () => {
             </div>
             <div className="chart">
 
-              <Line style={{ lineWidth: 2 }} data={listData} xField={'hour'} yField={'value'} colorField={'category'} height={400} />
+              <Line style={{ lineWidth: 2 }} padding={'auto'} legend={true} repsponsive={true} forceFit={true} data={listData} xField={'hour'} yField={'value'} colorField={'category'} height={390} />
             </div>
 
           </Col>

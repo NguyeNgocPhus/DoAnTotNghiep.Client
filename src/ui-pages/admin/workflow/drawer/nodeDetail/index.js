@@ -59,7 +59,7 @@ export const NodeDetailDrawer = ({ open, data, onClose, onUpdateNodes }) => {
     // console.log("nodeDetail",nodeDetail)
     return (
         <>
-            <Drawer placement="left" getContainer={false} mask={false} closable={false} open={open}>
+            <Drawer width={430} placement="left" getContainer={false} mask={false} closable={false} open={open}>
                 {/* <Row>
                     <Col span={24} style={{ display: 'flex', justifyContent: 'space-between' }}>
                         <div className='node-info'>

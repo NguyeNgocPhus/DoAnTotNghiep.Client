@@ -28,8 +28,8 @@ export const RejectNode = ({
     const isTarget = connectionNodeId && connectionNodeId !== id;
 
 
-    const onClick = () => {
-        data.callBackSetEdge();
+    const onClick = (bool) => {
+        data.callBackSetEdge(bool);
     }
 
 
@@ -39,11 +39,15 @@ export const RejectNode = ({
     return (
         <div className="text-updater-node">
             {
-                data.forceToolbarVisible &&
-                <div style={{ position: 'absolute', top: '-50%' }}>
-                    <button onClick={onClick}>Bước tiếp theo</button>
-
-                </div>
+                data.forceToolbarVisible && (!data.isNodeCondition ?
+                    <div style={{ position: 'absolute', top: '-50%' }}>
+                        <button onClick={()=>onClick(undefined)}>Bước tiếp theo</button>
+                    </div> :
+                    <div style={{ position: 'absolute', top: '-50%' }}>
+                        <button onClick={()=>onClick(true)}>Đúng</button>
+                        <button onClick={()=>onClick(false)}>Sai</button>
+                    </div>
+                )
             }
 
             <Handle type="target" position={Position.Top} isConnectable={isConnectable} />
