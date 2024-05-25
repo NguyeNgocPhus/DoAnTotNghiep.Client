@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import ReactFlow, { addEdge, useNodesState, useEdgesState, Panel, Background, Controls, MarkerType, useReactFlow, BackgroundVariant } from 'reactflow';
+import ReactFlow, { addEdge, useNodesState, useEdgesState, Panel, Background, Controls, MarkerType, useReactFlow, BackgroundVariant, MiniMap } from 'reactflow';
 import { CustomEdge } from '../customEdge';
 import "./styles.css";
 import 'reactflow/dist/style.css';
@@ -67,7 +67,7 @@ export const WorkflowDetail = (props) => {
     useEffect(() => {
         setNodes([]);
         setEdges([]);
-
+        // zoomOut({ duration: 800 })
         requestWfDefinitionApiData({ id });
     }, []);
 
@@ -346,6 +346,7 @@ export const WorkflowDetail = (props) => {
                         edgeTypes={edgeTypes}
                         nodeTypes={nodeTypes}
                         fitView
+                        
                         connectionLineStyle={connectionLineStyle}
                         connectionLineComponent={CustomConnectionLine}
                         preventScrolling={false}
@@ -363,7 +364,7 @@ export const WorkflowDetail = (props) => {
                         <Controls showInteractive={false} />
                         <ListNodeDrawer open={openListNodeDrawer} onClose={() => { setOpenListNodeDrawer(false) }}></ListNodeDrawer>
                         <NodeDetailDrawer onUpdateNodes={onUpdateNodes} open={openNodeDetailDrawer} data={dataNodeDetail} onClose={() => { setNodeDetailDrawer(false) }}></NodeDetailDrawer>
-
+                        <MiniMap />
                         <Background variant={BackgroundVariant.Dots} />
                     </ReactFlow>
                 </div>

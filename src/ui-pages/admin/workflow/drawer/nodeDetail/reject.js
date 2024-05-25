@@ -62,7 +62,7 @@ export const RejectDetail = ({ onUpdateNodes, data, onClose }) => {
         setRoleId(value);
     }
     const saveConfigNode = () => {
-        console.log("roleId", roleId);
+        // console.log("roleId", roleId);
         const data1 = {
             roleId: roleId,
         };

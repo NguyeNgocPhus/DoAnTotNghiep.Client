@@ -20,7 +20,7 @@ export const ApproveDetail = ({ onUpdateNodes, data, onClose }) => {
 
     useEffect(() => {
         requestGetRolesApiData();
-        console.log("data", data)
+        // console.log("data", data)
         requestGetNodeTemplateApiData({
             id: id,
             activityId: data.id,
@@ -60,7 +60,7 @@ export const ApproveDetail = ({ onUpdateNodes, data, onClose }) => {
         setRoleId(value);
     }
     const saveConfigNode = () => {
-        console.log("roleId", roleId);
+        // console.log("roleId", roleId);
         const data1 = {
             roleId: roleId,
         };

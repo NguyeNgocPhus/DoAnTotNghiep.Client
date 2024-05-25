@@ -10,15 +10,15 @@ import { useGetNodeDefinition } from "../../../../../store/workflow/use-get-node
 import { useParams } from "react-router-dom";
 import { REQUEST_STATE } from "../../../../../app-config/constants";
 
-const operators = defaultOperators.filter((op) => op.name === '=' || op.name === '!=')
+const operators = defaultOperators.filter((op) => op.name === '=' || op.name === '!=');
 const fields = [
     {
-        name: 'role', 
+        name: 'Roles', 
         operators: operators, 
-        label: 'Quyền',
+        label: 'Quyền người nhập',
         valueEditorType: 'select',
         values: [
-            {name:"68fc4ec0-18e1-4481-b0f0-24dd4ca3e364",label:'2'}
+        
         ]
     }
 ];
@@ -44,21 +44,22 @@ export const ConditionDetail = ({ onUpdateNodes, data, onClose }) => {
         if (rolesApiData !== null) {
             if (rolesApiData.state === REQUEST_STATE.SUCCESS) {
                 setLoading(false);
-              
+                // console.log("rolesApiData",rolesApiData)
                 var roles = rolesApiData.data.map(x => {
                     return {
-                        name: x.id,
+                        name: x.roleCode,
                         label: x.name,
                     }
 
                 })
                 var data = initializeField.map(x=>{
-                    if(x.name === "role"){
+                    if(x.name === "Roles"){
                         x.values = roles;
                         return x;
                     }
                     return x;
                 })
+                console.log(data);
                 setInitializeFields([...data])
             } else if (rolesApiData.state === REQUEST_STATE.ERROR) {
 
@@ -93,9 +94,11 @@ export const ConditionDetail = ({ onUpdateNodes, data, onClose }) => {
         ],
     });
     const onChange = (value) => {
+
         setQuery(value);
     }
     const saveConfigNode = () => {
+
         onUpdateNodes({
             nodeId: data.id,
             customData: JSON.stringify(query),

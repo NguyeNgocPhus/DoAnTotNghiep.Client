@@ -55,14 +55,14 @@ export const CreateUser = ({ isModalOpen, handleCancel , onCreateUserSuccess}) =
     }, [createUserApiData])
 
     const onFinish = (values) => {
-        console.log('Success:', values);
+        // console.log('Success:', values);
         requestCreateUserApiData(values);
     };
     const onFinishFailed = (errorInfo) => {
-        console.log('Failed:', errorInfo);
+        // console.log('Failed:', errorInfo);
     };
     const handleSelectChange = (value) => {
-        console.log(`selected ${value}`);
+        // console.log(`selected ${value}`);
     };
 
     const options = [];

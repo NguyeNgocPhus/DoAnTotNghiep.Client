@@ -23,7 +23,7 @@ export const Notification = ({ }) => {
                 setInitLoading(false);
 
                 setList(listNoficationApiData.data);
-                console.log("listNoficationApiData", listNoficationApiData.data);
+                // console.log("listNoficationApiData", listNoficationApiData.data);
             } else if (listNoficationApiData.state === REQUEST_STATE.ERROR) {
 
             } else if (listNoficationApiData.state === REQUEST_STATE.REQUEST) {
@@ -56,7 +56,7 @@ export const Notification = ({ }) => {
             </div>
         ) : null;
     const onUpdateNotification = (id) => {
-        console.log("id",id)
+        // console.log("id",id)
         requestUpdateNotification({Id:id})
     }
     return (

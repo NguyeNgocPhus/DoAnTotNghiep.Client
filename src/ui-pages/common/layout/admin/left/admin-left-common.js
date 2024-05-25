@@ -27,6 +27,10 @@ export const AdminLeftCommomLayout = ({ children }) => {
 
     ]
     const location = useLocation();
+    
+    const router = location.pathname.split("/");
+    
+    const key = router[2];
    
     if(showDashboard){
         
@@ -35,7 +39,7 @@ export const AdminLeftCommomLayout = ({ children }) => {
                 icon: <ProductOutlined style={{ fontSize: '20px' }} />,
                 name: "Dashboard",
                 route: "/admin/dashboard",
-                isActive: location.pathname === "/admin/dashboard",
+                isActive: key === "dashboard",
             })
     }
     if(showRole){
@@ -44,7 +48,7 @@ export const AdminLeftCommomLayout = ({ children }) => {
                 icon: <UsergroupAddOutlined style={{ fontSize: '20px' }} />,
                 name: "Quyền",
                 route: "/admin/roles",
-                isActive: location.pathname === "/admin/roles",
+                isActive: key === "roles",
             })
     }
     if(showUser){
@@ -53,7 +57,7 @@ export const AdminLeftCommomLayout = ({ children }) => {
                 icon: <UserOutlined style={{ fontSize: '20px' }} />,
                 name: "Người dùng",
                 route: "/admin/users",
-                isActive: location.pathname === "/admin/users",
+                isActive: key === "users",
             })
     }
     if(showDocument){
@@ -62,7 +66,7 @@ export const AdminLeftCommomLayout = ({ children }) => {
                 icon: <DownloadOutlined  style={{ fontSize: '20px' }} />,
                 name: "Nhập dữ liệu",
                 route: "/admin/documents",
-                isActive: location.pathname === "/admin/documents",
+                isActive: key === "documents",
             })
     }
     if(showApprove){
@@ -71,7 +75,7 @@ export const AdminLeftCommomLayout = ({ children }) => {
                 icon: <SolutionOutlined style={{ fontSize: '20px' }} />,
                 name: "Phê duyệt",
                 route: "/admin/approve",
-                isActive:  location.pathname === "/admin/approve",
+                isActive:  key === "approve",
             })
     }
     if(showWorkflow){
@@ -80,7 +84,7 @@ export const AdminLeftCommomLayout = ({ children }) => {
                 icon: <BranchesOutlined style={{ fontSize: '20px' }} />,
                 name: "Quy trình phê duyệt",
                 route: "/admin/workflows",
-                isActive: false,
+                isActive: key === "workflows" || key === "workflow-definition" ,
             })
     }
 
@@ -105,7 +109,7 @@ export const AdminLeftCommomLayout = ({ children }) => {
                 }
             }
         })]);
-        console.log("menus", menus)
+        // console.log("menus", menus)
         setItemClick(!itemClick);
         navigate(route);
     }

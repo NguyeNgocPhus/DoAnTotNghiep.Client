@@ -202,7 +202,7 @@ export const ListWorkflowDefinition = () => {
                         </Spin> */}
                         <div className='table'>
                             <div className='table_add'>
-                                <Button onClick={showModal} icon={<PlusOutlined />} type="primary" size="large">Tạo workflow</Button>
+                                <Button onClick={showModal} icon={<PlusOutlined />} type="primary" size="large">Tạo quy trình</Button>
                             </div>  
                             <Row className='table_filter' gutter={[15,0]}>
                                 <Col span={4} className='field_filter'>
@@ -235,7 +235,7 @@ export const ListWorkflowDefinition = () => {
                         </div>
                     </Col>
                 </Row>
-                <Modal title="Tạo flow mới" open={isModalOpen} onCancel={handleCancel} footer={null}>
+                <Modal title="Tạo mới quy trình" open={isModalOpen} onCancel={handleCancel} footer={null}>
                     <Form
                         name="basic"
                         layout="vertical"
@@ -244,7 +244,7 @@ export const ListWorkflowDefinition = () => {
                         autoComplete="off"
                     >
                         <Form.Item
-                            label="Tên Workflow"
+                            label="Tên quy trình"
                             name="name"
 
                         >
@@ -261,7 +261,7 @@ export const ListWorkflowDefinition = () => {
 
                         <Form.Item >
                             <Button type="primary" htmlType="submit">
-                                Submit
+                                Tạo mới
                             </Button>
                         </Form.Item>
                     </Form>

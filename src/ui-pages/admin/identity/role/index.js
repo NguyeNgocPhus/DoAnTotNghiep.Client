@@ -76,10 +76,10 @@ export const ListRole = () => {
         setIsModalOpen(false);
     };
     const onFinish = (values) => {
-        console.log('Success:', values);
+        // console.log('Success:', values);
     };
     const onFinishFailed = (errorInfo) => {
-        console.log('Failed:', errorInfo);
+        // console.log('Failed:', errorInfo);
     };
     const onChange = (page) => {
 

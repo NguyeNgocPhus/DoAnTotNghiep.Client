@@ -41,7 +41,7 @@ export const FieldItem = ({listColorCode,listColorName,listSize}) =>{
         }
     }   
 
-    console.log(displayColor);
+   
     return (
         <Col span={4}  className="fielItem">
             <div style={{height:"10px",fontWeight:700,display:"flex",alignItems:"center"}}>GIÁ -</div>

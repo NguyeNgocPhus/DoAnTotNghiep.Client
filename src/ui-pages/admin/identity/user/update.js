@@ -33,7 +33,7 @@ export const UpdateUser = ({ id, isModalOpen, handleCancel, onUpdateUserSuccess 
     useEffect(() => {
         if (rolesApiData !== null) {
             if (rolesApiData.state === REQUEST_STATE.SUCCESS) {
-                console.log("rolesApiData",rolesApiData)
+                // console.log("rolesApiData",rolesApiData)
                 var roles = rolesApiData.data.map(x => {
                     return {
                         label: x.name,
@@ -82,7 +82,7 @@ export const UpdateUser = ({ id, isModalOpen, handleCancel, onUpdateUserSuccess 
 
 
     const onFinish = (values) => {
-        console.log("values",values)
+        // console.log("values",values)
         const userUpdate = {
             ...values,
             id
@@ -91,10 +91,10 @@ export const UpdateUser = ({ id, isModalOpen, handleCancel, onUpdateUserSuccess 
         requestUpdateUserApiData(userUpdate)
     };
     const onFinishFailed = (errorInfo) => {
-        console.log('Failed:', errorInfo);
+        // console.log('Failed:', errorInfo);
     };
     const handleSelectChange = (value) => {
-        console.log(`selected ${value}`);
+        // console.log(`selected ${value}`);
     };
 
 

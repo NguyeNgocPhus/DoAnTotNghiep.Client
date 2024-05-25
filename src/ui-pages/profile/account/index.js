@@ -4,8 +4,6 @@ import { Col, Row } from "antd";
 
 export const AccountProfile = ({myProfile}) =>{
 
-    
-    console.log(myProfile);
     return (
         <div>
              <div className="title-info">TÀI KHOẢN CỦA TUI</div>

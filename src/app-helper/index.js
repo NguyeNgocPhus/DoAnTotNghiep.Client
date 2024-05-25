@@ -1,7 +1,7 @@
 import { REQUEST_STATE } from "../app-config/constants";
 
 export function log(...params) {
-	console.log(...params);
+	// console.log(...params);
 }
 
 export function cancel(source) {

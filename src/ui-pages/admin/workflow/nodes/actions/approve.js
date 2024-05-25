@@ -30,7 +30,7 @@ export const ApproveNode = ({
 
 
     const onClick = (bool = undefined) => {
-        console.log(bool);
+        // console.log(bool);
         data.callBackSetEdge(bool);
     }
 

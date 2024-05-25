@@ -229,10 +229,13 @@ export const ListApprove = (props) => {
         if (workflowActivityData !== null) {
             if (workflowActivityData.state === REQUEST_STATE.SUCCESS) {
                 setLoadingModal(false);
+                console.log("workflowActivityData.data.actionLogs",workflowActivityData.data.actionLogs)
 
                 if (workflowActivityData.data.activities.length === workflowActivityData.data.actionLogs.length) {
                     setIsEnd(true);
-                } else {
+                } else if(workflowActivityData.data.actionLogs.some(x=>x.activityName === "Finish")){
+                    setIsEnd(true);
+                }else {
                     setIsEnd(false);
                 }
 
@@ -421,7 +424,7 @@ export const ListApprove = (props) => {
                                     <Button size='small' onClick={onClearFilter}>Clear bộ lọc</Button>
                                 </Col>
                             </Row>
-                            <Table scroll={{ y: 600 }} className='table_data' size="middle" pagination={false} loading={loading} columns={columns} dataSource={listApprove} />
+                            <Table scroll={{ y: 450 }} className='table_data' size="middle" pagination={false} loading={loading} columns={columns} dataSource={listApprove} />
 
                             <div className='table_paging'>
                                 <div><b>Tổng số : {total}</b></div>

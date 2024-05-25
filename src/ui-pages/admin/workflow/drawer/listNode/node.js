@@ -61,7 +61,7 @@ export const Node = ({ node }) => {
 
     }
     const onClickNodeTrigger = () => {
-        console.log("onClickNodeTrigger")
+        // console.log("onClickNodeTrigger")
     }
     const onDragStart = (event, nodeType, nodeName, nodeDescription) => {
         event.dataTransfer.setData('type', nodeType);

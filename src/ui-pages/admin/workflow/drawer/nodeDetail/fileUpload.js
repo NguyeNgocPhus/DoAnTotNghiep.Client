@@ -63,7 +63,7 @@ export const FileUploadDetail = ({ onUpdateNodes, data, onClose }) => {
         const data1 = {
             importTemplateId: importTemplateId,
         };
-        console.log("data?.data?.description", description)
+        // console.log("data?.data?.description", description)
         onUpdateNodes({
             nodeId: data.id,
             customData: JSON.stringify(data1),
