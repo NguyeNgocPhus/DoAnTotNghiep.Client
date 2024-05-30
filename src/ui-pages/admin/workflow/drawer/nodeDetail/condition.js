@@ -9,14 +9,28 @@ import { useGetRoles } from "../../../../../store/auth/use-get-roles";
 import { useGetNodeDefinition } from "../../../../../store/workflow/use-get-node-definition";
 import { useParams } from "react-router-dom";
 import { REQUEST_STATE } from "../../../../../app-config/constants";
-
-const operators = defaultOperators.filter((op) => op.name === '=' || op.name === '!=');
+const operatorValid = ['<'
+,'>'
+, '<='
+, '>='
+, '=','!='];
+const operators = defaultOperators.filter((op) => operatorValid.includes(op.name) );
 const fields = [
     {
         name: 'Roles', 
         operators: operators, 
         label: 'Quyền người nhập',
         valueEditorType: 'select',
+        values: [
+        
+        ],
+        
+    },
+    {
+        name: 'CreatedTime', 
+        operators: operators, 
+        label: 'Ngày nhập dữ liệu',
+        inputType: 'date',
         values: [
         
         ]
@@ -43,7 +57,7 @@ export const ConditionDetail = ({ onUpdateNodes, data, onClose }) => {
     useEffect(() => {
         if (rolesApiData !== null) {
             if (rolesApiData.state === REQUEST_STATE.SUCCESS) {
-                setLoading(false);
+                
                 // console.log("rolesApiData",rolesApiData)
                 var roles = rolesApiData.data.map(x => {
                     return {
@@ -59,10 +73,11 @@ export const ConditionDetail = ({ onUpdateNodes, data, onClose }) => {
                     }
                     return x;
                 })
-                console.log(data);
+                // console.log(data);
                 setInitializeFields([...data])
+                setLoading(false);
             } else if (rolesApiData.state === REQUEST_STATE.ERROR) {
-
+                console.log("errr");
             } else if (rolesApiData.state === REQUEST_STATE.REQUEST) {
                 setLoading(true);
             }
@@ -74,8 +89,12 @@ export const ConditionDetail = ({ onUpdateNodes, data, onClose }) => {
             if (nodeDefinitionApiData.state === REQUEST_STATE.SUCCESS) {
 
                 var jsonData = JSON.parse(nodeDefinitionApiData?.data?.data)
-                setQuery(jsonData);
-                setLoading(false);
+                console.log(jsonData);
+                if(jsonData.rules !== undefined){
+                        setQuery(jsonData);
+                        setLoading(false);
+                }
+                
                
             } else if (nodeDefinitionApiData.state === REQUEST_STATE.ERROR) {
 
@@ -129,7 +148,7 @@ export const ConditionDetail = ({ onUpdateNodes, data, onClose }) => {
                         </div>
 
                         <div>
-                            <QueryBuilder controlClassnames={{ queryBuilder: 'queryBuilder-branches' }} fields={initializeField} query={query} onQueryChange={onChange} />
+                          <QueryBuilder controlClassnames={{ queryBuilder: 'queryBuilder-branches' }} fields={fields} query={query} onQueryChange={onChange} />
                         </div>
                         <div style={{ display: 'flex', justifyContent: 'end' }}>
                             <Button type="primary" style={{ margin: '10px 0' }} onClick={saveConfigNode}>Lưu</Button>

@@ -15,7 +15,7 @@ export const useGetRoles = () =>{
     }
     useEffect(()=>{
         return ()=>{
-        
+            setRoles({});
             Auth.cancelGetRoles();
         }
     },[])

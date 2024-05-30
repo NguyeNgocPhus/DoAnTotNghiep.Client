@@ -436,13 +436,13 @@ export const ListApprove = (props) => {
                 </Row>
                 <Modal title={"Phê duyệt tài liệu"} open={isModalOpen} onCancel={handleCancel} footer={null}>
                     <Spin size="large" spinning={loadingModal}>
-                        {dataApprove && <div>
+                        {dataApprove && <div style={{ marginBottom: '10px' }}>
                             <span><b>Quy trình : {`${dataApprove.importTemplateName}`}</b></span>
 
                         </div>
                         }
-                        {isEnd != null && <div style={{ display: 'flex', alignItems: 'center', marginBottom: '10px', gap: '5px' }}><b>Trạng thái : </b> <div>{isEnd ? statusEnd : statusProcess}</div></div>}
-                        {workflowActivityData.state === REQUEST_STATE.SUCCESS && workflowActivityData.data.activities.map(x => {
+                        {/* {isEnd != null && <div style={{ display: 'flex', alignItems: 'center', marginBottom: '10px', gap: '5px' }}><b>Trạng thái : </b> <div>{isEnd ? statusEnd : statusProcess}</div></div>} */}
+                        {workflowActivityData.state === REQUEST_STATE.SUCCESS && workflowActivityData.data.actionLogs.map(x => {
                             return <StepImport setIsEnd={setIsEnd} activity={x} actionLogs={workflowActivityData.data.actionLogs}></StepImport>
                         })}
 

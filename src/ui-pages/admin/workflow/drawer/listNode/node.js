@@ -9,9 +9,10 @@ import { FileUploadIcon } from "../../nodes/icons/file_upload_icon";
 import { ConditionIcon } from "../../nodes/icons/condition_icon";
 import { CronIcon } from "../../nodes/icons/cron_icon";
 import { FinishIcon } from "../../nodes/icons/finish_icon";
+import { UpdateStatusIcon } from "../../nodes/icons/update_status";
 
 export const Node = ({ node }) => {
-    
+
     let avatar = (
         <DownCircleTwoTone style={{ fontSize: '36px', height: '100%' }} />
     );
@@ -25,6 +26,11 @@ export const Node = ({ node }) => {
         case "Cron":
             avatar = (
                 <CronIcon style={{ fontSize: '36px', height: '100%' }} />
+            );
+            break;
+        case "UpdateStatus":
+            avatar = (
+                <UpdateStatusIcon style={{ fontSize: '36px', height: '100%' }} />
             );
             break;
         case "Reject":
@@ -52,11 +58,11 @@ export const Node = ({ node }) => {
                 <FileUploadIcon style={{ fontSize: '36px', height: '100%' }} />
             );
             break;
-            case "Finish":
-                avatar = (
-                    <FinishIcon style={{ fontSize: '36px', height: '100%' }} />
-                );
-                break;
+        case "Finish":
+            avatar = (
+                <FinishIcon style={{ fontSize: '36px', height: '100%' }} />
+            );
+            break;
         default:
 
     }
@@ -72,7 +78,7 @@ export const Node = ({ node }) => {
     return (
         <>
             <Comment className="dndnode"
-                onDragStart={(event) => onDragStart(event, node.key, node.name, node.description)} 
+                onDragStart={(event) => onDragStart(event, node.key, node.name, node.description)}
                 draggable
                 onClick={onClickNodeTrigger}
                 author={<b>{node.name}</b>}

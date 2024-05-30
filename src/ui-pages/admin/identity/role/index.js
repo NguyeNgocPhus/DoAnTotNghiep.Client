@@ -59,6 +59,7 @@ export const ListRole = () => {
                         active: true
                     }
                 });
+                setTotal(roles.length)
                 setListRole(roles);
             } else if (rolesApiData.state === REQUEST_STATE.ERROR) {
 

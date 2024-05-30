@@ -31,7 +31,6 @@ export const DashBoard = () => {
       list = list.concat(viewDashboardApiData.data.approves);
       list = list.concat(viewDashboardApiData.data.rejects);
       list = list.concat(viewDashboardApiData.data.uploads);
-      console.log(list)
       setListData([...list])
       setCountApprove(viewDashboardApiData.data.countApprove);
       setCountReject(viewDashboardApiData.data.countReject);
@@ -55,7 +54,10 @@ export const DashBoard = () => {
         <Row gutter={[0, 20]} style={{ padding: '30px' }}>
           <Col span={24}>
             <Row gutter={[0, 20]} style={{ display: 'flex', justifyContent: 'flex-start', gap: '20px' }}>
-
+            <Col span={5} className="dashboad_count">
+                <div className="count_text" >Số lần truy cập hệ thống</div>
+                <span className="count_number">2</span>
+              </Col>
               <Col span={5} className="dashboad_count">
                 <div className="count_text" >Số báo cáo nhập</div>
                 <span className="count_number">{countUpload}</span>

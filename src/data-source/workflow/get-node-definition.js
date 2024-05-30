@@ -10,13 +10,13 @@ export const cancelApiGetNodeDefinition = () => cancel(source);
 
 export const apiGetNodeDefinition = async (params) => {
 
-    cancelApiGetNodeDefinition();
+    // cancelApiGetNodeDefinition();
 
     source = getTokenSource();
  
     try {
         const response = await GET(`/Api/WorkflowDefinition/${params.id}/node/${params.type}?activityId=${params.activityId}`, {}, {
-            cancelToken: source.token
+            //  cancelToken: source.token
         })
         
         if(response?.data?.isSuccess === true){

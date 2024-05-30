@@ -258,7 +258,7 @@ export const ListDocument = () => {
                 <Row style={{ padding: '20px' }}>
                     <Col span={24}>
                         <div className='header_list_users'>
-                            <Title level={5}>Danh sách mẫu nhập</Title>
+                            <Title level={5}>Danh sách mẫu báo cáo</Title>
                             {/* <div>
                                {hasImportTemplate && <Button onClick={showFormCreate} icon={<PlusOutlined />} type="primary" size="large">Tạo mẫu nhập</Button>} 
                             </div> */}
@@ -268,7 +268,7 @@ export const ListDocument = () => {
                         <div className='table'>
                             <div className='table_add'>
 
-                                {hasImportTemplate && <Button onClick={showFormCreate} icon={<PlusOutlined />} type="primary" size="large">Tạo mẫu nhập</Button>}
+                                {hasImportTemplate && <Button onClick={showFormCreate} icon={<PlusOutlined />} type="primary" size="large">Tạo mẫu báo cáo</Button>}
 
                             </div>
                             <Row className='table_filter' gutter={[15, 0]}>

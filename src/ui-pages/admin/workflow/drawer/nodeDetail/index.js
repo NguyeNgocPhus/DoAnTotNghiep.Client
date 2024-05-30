@@ -8,49 +8,56 @@ import { BranchDetail } from "./branch";
 import { SendEmailDetail } from "./sendEmail";
 import { FileUploadDetail } from "./fileUpload";
 import { FinishDetail } from "./finish";
+import { UpdateStatusDetail } from "./update_status";
 export const NodeDetailDrawer = ({ open, data, onClose, onUpdateNodes }) => {
-    
-    let nodeDetail ;
+
+    let nodeDetail = null;
     switch (data.type) {
         case "Approve":
             nodeDetail = (
-                <ApproveDetail onUpdateNodes={onUpdateNodes} data={data} onClose={onClose}/>
+                <ApproveDetail onUpdateNodes={onUpdateNodes} data={data} onClose={onClose} />
+            );
+
+            break;
+        case "UpdateStatus":
+            nodeDetail = (
+                <UpdateStatusDetail onUpdateNodes={onUpdateNodes} data={data} onClose={onClose} />
             );
 
             break;
         case "Cron":
             nodeDetail = (
-                <CronDetail onUpdateNodes={onUpdateNodes} data={data}  onClose={onClose}/>
+                <CronDetail onUpdateNodes={onUpdateNodes} data={data} onClose={onClose} />
             );
             break;
         case "Reject":
             nodeDetail = (
-                <RejectDetail onUpdateNodes={onUpdateNodes} data={data}  onClose={onClose}/>
+                <RejectDetail onUpdateNodes={onUpdateNodes} data={data} onClose={onClose} />
             );
             break;
         case "Condition":
             nodeDetail = (
-                <ConditionDetail onUpdateNodes={onUpdateNodes} data={data}  onClose={onClose}/>
+                <ConditionDetail onUpdateNodes={onUpdateNodes} data={data} onClose={onClose} />
             );
             break;
         case "Branch":
             nodeDetail = (
-                <BranchDetail onUpdateNodes={onUpdateNodes} data={data}  onClose={onClose}/>
+                <BranchDetail onUpdateNodes={onUpdateNodes} data={data} onClose={onClose} />
             );
             break;
         case "SendEmail":
             nodeDetail = (
-                <SendEmailDetail onUpdateNodes={onUpdateNodes} data={data}  onClose={onClose}/>
+                <SendEmailDetail onUpdateNodes={onUpdateNodes} data={data} onClose={onClose} />
             );
             break;
         case "FileUpload":
-            nodeDetail =(
-                <FileUploadDetail onUpdateNodes={onUpdateNodes} data={data}  onClose={onClose}/>
+            nodeDetail = (
+                <FileUploadDetail onUpdateNodes={onUpdateNodes} data={data} onClose={onClose} />
             );
             break;
         case "Finish":
-            nodeDetail =(
-                <FinishDetail onUpdateNodes={onUpdateNodes} data={data}  onClose={onClose}/>
+            nodeDetail = (
+                <FinishDetail onUpdateNodes={onUpdateNodes} data={data} onClose={onClose} />
             );
             break;
         default:
@@ -82,7 +89,7 @@ export const NodeDetailDrawer = ({ open, data, onClose, onUpdateNodes }) => {
                     </Col>
 
                 </Row> */}
-                {data && nodeDetail}
+                {data.type && nodeDetail}
 
 
             </Drawer>

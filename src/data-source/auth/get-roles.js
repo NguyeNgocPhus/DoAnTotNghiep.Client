@@ -11,12 +11,12 @@ let source = null;
 export const cancelGetRoles = () => cancel(source);
 export const apiGetRolesAsync = async (params) => {
 
-    cancelGetRoles();
+    // cancelGetRoles();
     source = getTokenSource();
 
     try {
         const response = await GET('/Api/Roles', {...params}, {
-            cancelToken: source.token
+            // cancelToken: source.token
         })
         
         if(response?.data?.isSuccess === true){

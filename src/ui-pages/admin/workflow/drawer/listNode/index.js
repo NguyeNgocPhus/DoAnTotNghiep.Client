@@ -12,8 +12,8 @@ export const ListNodeDrawer = ({ open, onClose }) => {
             image: "",
             type: "trigger",
             key: "FileUpload",
-            name: "Tài liệu được đẩy lên",
-            description: "Kích hoạt khi có tài liệu được đẩy lên hệ thống"
+            name: "Báo cáo được đẩy lên",
+            description: "Kích hoạt khi có báo cáo được đẩy lên hệ thống"
         },
         // {
         //     image: "",
@@ -49,6 +49,13 @@ export const ListNodeDrawer = ({ open, onClose }) => {
             key: "SendEmail",
             name: "Gửi Email",
             description: "Gửi Email tới người dùng"
+        },
+        {
+            image: "",
+            type: "action",
+            key: "UpdateStatus",
+            name: "Cập nhật trạng thái",
+            description: "Thực hiện Cập nhật trạng thái"
         },
         {
             image: "",

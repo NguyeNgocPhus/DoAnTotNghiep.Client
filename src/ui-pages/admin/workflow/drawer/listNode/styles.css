@@ -20,7 +20,7 @@
   
   .dndflow .dndnode {
     padding: 4px;
-    border: 1px solid #1a192b;
+    border: 1px solid #f0f0f0;
     border-radius: 2px;
     margin-bottom: 10px;
     display: flex;

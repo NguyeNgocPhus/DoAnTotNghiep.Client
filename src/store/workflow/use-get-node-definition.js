@@ -14,6 +14,7 @@ export const useGetNodeDefinition = () => {
     
     useEffect(() => {
         return () => {
+            setNodeDefinitionApiData({});
             WORKFLOW.cancelApiGetNodeDefinition();
         }
     }, [])

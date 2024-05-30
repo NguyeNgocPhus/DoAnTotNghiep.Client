@@ -4,6 +4,7 @@ import { ConditionNode } from "../ui-pages/admin/workflow/nodes/actions/conditio
 import { FinishNode } from "../ui-pages/admin/workflow/nodes/actions/finish";
 import { RejectNode } from "../ui-pages/admin/workflow/nodes/actions/reject";
 import { SendEmailNode } from "../ui-pages/admin/workflow/nodes/actions/sendEmail";
+import { UpdateStatusNode } from "../ui-pages/admin/workflow/nodes/actions/update_status";
 import { CronNode } from "../ui-pages/admin/workflow/nodes/triggers/cron";
 import { FileUploadNode } from "../ui-pages/admin/workflow/nodes/triggers/fileUpdated";
 import { HttpEndpointNode } from "../ui-pages/admin/workflow/nodes/triggers/httpEndpoint";
@@ -13,6 +14,7 @@ const nodeTypes = {
     'HttpEndpoint': HttpEndpointNode,
     'Cron': CronNode,
     'Approve': ApproveNode,
+    'UpdateStatus': UpdateStatusNode,
     'Reject': RejectNode,
     'Condition': ConditionNode,
     'SendEmail': SendEmailNode,
@@ -64,6 +66,7 @@ const generateWfDefinitionForApi = ({ id, name, version, nodes, edges }) => {
                 }
             )
         }
+        
         return {
             activityId: node.id,
             category: "",

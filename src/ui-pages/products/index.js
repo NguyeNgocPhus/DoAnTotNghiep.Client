@@ -30,10 +30,8 @@ export const PageProduct =({})=>{
     const [typeProduct,setTypeProduct] = useState('');
     useEffect(()=>{
         const path =window.location.pathname.slice(1);
-        // console.log(window.location.search);
         requestSetListProduct(path);
     },[ window.location.pathname])
-    // console.log(listSize);
     useEffect(()=>{
         if(listProduct.state === REQUEST_STATE.SUCCESS){
             let code = [],name = [], products=[];

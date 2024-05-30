@@ -23,7 +23,7 @@ export const FormCreate = ({ setFileTemplateId, form, open, onClose, onFinish })
         },
     };
     return (
-        <Modal title="Tạo mẫu nhập" open={open} onCancel={onClose} footer={null}>
+        <Modal title="Tạo mẫu báo cáo" open={open} onCancel={onClose} footer={null}>
             <Form
                 form={form}
                 name="basic"
@@ -56,12 +56,12 @@ export const FormCreate = ({ setFileTemplateId, form, open, onClose, onFinish })
 
                 >
                     <Upload {...props}>
-                        <Button icon={<UploadOutlined />}>Tải lên mẫu nhập</Button>
+                        <Button icon={<UploadOutlined />}>Tải lên mẫu báo cáo</Button>
                     </Upload>
                 </Form.Item>
                 <Form.Item >
                     <Button type="primary" htmlType="submit">
-                        Submit
+                        Tạo mới
                     </Button>
                 </Form.Item>
             </Form>

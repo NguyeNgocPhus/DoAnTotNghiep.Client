@@ -283,7 +283,6 @@ export const WorkflowDetail = (props) => {
     );
 
     const onUpdateNodes = ({ nodeId, customData, description }) => {
-
         const newNodes = nodes.map(x => {
             if (x.id === nodeId) {
                 return {
@@ -298,8 +297,7 @@ export const WorkflowDetail = (props) => {
                 return x;
             }
         });
-        // console.log("nodes",nodes)
-        // console.log("newNodes",newNodes)
+       
         setNodes([...newNodes]);
 
         const workflow = generateWfDefinitionForApi({

@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import "./styles.css";
 import 'reactflow/dist/style.css';
 import { Button, Col, Input, Row, Space, Table, Typography, Tag, Dropdown, Modal, Form, message, Popconfirm, Spin, Pagination } from 'antd';
-import { SearchOutlined, PlusOutlined, DownOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
+import { DeleteOutlined, PlusOutlined, QuestionCircleOutlined, EditOutlined } from '@ant-design/icons';
 import { REQUEST_STATE } from '../../../../app-config/constants';
 import { useCreateWfDefinition } from '../../../../store/workflow/use-create-wf-definition';
 import { useGetListWfDefinition } from '../../../../store/workflow/use-get-list-wf-definition';
@@ -61,7 +61,7 @@ export const ListWorkflowDefinition = () => {
             render: (_, { status }) => (
                 <>
                     <Tag key={status}>
-                        {status}
+                       Hoạt động
                     </Tag>
                 </>
             ),
@@ -69,17 +69,37 @@ export const ListWorkflowDefinition = () => {
         {
             title: 'Phiên bản',
             dataIndex: 'version',
+            width:'100px',
             key: 'version',
         },
         {
             title: '',
             dataIndex: 'operation',
-            render: (_, record) =>
-                listWfDefinition.length >= 1 ? (
-                    <Popconfirm title="Sure to delete?" onConfirm={() => onConfirmDelete(record.id)}>
-                        <a>Xoá</a>
-                    </Popconfirm>
-                ) : null,
+            width:'100px',
+            render: (_, record) => (
+
+                <Row gutter={[10, 20]}>
+
+                    <Col >
+                        <Popconfirm
+                            title="Xác nhận xoá dữ liệu"
+                            onConfirm={() => { onConfirmDelete(record.id) }}
+                            // description="Are you sure to delete this task?"
+                            icon={
+                                <QuestionCircleOutlined
+                                    style={{
+                                        color: 'red',
+                                    }}
+                                />
+                            }
+                        >
+                            <DeleteOutlined className='import_teamplate_action_icon' style={{ cursor: 'pointer', color: 'red' }} />
+                        </Popconfirm>
+
+                    </Col>
+                </Row>
+            )
+
         },
     ];
 
@@ -152,7 +172,7 @@ export const ListWorkflowDefinition = () => {
 
 
     useEffect(() => {
-      
+
         requestGetListWfDefinitionData({});
     }, [])
 
@@ -188,7 +208,7 @@ export const ListWorkflowDefinition = () => {
                     <Col span={24}>
                         <div className='header_list_users'>
                             <Title level={5}>Danh sách quy trình</Title>
-                            
+
                         </div>
                     </Col>
                     {/* <Col span={24}>
@@ -203,29 +223,29 @@ export const ListWorkflowDefinition = () => {
                         <div className='table'>
                             <div className='table_add'>
                                 <Button onClick={showModal} icon={<PlusOutlined />} type="primary" size="large">Tạo quy trình</Button>
-                            </div>  
-                            <Row className='table_filter' gutter={[15,0]}>
+                            </div>
+                            <Row className='table_filter' gutter={[15, 0]}>
                                 <Col span={4} className='field_filter'>
                                     <div className='field_name'>
                                         Tên quy trình
                                     </div>
-                                    <Input size="small" placeholder="Tìm kiếm theo tên"/>
+                                    <Input size="small" placeholder="Tìm kiếm theo tên" />
 
                                 </Col>
                                 <Col span={4} className='field_filter'>
                                     <div className='field_name'>
                                         Trạng thái
                                     </div>
-                                    <Input  size="small" placeholder="Tìm kiếm theo email" />
+                                    <Input size="small" placeholder="Tìm kiếm theo email" />
 
                                 </Col>
-                            
-                                <Col span={4} style={{display: "flex", alignItems:'end', gap:'10px'}}>
-                                <Button size='small' type='primary'>Lọc</Button>
+
+                                <Col span={4} style={{ display: "flex", alignItems: 'end', gap: '10px' }}>
+                                    <Button size='small' type='primary'>Lọc</Button>
                                     <Button size='small'>Clear bộ lọc</Button>
                                 </Col>
                             </Row>
-                            <Table scroll={{y:450}} className='table_data' size="middle" pagination={false} loading={loading} columns={columns} dataSource={listWfDefinition} />
+                            <Table scroll={{ y: 450 }} className='table_data' size="middle" pagination={false} loading={loading} columns={columns} dataSource={listWfDefinition} />
 
                             <div className='table_paging'>
                                 <div><b>Tổng số : {total}</b></div>

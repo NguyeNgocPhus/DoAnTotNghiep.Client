@@ -312,7 +312,7 @@ export const ListUsers = () => {
                                     <Button size='small' onClick={onClearFilter}>Clear bộ lọc</Button>
                                 </Col>
                             </Row>
-                            <Table scroll={{ y: 400 }} className='table_data' size="middle" pagination={false} loading={loading} columns={columns} dataSource={listUser} />
+                            <Table scroll={{ y: 450 }} className='table_data' size="middle" pagination={false} loading={loading} columns={columns} dataSource={listUser} />
 
                             <div className='table_paging'>
                                 <div><b>Tổng số : {total}</b></div>
