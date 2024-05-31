@@ -86,6 +86,7 @@ export const CreateUser = ({ isModalOpen, handleCancel , onCreateUserSuccess}) =
                     <Form.Item
                         label="Tên người dùng"
                         name="name"
+                        rules={[{ required: true, message: 'Nhập tên người dùng' }]}
 
                     >
                         <Input />
@@ -94,6 +95,19 @@ export const CreateUser = ({ isModalOpen, handleCancel , onCreateUserSuccess}) =
                     <Form.Item
                         label="Email"
                         name="email"
+                        rules={[{ required: true, message: 'Nhập email' },
+                        {
+                            message: 'Nhập đúng định dạng email',
+                            validator: (_, value) => {
+                              if (value.match(
+                                /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+                              )) {
+                                return Promise.resolve();
+                              } else {
+                                return Promise.reject('Some message here');
+                              }
+                             }
+                           }]}
                     >
                         <Input />
                     </Form.Item>
@@ -101,12 +115,26 @@ export const CreateUser = ({ isModalOpen, handleCancel , onCreateUserSuccess}) =
                     <Form.Item
                         label="Số điện thoại"
                         name="phoneNumber"
+                        rules={[{ required: true, message: 'Nhập số điện thoại' },
+                        {
+                            message: 'Nhập đúng định dạng số điên thoại',
+                            validator: (_, value) => {
+                              if (value.match(
+                                /(84|0[3|5|7|8|9])+([0-9]{8})\b/g
+                              )) {
+                                return Promise.resolve();
+                              } else {
+                                return Promise.reject('Some message here');
+                              }
+                             }
+                           }]}
                     >
                         <Input />
                     </Form.Item>
                     <Form.Item
                         label="Nhóm người dùng"
                         name="roles"
+                        rules={[{ required: true, message: 'Chọn nhóm người dùng' }]}
                     >
                         {listRole.length > 0 && <Select
                             mode="multiple"

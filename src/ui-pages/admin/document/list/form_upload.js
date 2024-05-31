@@ -7,23 +7,34 @@ import { useImportData } from "../../../../store/import-template/use-import-data
 import { REQUEST_STATE } from "../../../../app-config/constants";
 import { getToken } from "../../../../app-helper";
 
-export const FormUpload = ({hasWf, open, onClose, importTemplateId }) => {
+export const FormUpload = ({ hasWf, open, onClose, importTemplateId }) => {
 
     const [fileUploadId, setFileUploadId] = useState(null);
     const [importApiData, requestImportApiData] = useImportData();
     const [loading, setLoading] = useState(false);
+    
     var jwt = getToken();
+    const beforeUpload = (file) => {
 
+        const isXlsx = file.type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+        if (!isXlsx) {
+            message.error('Dữ liệu không đúng định đạng');
+        }
+
+        return isXlsx;
+    };
     const props = {
         action: 'http://localhost:5000/Api/FileStorage/Upload',
         name: 'file',
-        headers:{ "Authorization": `Bearer ${jwt.accessToken}` },
+        beforeUpload: beforeUpload,
+        headers: { "Authorization": `Bearer ${jwt.accessToken}` },
         onChange(info) {
             if (info.file.status !== 'uploading') {
                 console.log(info.file, info.fileList);
             }
             if (info.file.status === 'done') {
-                // message.success(`${info.file.name} file uploaded successfully`);
+               
+                message.success(`${info.file.name} tải dữ liệu thành công`);
                 const fileId = info.file.response.value.id;
                 setFileUploadId(fileId);
             } else if (info.file.status === 'error') {
@@ -33,21 +44,21 @@ export const FormUpload = ({hasWf, open, onClose, importTemplateId }) => {
     };
 
     const onFinish = () => {
-        if(!hasWf){
+        if (!hasWf) {
             notification.error({
                 message: 'vui lòng nhập thiết lập quy trình phê duyệt cho mẫu nhập',
             });
 
-            
+
         }
-        else if(fileUploadId === null) {
-           
+        else if (fileUploadId === null) {
+
             notification.error({
-                message: 'vui lòng nhập file',
+                message: 'Vui lòng tải lên tài liệu',
             });
             return;
         } else {
-            
+
             requestImportApiData({
                 importTemplateId,
                 fileUploadId
@@ -60,7 +71,7 @@ export const FormUpload = ({hasWf, open, onClose, importTemplateId }) => {
         if (importApiData !== null) {
             if (importApiData.state === REQUEST_STATE.SUCCESS) {
                 setLoading(false);
-               
+
                 notification.success({
                     message: 'Nhập dữ liệu thành công',
                 });
@@ -83,6 +94,8 @@ export const FormUpload = ({hasWf, open, onClose, importTemplateId }) => {
                     autoComplete="off"
                 >
                     <Form.Item
+                        label="Vui lòng nhập định dạng mẫu báo cáo là file excel"
+                        
                     >
                         <Upload {...props}>
                             <Button icon={<UploadOutlined />}>Tải lên tài liệu</Button>

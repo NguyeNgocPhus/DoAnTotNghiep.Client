@@ -236,7 +236,7 @@ export const ListWorkflowDefinition = () => {
                                     <div className='field_name'>
                                         Trạng thái
                                     </div>
-                                    <Input size="small" placeholder="Tìm kiếm theo email" />
+                                    <Input size="small" placeholder="Tìm kiếm theo trạng thái" />
 
                                 </Col>
 
@@ -266,7 +266,7 @@ export const ListWorkflowDefinition = () => {
                         <Form.Item
                             label="Tên quy trình"
                             name="name"
-
+                            rules={[{ required: true, message: 'Nhập tên quy trình' }]}
                         >
                             <Input />
                         </Form.Item>

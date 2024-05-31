@@ -2,8 +2,8 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import "./styles.css";
 import 'reactflow/dist/style.css';
-import { Button, Col, Input, Row, Space, Table, Typography, Tag, Modal, Form, Upload, Spin, Pagination } from 'antd';
-import { SearchOutlined, PlusOutlined, CheckOutlined, EditOutlined, UploadOutlined, HistoryOutlined, DeleteOutlined } from '@ant-design/icons';
+import { Button, Col, Input, Row, Space, Table, Typography, Tag, Modal, Form, Upload, Spin, Pagination, notification, Popconfirm } from 'antd';
+import { QuestionCircleOutlined, PlusOutlined, CheckOutlined, EditOutlined, UploadOutlined, HistoryOutlined, DeleteOutlined } from '@ant-design/icons';
 import { FormCreate } from './form_create';
 import { FormUpload } from './form_upload';
 import { useGetListImportTemplate } from '../../../../store/import-template/use-get-list-import-template';
@@ -16,6 +16,13 @@ import { hasRole } from '../../../../app-helper/jwtHepler';
 const { Title } = Typography;
 
 
+const tags = [
+
+    { label: "Tài chính kế toán", value: "TCKT" },
+    { label: "Kết quả kinh doanh", value: "KQKD" },
+    { label: "Công nợ phải thu/phải trả", value: "CN" },
+    { label: "Báo cáo đầu tư", value: "DT" }
+]
 export const ListDocument = () => {
     const hasImportTemplate = hasRole("Document") || hasRole("SuperAdmin");
     const hasUpload = hasRole("Upload") || hasRole("SuperAdmin");
@@ -30,13 +37,13 @@ export const ListDocument = () => {
             title: 'Loại Báo cáo',
             dataIndex: 'tag',
             key: 'tag',
-            width:'250px',
-            render: (text) => <div>{text}</div>,
+            width: '250px',
+            render: (text) => <div>{tags.find(x => x.value === text).label}</div>,
         },
         {
             title: 'Trạng thái',
             key: 'active',
-            width:'100px',
+            width: '100px',
             dataIndex: 'active',
             render: (_, { active }) => (
                 <>
@@ -47,7 +54,7 @@ export const ListDocument = () => {
         {
             title: 'Đã có quy trình',
             key: 'hasWorkflow',
-            width:'150px',
+            width: '150px',
             dataIndex: 'hasWorkflow',
             render: (_, { hasWorkflow }) => (
                 <>
@@ -58,7 +65,7 @@ export const ListDocument = () => {
         {
             title: 'Tải mẫu báo cáo',
             key: 'fileTemplateId',
-            width:'150px',
+            width: '150px',
             dataIndex: 'fileTemplateId',
             render: (_, { fileTemplateId, fileTemplateName }) => (
                 <>
@@ -69,7 +76,7 @@ export const ListDocument = () => {
         {
             title: '',
             key: 'action',
-            width:'170px',
+            width: '170px',
             dataIndex: 'action',
             render: (_, data) => (
                 <>
@@ -94,9 +101,22 @@ export const ListDocument = () => {
                         </Col>}
 
                         <Col className='import_teamplate_action_icon'>
-                            <DeleteOutlined style={{ cursor: 'pointer', color: 'red' }} onClick={() => {
-                                onDeleteImportTemplate(data.key)
-                            }} />
+
+                            <Popconfirm
+                                title="Xác nhận xoá dữ liệu"
+                                onConfirm={() => {  onDeleteImportTemplate(data.key) }}
+                                // description="Are you sure to delete this task?"
+                                icon={
+                                    <QuestionCircleOutlined
+                                        style={{
+                                            color: 'red',
+                                        }}
+                                    />
+                                }
+                            >
+                                <DeleteOutlined className='import_teamplate_action_icon'  style={{ cursor: 'pointer', color: 'red' }} />
+                            </Popconfirm>
+                            {/* <DeleteOutlined style={{ cursor: 'pointer', color: 'red' }}  /> */}
                         </Col>
                     </Row>
 
@@ -137,9 +157,17 @@ export const ListDocument = () => {
 
 
     const onCreateImportTemplate = (values) => {
-        console.log("Onfinish",{...values, fileTemplateId})
-        form.resetFields();
-        requestCreateImportTemplateApiData({ ...values, fileTemplateId });
+        if (fileTemplateId === null) {
+            notification.error({
+                message: 'Vui lòng tải lên mẫu báo cáo',
+            });
+            return;
+        } else {
+
+            form.resetFields();
+            requestCreateImportTemplateApiData({ ...values, fileTemplateId });
+        }
+
     };
     const onUpdateImportTemplate = (id) => {
         setFormCreateOpen(true);
@@ -199,11 +227,14 @@ export const ListDocument = () => {
         if (deleteImportTemplateApiData !== null) {
             if (deleteImportTemplateApiData.state === REQUEST_STATE.SUCCESS) {
                 setLoading(false);
+                notification.success({
+                    message: 'Xoá dữ liệu thành công',
+                });
                 requestListImportTemplateApi({
                     page: currentPage,
                     name: searchName,
                     tag: searchTag,
-        
+
                 });
             } else if (deleteImportTemplateApiData.state === REQUEST_STATE.ERROR) {
 

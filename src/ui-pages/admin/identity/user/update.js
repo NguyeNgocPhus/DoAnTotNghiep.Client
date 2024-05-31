@@ -117,6 +117,7 @@ export const UpdateUser = ({ id, isModalOpen, handleCancel, onUpdateUserSuccess 
                     <Form.Item
                         label="Tên người dùng"
                         name="userName"
+                        rules={[{ required: true, message: 'Nhập tên người dùng' }]}
 
                     >
                         <Input />
@@ -125,7 +126,7 @@ export const UpdateUser = ({ id, isModalOpen, handleCancel, onUpdateUserSuccess 
                     <Form.Item
                         label="Email"
                         name="email"
-
+                        rules={[{ required: true, message: 'Nhập email' }]}
                     >
                         <Input disabled />
                     </Form.Item>
@@ -133,12 +134,14 @@ export const UpdateUser = ({ id, isModalOpen, handleCancel, onUpdateUserSuccess 
                     <Form.Item
                         label="Số điện thoại"
                         name="phoneNumber"
+                        rules={[{ required: true, message: 'Nhập số điện thoại' }]}
                     >
                         <Input />
                     </Form.Item>
                     <Form.Item
                         label="Nhóm người dùng"
                         name="roles"
+                        rules={[{ required: true, message: 'Nhập nhóm người dùng' }]}
                     >
                         {listRole.length > 0 && <Select
                             mode="multiple"

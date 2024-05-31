@@ -11,11 +11,13 @@ export const useDeleteImportTemplate = () => {
     const [deleteImportTemplateApiData, setDeleteImportTemplateApiData] = useRecoilState(deleteImportTemplateState);
 
     const request = (params) => {
+       
         IMPORT_TEMPLATE.deleteImportTempateAsync(params, setDeleteImportTemplateApiData);
     }
     
     useEffect(() => {
         return () => {
+            setDeleteImportTemplateApiData({})
             IMPORT_TEMPLATE.cancelDeleteImportTempate();
         }
     }, [])

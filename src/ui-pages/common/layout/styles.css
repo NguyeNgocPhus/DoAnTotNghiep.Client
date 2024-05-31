@@ -261,7 +261,8 @@
 .notification_read{
     background-color :rgb(24, 144, 255)
 }
-.list-notification{
-    max-width: 500px;
+
+.ant-list-items{
+    max-height: 500px;
     overflow-y: scroll;
 }
