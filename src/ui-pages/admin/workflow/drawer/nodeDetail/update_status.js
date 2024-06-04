@@ -49,9 +49,12 @@ export const UpdateStatusDetail = ({ onUpdateNodes, data, onClose }) => {
             if (nodeDefinitionApiData.state === REQUEST_STATE.SUCCESS) {
 
                 var jsonData = JSON.parse(nodeDefinitionApiData?.data?.data)
-                console.log("jsonData",jsonData)
-                setObject(jsonData["object"]);
-                setStatus(jsonData["status"]);
+                if(jsonData !== null && jsonData !== undefined){
+                   
+                    setObject(jsonData["object"]);
+                    setStatus(jsonData["status"]);
+                   
+                }
                 setLoading(false);
             } else if (nodeDefinitionApiData.state === REQUEST_STATE.ERROR) {
 

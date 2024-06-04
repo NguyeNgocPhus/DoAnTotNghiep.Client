@@ -23,7 +23,7 @@ export const ListApprove = (props) => {
         {
             title: 'Mã báo cáo',
             key: 'code',
-            width:'100px',
+            width: '100px',
             dataIndex: 'code',
             render: (_, { code }) => (
                 <>
@@ -103,7 +103,7 @@ export const ListApprove = (props) => {
             title: '',
             key: 'action',
             dataIndex: 'action',
-            width:'150px',
+            width: '150px',
             render: (_, data) => (
                 <>
                     {/* {console.log("JKey", key)} */}
@@ -131,7 +131,7 @@ export const ListApprove = (props) => {
     let search = window.location.search;
     let params = new URLSearchParams(search);
     let importHistoryId = params.get('importHistoryId');
-    
+
 
     const [workflowActivityData, requestGetWorkflowActivityApi] = useGetWorkflowActivity();
     const [currentStepWf, requestGetCurrentStepWfApi] = useGetCurrentStepWf();
@@ -159,7 +159,8 @@ export const ListApprove = (props) => {
     useEffect(() => {
 
         requestListApproveApi({
-            page: currentPage
+            page: currentPage,
+            type: "Approve"
         });
         requestListImportTemplateApi();
     }, [])
@@ -176,7 +177,7 @@ export const ListApprove = (props) => {
                         importTemplateName: x.importTemplateName,
                         createdByName: x.createdByName,
                         key: x.id,
-                        code : x.code,
+                        code: x.code,
                         status: x.status,
                         fileId: x.fileId,
                         fileName: x.fileName
@@ -186,11 +187,11 @@ export const ListApprove = (props) => {
                 setTotal(listApproveApiData.data.totalCount);
                 setCurrentPage(listApproveApiData.data.pageIndex)
                 setListApprove(data);
-                
 
-                if(importHistoryId !== null && importHistoryId !== undefined){
-                    const detail = data.find(x=>x.key === importHistoryId);
-                   
+
+                if (importHistoryId !== null && importHistoryId !== undefined) {
+                    const detail = data.find(x => x.key === importHistoryId);
+
                     showWorkflowDetail(detail);
                 }
 
@@ -229,13 +230,13 @@ export const ListApprove = (props) => {
         if (workflowActivityData !== null) {
             if (workflowActivityData.state === REQUEST_STATE.SUCCESS) {
                 setLoadingModal(false);
-                console.log("workflowActivityData.data.actionLogs",workflowActivityData.data.actionLogs)
+                console.log("workflowActivityData.data.actionLogs", workflowActivityData.data.actionLogs)
 
                 if (workflowActivityData.data.activities.length === workflowActivityData.data.actionLogs.length) {
                     setIsEnd(true);
-                } else if(workflowActivityData.data.actionLogs.some(x=>x.activityName === "Finish")){
+                } else if (workflowActivityData.data.actionLogs.some(x => x.activityName === "Finish")) {
                     setIsEnd(true);
-                }else {
+                } else {
                     setIsEnd(false);
                 }
 
@@ -270,7 +271,8 @@ export const ListApprove = (props) => {
                     page: currentPage,
                     createdByName: searchName,
                     status: searchStatus,
-                    importTemplateIds: searchImportTemplate
+                    importTemplateIds: searchImportTemplate,
+                    type: "Approve"
                 });
                 notification.success({
                     message: 'Đã thao tác thành công',
@@ -344,6 +346,7 @@ export const ListApprove = (props) => {
             createdByName: searchName,
             status: searchStatus,
             code: searchCode,
+            type: "History",
             importTemplateIds: searchImportTemplate
         });
     };
@@ -353,7 +356,8 @@ export const ListApprove = (props) => {
         setSearchImportTemplate([]);
         setSearchStatus([]);
         requestListApproveApi({
-            page: currentPage
+            page: currentPage,
+            type: "Approve"
         });
     };
 
@@ -370,7 +374,7 @@ export const ListApprove = (props) => {
                     <Col span={24}>
                         <div className='table'>
                             <Row className='table_filter' gutter={[15, 0]}>
-                            <Col span={4} className='field_filter'>
+                                <Col span={4} className='field_filter'>
                                     <div className='field_name'>
                                         Mã báo cáo
                                     </div>
@@ -381,7 +385,7 @@ export const ListApprove = (props) => {
                                     <div className='field_name'>
                                         Người tạo
                                     </div>
-                                    <Input value={searchName}  onChange={(e) => { setSearchName(e.target.value) }} size="small" placeholder="Tìm kiếm theo tên" />
+                                    <Input value={searchName} onChange={(e) => { setSearchName(e.target.value) }} size="small" placeholder="Tìm kiếm theo tên" />
 
                                 </Col>
                                 <Col span={5} className='field_filter'>

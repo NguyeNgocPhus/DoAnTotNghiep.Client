@@ -140,7 +140,7 @@ export const History = () => {
     const [searchStatus, setSearchStatus] = useState([]);
 
     useEffect(() => {
-        requestListHistoryApi({ importTemplateIds: [id] });
+        requestListHistoryApi({ importTemplateIds: [id],type:"History" });
         requestImportTemplateApi({ id });
     }, [])
     useEffect(() => {
@@ -235,6 +235,7 @@ export const History = () => {
             createdByName: searchName,
             status: searchStatus,
             code: searchCode,
+            type:"History"
         });
     };
     const onClearFilter = (value) => {
@@ -244,7 +245,8 @@ export const History = () => {
         setSearchStatus([]);
         requestListHistoryApi({
             importTemplateIds: [id],
-            page: currentPage
+            page: currentPage,
+            type:"History"
         });
     };
     return (
