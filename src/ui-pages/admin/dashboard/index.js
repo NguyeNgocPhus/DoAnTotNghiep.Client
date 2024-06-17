@@ -15,6 +15,7 @@ export const DashBoard = () => {
   const [countApprove, setCountApprove] = useState(0);
   const [countReject, setCountReject] = useState(0);
   const [countUpload, setCountUpload] = useState(0);
+  const [countLogin, setCountLogin] = useState(0);
   const [listData, setListData] = useState([]);
   const [loading, setLoading] = useState(false);
 
@@ -28,10 +29,12 @@ export const DashBoard = () => {
     if (viewDashboardApiData.state === REQUEST_STATE.SUCCESS) {
 
       var list = [];
+      list = list.concat(viewDashboardApiData.data.logins);
       list = list.concat(viewDashboardApiData.data.approves);
       list = list.concat(viewDashboardApiData.data.rejects);
       list = list.concat(viewDashboardApiData.data.uploads);
       setListData([...list])
+      setCountLogin(viewDashboardApiData.data.countLogin);
       setCountApprove(viewDashboardApiData.data.countApprove);
       setCountReject(viewDashboardApiData.data.countReject);
       setCountUpload(viewDashboardApiData.data.countUpload);
@@ -56,7 +59,7 @@ export const DashBoard = () => {
             <Row gutter={[0, 20]} style={{ display: 'flex', justifyContent: 'flex-start', gap: '20px' }}>
             <Col span={5} className="dashboad_count">
                 <div className="count_text" >Số lần truy cập hệ thống</div>
-                <span className="count_number">2</span>
+                <span className="count_number">{countLogin}</span>
               </Col>
               <Col span={5} className="dashboad_count">
                 <div className="count_text" >Số báo cáo nhập</div>
@@ -78,9 +81,9 @@ export const DashBoard = () => {
               <b>Biểu đồ thống kê</b>
               <DatePicker format={"DD/MM/YYYY"} defaultValue={moment(new Date(), "DD/MM/YYYY")} size="small" onChange={onChange} />
             </div>
-            <div className="chart">
+            <div className="chart" style={{marginBottom:"20px"}}>
 
-              <Line style={{ lineWidth: 2 }} padding={'auto'} legend={true} repsponsive={true} forceFit={true} data={listData} xField={'hour'} yField={'value'} colorField={'category'} height={390} />
+              <Line style={{ lineWidth: 2 }} padding={'auto'} legend={true} repsponsive={true} forceFit={true} data={listData} xField={'hour'} yField={'value'} colorField={'category'} />
             </div>
 
           </Col>

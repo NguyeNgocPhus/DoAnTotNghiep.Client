@@ -29,6 +29,7 @@ import { DashBoard } from './ui-pages/admin/dashboard';
 import { useCountUnreadNotification } from './store/notification/use-get-count-unread-noti';
 import { getCoutUnreadNotificationState } from './store/notification/share-state';
 import useWebSocket, { ReadyState } from "react-use-websocket"
+import AuthService from './helpers/oidcHepler';
 
 const { Option } = Select;
 
@@ -41,6 +42,15 @@ function App() {
   const [countUnreadNotificationData, setCountUnreadNotificationData] = useRecoilState(getCoutUnreadNotificationState);
 
   useEffect(() => {
+    AuthService.init({
+      stsAuthority: "https://localhost:5001",
+      clientId: "mvc",
+      clientRoot: "http://localhost:3000/",
+      clientLogoutURL: "http://localhost:3000/login",
+      clientScope: "openid profile"
+    });
+
+    AuthService.eventAddUserLoaded()
     let userInfo = getToken();
     if (userInfo !== null)
       requestMyProfile();
@@ -48,7 +58,7 @@ function App() {
   const connection = useRef(null)
 
   useEffect(() => {
-    
+
   }, [])
 
   useEffect(() => {
@@ -63,7 +73,7 @@ function App() {
     if (myProfile.state === REQUEST_STATE.SUCCESS) {
       setIsVerify(true);
       saveUserToStore(myProfile.data)
-    
+
     }
 
   }, [myProfile])

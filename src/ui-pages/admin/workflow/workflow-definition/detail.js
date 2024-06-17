@@ -319,7 +319,7 @@ export const WorkflowDetail = (props) => {
                         <Col span={12}>
 
                             <Breadcrumb>
-                                <Breadcrumb.Item>Workflow Definition</Breadcrumb.Item>
+                                <Breadcrumb.Item>Quy trình</Breadcrumb.Item>
                                 {wfDefinition && <Breadcrumb.Item href="">{wfDefinition.name}</Breadcrumb.Item>}
                             </Breadcrumb>
                         </Col>
@@ -356,8 +356,8 @@ export const WorkflowDetail = (props) => {
                         </Panel>
                         <Panel position="top-right" >
 
-                            <Button onClick={() => onLayout('TB')}>Vertical</Button>
-                            <Button onClick={() => onLayout('LR')}>Horizontal</Button>
+                            <Button onClick={() => onLayout('TB')}>Chiều dọc</Button>
+                            <Button onClick={() => onLayout('LR')}>Chiều ngang</Button>
                         </Panel>
                         <Controls showInteractive={false} />
                         <ListNodeDrawer open={openListNodeDrawer} onClose={() => { setOpenListNodeDrawer(false) }}></ListNodeDrawer>

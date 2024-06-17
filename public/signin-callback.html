@@ -1,0 +1,11 @@
+<script src="oidc-client.min.js"></script>
+<script>
+    new Oidc.UserManager({ response_mode: "query" }).signinRedirectCallback().then(function (user) {
+        window.localStorage.setItem('setting_accessToken', user.access_token)
+        window.localStorage.setItem('setting_idToken', user.id_token)
+        window.localStorage.setItem('setting_oidc', JSON.stringify(user))
+        window.location = "/";
+    }).catch(function (e) {
+        console.error(e);
+    });
+</script>

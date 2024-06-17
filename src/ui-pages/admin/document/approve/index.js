@@ -111,7 +111,7 @@ export const ListApprove = (props) => {
 
                         <Col >
                             <ShareAltOutlined onClick={() => { showWorkflowDetail(data) }} className='import_teamplate_action_icon' style={{ cursor: 'pointer', color: 'green' }} />
-                            <EyeOutlined className='import_teamplate_action_icon' style={{ cursor: 'pointer' }} />
+                            <EyeOutlined onClick={() => { onOpenSheetOnl(data)}} className='import_teamplate_action_icon' style={{ cursor: 'pointer' }} />
                             <DeleteOutlined className='import_teamplate_action_icon' style={{ cursor: 'pointer', color: 'red' }} />
                         </Col>
                     </Row>
@@ -230,14 +230,11 @@ export const ListApprove = (props) => {
         if (workflowActivityData !== null) {
             if (workflowActivityData.state === REQUEST_STATE.SUCCESS) {
                 setLoadingModal(false);
-                console.log("workflowActivityData.data.actionLogs", workflowActivityData.data.actionLogs)
 
-                if (workflowActivityData.data.activities.length === workflowActivityData.data.actionLogs.length) {
-                    setIsEnd(true);
-                } else if (workflowActivityData.data.actionLogs.some(x => x.activityName === "Finish")) {
-                    setIsEnd(true);
+                if (workflowActivityData.data.actionLogs.some(x => x.activityName === "Finish")) {
+                    setIsEnd(workflowActivityData.data.actionLogs.findIndex(x => x.activityName === "Finish"));
                 } else {
-                    setIsEnd(false);
+                    setIsEnd(null);
                 }
 
             } else if (workflowActivityData.state === REQUEST_STATE.ERROR) {
@@ -334,6 +331,11 @@ export const ListApprove = (props) => {
     const onRejectReason = (e) => {
         setRejectReason(e.target.value);
     }
+    const onOpenSheetOnl = (data) => {
+        // https://e8df-118-68-88-223.ngrok-free.app/Api/FileStorage/Get/c6d50042-e0a2-4503-9732-1500856ad6f6?name=TCKT%20(2).xlsx
+        window.open(`https://view.officeapps.live.com/op/view.aspx?src=https://e8df-118-68-88-223.ngrok-free.app/Api/FileStorage/Get/${data.fileId}?name=TCKT%20(2).xlsx${data.fileName}`, '_blank');
+    }
+
     const statusEnd = (
         <div style={{ border: "1px solid green", borderRadius: "5px", padding: "3px", backgroundColor: "green", color: '#fff' }}>Kết thúc quy trình</div>
     )
@@ -446,9 +448,13 @@ export const ListApprove = (props) => {
                         </div>
                         }
                         {/* {isEnd != null && <div style={{ display: 'flex', alignItems: 'center', marginBottom: '10px', gap: '5px' }}><b>Trạng thái : </b> <div>{isEnd ? statusEnd : statusProcess}</div></div>} */}
-                        {workflowActivityData.state === REQUEST_STATE.SUCCESS && workflowActivityData.data.actionLogs.map(x => {
+                        {workflowActivityData.state === REQUEST_STATE.SUCCESS && workflowActivityData.data.activities.map((x, index) => {
+                            // if(index === isEnd){
+                            //     return <div style={{textAlign:'center'}}><b>--- Kết thúc quy trình ---</b></div>
+                            // }
                             return <StepImport setIsEnd={setIsEnd} activity={x} actionLogs={workflowActivityData.data.actionLogs}></StepImport>
                         })}
+                      
 
 
                         <div style={{ display: 'flex', justifyContent: 'end', gap: '10px' }}>

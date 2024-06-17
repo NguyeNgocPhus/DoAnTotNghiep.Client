@@ -91,7 +91,6 @@ const generateWfDefinitionForApi = ({ id, name, version, nodes, edges }) => {
         }
         if (activity.type === "Condition") {
             outcome = edge.data === true ? "True" :"False";
-            index = index + 1;
         }
         return {
             outcome: outcome,

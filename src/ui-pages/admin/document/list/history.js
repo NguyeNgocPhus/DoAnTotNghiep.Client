@@ -327,7 +327,7 @@ export const History = () => {
             <Modal title={"Lịch sử phê duyệt"} open={historyOpen} onCancel={handleCancel} footer={null}>
                 <Spin size="small" spinning={loadingModal}>
                     {/* {isEnd != null && <div style={{ display: 'flex', alignItems: 'center', marginBottom: '10px', gap: '5px' }}><b>Trạng thái : </b> <div>{isEnd ? statusEnd : statusProcess}</div></div>} */}
-                    {workflowActivityData.state === REQUEST_STATE.SUCCESS && workflowActivityData.data.actionLogs.map(x => {
+                    {workflowActivityData.state === REQUEST_STATE.SUCCESS && workflowActivityData.data.activities.map(x => {
                         return <StepImport setIsEnd={setIsEnd} activity={x} actionLogs={workflowActivityData.data.actionLogs}></StepImport>
                     })}
 

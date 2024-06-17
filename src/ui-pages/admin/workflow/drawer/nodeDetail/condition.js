@@ -58,7 +58,7 @@ export const ConditionDetail = ({ onUpdateNodes, data, onClose }) => {
         if (rolesApiData !== null) {
             if (rolesApiData.state === REQUEST_STATE.SUCCESS) {
 
-                console.log("rolesApiData",rolesApiData)
+                // console.log("rolesApiData",rolesApiData)
                 var roles = rolesApiData.data.map(x => {
                     return {
                         name: x.roleCode,
